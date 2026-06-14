@@ -1,10 +1,10 @@
 "use client"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState, useCallback } from "react"
+import { useState, useCallback, Suspense } from "react"
 
 interface FeedFilterProps { cargoTypes: string[] }
 
-export function FeedFilter({ cargoTypes }: FeedFilterProps) {
+function FeedFilterInner({ cargoTypes }: FeedFilterProps) {
   const router = useRouter()
   const params = useSearchParams()
   const [origin, setOrigin] = useState(params.get("origin") || "")
@@ -59,5 +59,15 @@ export function FeedFilter({ cargoTypes }: FeedFilterProps) {
         </div>
       </div>
     </div>
+  )
+}
+
+export function FeedFilter({ cargoTypes }: FeedFilterProps) {
+  return (
+    <Suspense fallback={
+      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 h-16 animate-pulse" />
+    }>
+      <FeedFilterInner cargoTypes={cargoTypes} />
+    </Suspense>
   )
 }

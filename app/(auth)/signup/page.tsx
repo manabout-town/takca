@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { signUp } from "@/app/actions/auth"
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button"
 import { Select } from "@/components/ui/Select"
 import { VEHICLE_TYPES } from "@/lib/types"
 
-export default function SignupPage() {
+function SignupForm() {
   const params = useSearchParams()
   const [role, setRole] = useState<"shipper" | "driver">(
     (params.get("role") as "shipper" | "driver") || "shipper"
@@ -107,5 +107,17 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-400">로딩 중...</div>
+      </div>
+    }>
+      <SignupForm />
+    </Suspense>
   )
 }
