@@ -5,7 +5,7 @@ import { formatKRW, formatDate } from "@/lib/utils/format"
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/lib/utils/status"
 import { cancelOrder, confirmCompletion } from "@/app/actions/orders"
 import { Card, CardBody, CardHeader } from "@/components/ui/Card"
-import { MapPin, Package, Calendar, User, MessageCircle } from "lucide-react"
+import { MapPin, Package, Calendar, User, MessageCircle, AlertTriangle } from "lucide-react"
 
 export default async function ShipperOrderDetail({ params }: { params: { id: string } }) {
   const supabase = await createClient()
@@ -13,7 +13,16 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
 
   const { data: order } = await supabase
     .from("orders")
-    .select(`*, matches(*, drivers:users(*), driver_profiles(*))`)
+    .select(`
+      *,
+      matches(
+        *,
+        drivers:users!driver_id(
+          *,
+          driver_profiles(vehicle_type, vehicle_number, rating_avg, rating_count)
+        )
+      )
+    `)
     .eq("id", params.id)
     .eq("shipper_id", user!.id)
     .single()
@@ -23,6 +32,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
   const activeMatch = order.matches?.find(
     (m: any) => !["cancelled"].includes(m.status)
   )
+  const driverProfile = activeMatch?.drivers?.driver_profiles
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -80,7 +90,6 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
         </CardBody>
       </Card>
 
-      {/* Matched driver */}
       {activeMatch && (
         <Card className="mb-4">
           <CardHeader>
@@ -93,15 +102,15 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
               <div>
                 <div className="font-semibold">{activeMatch.drivers?.name}</div>
                 <div className="text-sm text-gray-500">
-                  {activeMatch.driver_profiles?.vehicle_type} | {activeMatch.driver_profiles?.vehicle_number}
+                  {driverProfile?.vehicle_type} | {driverProfile?.vehicle_number}
                 </div>
                 <div className="flex items-center gap-1 mt-1">
                   <span className="text-yellow-500">★</span>
                   <span className="text-sm font-medium">
-                    {activeMatch.driver_profiles?.rating_avg?.toFixed(1) || "신규"}
+                    {driverProfile?.rating_avg?.toFixed(1) || "신규"}
                   </span>
                   <span className="text-sm text-gray-400">
-                    ({activeMatch.driver_profiles?.rating_count || 0}건)
+                    ({driverProfile?.rating_count || 0}건)
                   </span>
                 </div>
               </div>
@@ -116,7 +125,21 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
         </Card>
       )}
 
-      {/* Actions */}
+      {activeMatch && order.status === "matched" && (
+        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+          <div>
+            <div className="font-semibold text-blue-800 text-sm">기사 매칭 완료!</div>
+            <div className="text-xs text-blue-600 mt-0.5">에스크로 결제 후 운송이 시작됩니다</div>
+          </div>
+          <Link
+            href={`/shipper/orders/${order.id}/pay`}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700"
+          >
+            결제하기
+          </Link>
+        </div>
+      )}
+
       <div className="flex gap-3">
         {order.status === "pending" && (
           <form action={cancelOrder.bind(null, order.id)} className="flex-1">
@@ -126,11 +149,19 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
           </form>
         )}
         {activeMatch && order.status === "in_progress" && (
-          <form action={confirmCompletion.bind(null, activeMatch.id)} className="flex-1">
-            <button type="submit" className="btn-primary w-full py-2.5 rounded-lg text-sm">
-              ✓ 운송 완료 확인
-            </button>
-          </form>
+          <>
+            <form action={confirmCompletion.bind(null, activeMatch.id)} className="flex-1">
+              <button type="submit" className="btn-primary w-full py-2.5 rounded-lg text-sm">
+                ✓ 운송 완료 확인
+              </button>
+            </form>
+            <Link
+              href={`/shipper/orders/${order.id}/dispute?matchId=${activeMatch.id}`}
+              className="flex items-center gap-1 px-4 py-2.5 rounded-lg text-sm border border-red-300 text-red-600 hover:bg-red-50"
+            >
+              <AlertTriangle size={14} /> 분쟁
+            </Link>
+          </>
         )}
       </div>
 
