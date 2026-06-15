@@ -28,11 +28,11 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const path = request.nextUrl.pathname
 
-  // Public paths
+  // Public paths (no auth required)
   const publicPaths = ["/", "/login", "/signup", "/intro", "/verify-email", "/auth/callback"]
   const isPublic = publicPaths.some(p => path === p || path.startsWith("/auth/")) || path.startsWith("/driver/")
 
-  if (!user && !isPublic) {
+  if (!user && !isPublic && path !== "/onboarding") {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 
@@ -44,6 +44,7 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .single()
     const role = profile?.role
+    if (!role) return NextResponse.redirect(new URL("/onboarding", request.url))
     if (role === "shipper") return NextResponse.redirect(new URL("/shipper/dashboard", request.url))
     if (role === "driver") return NextResponse.redirect(new URL("/driver/dashboard", request.url))
     if (role === "admin") return NextResponse.redirect(new URL("/admin/dashboard", request.url))
