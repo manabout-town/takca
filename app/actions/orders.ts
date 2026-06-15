@@ -39,6 +39,7 @@ export async function createOrder(formData: FormData) {
 
   revalidatePath("/shipper/dashboard")
   revalidatePath("/driver/feed")
+  revalidatePath("/driver/dashboard")
   redirect(`/shipper/orders/${data.id}`)
 }
 
@@ -79,7 +80,8 @@ export async function acceptOrder(orderId: string) {
     .eq("id", orderId)
 
   revalidatePath("/driver/feed")
-  revalidatePath(`/driver/matches/${match.id}`)
+  revalidatePath("/driver/dashboard")
+  revalidatePath("/shipper/dashboard")
   redirect(`/chat/${match.id}`)
 }
 

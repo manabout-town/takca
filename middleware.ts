@@ -1,11 +1,11 @@
 import { createServerClient } from "@supabase/ssr"
-import { NextResponse, type NextRequest } from "next/server"
-import type { CookieOptions } from "@supabase/ssr"
-
-type CookieToSet = { name: string; value: string; options?: CookieOptions }
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
+  const response = NextResponse.next({
+    request: { headers: request.headers },
+  })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,50 +15,41 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet: CookieToSet[]) {
-          cookiesToSet.forEach(({ name, value }: { name: string; value: string }) =>
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value)
-          )
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }: CookieToSet) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
+            response.cookies.set(name, value, options)
+          })
         },
       },
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+  const path = request.nextUrl.pathname
 
-  const pathname = request.nextUrl.pathname
+  // Public paths
+  const publicPaths = ["/", "/login", "/signup", "/intro", "/verify-email", "/auth/callback"]
+  const isPublic = publicPaths.some(p => path === p || path.startsWith("/auth/"))
 
-  // Protected routes
-  const protectedPaths = ["/shipper", "/driver", "/admin", "/chat"]
-  const isProtected = protectedPaths.some((p) => pathname.startsWith(p))
-
-  if (!user && isProtected) {
-    const url = request.nextUrl.clone()
-    url.pathname = "/login"
-    url.searchParams.set("redirectTo", pathname)
-    return NextResponse.redirect(url)
+  if (!user && !isPublic) {
+    return NextResponse.redirect(new URL("/login", request.url))
   }
 
-  // Admin only
-  if (pathname.startsWith("/admin")) {
+  // Redirect logged-in users away from auth pages
+  if (user && (path === "/login" || path === "/signup")) {
     const { data: profile } = await supabase
       .from("users")
       .select("role")
-      .eq("id", user!.id)
+      .eq("id", user.id)
       .single()
-
-    if (profile?.role !== "admin") {
-      return NextResponse.redirect(new URL("/", request.url))
-    }
+    const role = profile?.role
+    if (role === "shipper") return NextResponse.redirect(new URL("/shipper/dashboard", request.url))
+    if (role === "driver") return NextResponse.redirect(new URL("/driver/dashboard", request.url))
+    if (role === "admin") return NextResponse.redirect(new URL("/admin/dashboard", request.url))
   }
 
-  return supabaseResponse
+  return response
 }
 
 export const config = {

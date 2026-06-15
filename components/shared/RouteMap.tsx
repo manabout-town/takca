@@ -8,63 +8,45 @@ interface RouteMapProps {
 
 export function RouteMap({ origin, destination, className = "" }: RouteMapProps) {
   return (
-    <div className={`bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4 ${className}`}>
-      <div className="relative" style={{ minHeight: "140px" }}>
-        <svg
-          viewBox="0 0 400 140"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full"
-          style={{ minHeight: "140px" }}
-        >
-          {/* Background road */}
-          <rect x="0" y="0" width="400" height="140" fill="none" />
-          
-          {/* Dashed road line */}
-          <line x1="70" y1="70" x2="330" y2="70" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="8,4" />
-          
-          {/* Gradient path */}
-          <defs>
-            <linearGradient id="routeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#f97316" />
-            </linearGradient>
-            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="#f97316" />
-            </marker>
-          </defs>
-          
-          {/* Route arc */}
-          <path
-            d="M 70 70 Q 200 30 330 70"
-            fill="none"
-            stroke="url(#routeGrad)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            markerEnd="url(#arrowhead)"
-          />
-          
-          {/* Truck icon along route */}
-          <text x="190" y="44" textAnchor="middle" fontSize="16" fill="#3b82f6">🚛</text>
-          
-          {/* Origin circle */}
-          <circle cx="70" cy="70" r="14" fill="#3b82f6" />
-          <text x="70" y="75" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">출</text>
-          
-          {/* Destination circle */}
-          <circle cx="330" cy="70" r="14" fill="#f97316" />
-          <text x="330" y="75" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">도</text>
-        </svg>
-        
-        {/* Labels */}
-        <div className="flex justify-between px-2 -mt-1">
-          <div className="text-center max-w-[45%]">
-            <div className="text-[10px] font-semibold text-blue-600 uppercase tracking-wide">출발</div>
-            <div className="text-xs font-semibold text-gray-800 truncate">{origin}</div>
-          </div>
-          <div className="text-center max-w-[45%]">
-            <div className="text-[10px] font-semibold text-orange-500 uppercase tracking-wide">도착</div>
-            <div className="text-xs font-semibold text-gray-800 truncate">{destination}</div>
-          </div>
+    <div className={`bg-gray-50 border border-gray-100 rounded-xl p-4 ${className}`}>
+      <svg viewBox="0 0 400 110" xmlns="http://www.w3.org/2000/svg" className="w-full">
+        <defs>
+          <linearGradient id="routeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#6366f1" />
+            <stop offset="100%" stopColor="#10b981" />
+          </linearGradient>
+          <marker id="arrowhead" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+            <polygon points="0 0, 6 2.5, 0 5" fill="#10b981" />
+          </marker>
+        </defs>
+
+        {/* Background dots */}
+        <line x1="70" y1="55" x2="330" y2="55" stroke="#e5e7eb" strokeWidth="1.5" strokeDasharray="5,4" />
+
+        {/* Route path */}
+        <path d="M 70 55 Q 200 20 330 55" fill="none" stroke="url(#routeGrad)"
+          strokeWidth="2.5" strokeLinecap="round" markerEnd="url(#arrowhead)" />
+
+        {/* Truck */}
+        <text x="195" y="32" textAnchor="middle" fontSize="14">🚛</text>
+
+        {/* Origin dot */}
+        <circle cx="70" cy="55" r="10" fill="#6366f1" />
+        <text x="70" y="59" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">출</text>
+
+        {/* Destination dot */}
+        <circle cx="330" cy="55" r="10" fill="#10b981" />
+        <text x="330" y="59" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">도</text>
+      </svg>
+
+      <div className="flex justify-between mt-2 px-1">
+        <div className="max-w-[45%]">
+          <div className="text-[9px] font-semibold text-indigo-500 uppercase tracking-wider mb-0.5">출발</div>
+          <div className="text-xs font-medium text-gray-700 truncate">{origin}</div>
+        </div>
+        <div className="max-w-[45%] text-right">
+          <div className="text-[9px] font-semibold text-emerald-500 uppercase tracking-wider mb-0.5">도착</div>
+          <div className="text-xs font-medium text-gray-700 truncate">{destination}</div>
         </div>
       </div>
     </div>

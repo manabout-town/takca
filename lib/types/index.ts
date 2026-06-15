@@ -38,10 +38,12 @@ export interface ShipperProfile {
 export interface Order {
   id: string
   shipper_id: string
+  title?: string
   origin: string
   destination: string
   cargo_type: string
   cargo_detail?: string
+  vehicle_type?: string
   price: number
   status: OrderStatus
   is_urgent: boolean
