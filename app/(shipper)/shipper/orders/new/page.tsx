@@ -6,11 +6,16 @@ import { Select } from "@/components/ui/Select"
 import { Button } from "@/components/ui/Button"
 import { CARGO_TYPES } from "@/lib/types"
 import { PageHeader } from "@/components/shared/PageHeader"
+import { RouteMap } from "@/components/shared/RouteMap"
+
+const VEHICLE_TYPES = ["1톤 트럭", "2.5톤 트럭", "5톤 트럭", "11톤 트럭", "25톤 트럭", "윙바디", "냉동 탑차", "카고 트럭", "트레일러", "상관없음"]
 
 export default function NewOrderPage() {
   const [isPending, startTransition] = useTransition()
   const [isUrgent, setIsUrgent] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [origin, setOrigin] = useState("")
+  const [destination, setDestination] = useState("")
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -29,7 +34,7 @@ export default function NewOrderPage() {
     <div className="max-w-2xl mx-auto">
       <PageHeader title="의뢰 등록" description="운송 의뢰 정보를 입력해주세요" />
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
             {error}
@@ -37,11 +42,51 @@ export default function NewOrderPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* 의뢰명 */}
+          <Input
+            name="title"
+            label="의뢰명"
+            placeholder="예: 서울-부산 전자기기 운송"
+            required
+          />
+
+          {/* 출발 / 도착 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input name="origin" label="출발지" placeholder="예: 서울시 강남구" required />
-            <Input name="destination" label="도착지" placeholder="예: 부산시 해운대구" required />
+            <div>
+              <label className="label">출발지</label>
+              <input
+                type="text"
+                name="origin"
+                className="input"
+                placeholder="예: 서울시 강남구"
+                value={origin}
+                onChange={e => setOrigin(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="label">도착지</label>
+              <input
+                type="text"
+                name="destination"
+                className="input"
+                placeholder="예: 부산시 해운대구"
+                value={destination}
+                onChange={e => setDestination(e.target.value)}
+                required
+              />
+            </div>
           </div>
 
+          {/* Route preview */}
+          {(origin || destination) && (
+            <RouteMap
+              origin={origin || "출발지 입력 중..."}
+              destination={destination || "도착지 입력 중..."}
+            />
+          )}
+
+          {/* 화물 종류 */}
           <Select
             name="cargoType"
             label="화물 종류"
@@ -50,6 +95,17 @@ export default function NewOrderPage() {
             required
           />
 
+          {/* 필요 차량 */}
+          <div>
+            <label className="label">필요 차량</label>
+            <select name="vehicleType" className="input">
+              {VEHICLE_TYPES.map(v => (
+                <option key={v} value={v}>{v}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* 화물 상세 */}
           <div>
             <label className="label">화물 상세 설명</label>
             <textarea
@@ -60,6 +116,7 @@ export default function NewOrderPage() {
             />
           </div>
 
+          {/* 금액 + 픽업 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="label">희망 금액 (원)</label>
@@ -81,7 +138,7 @@ export default function NewOrderPage() {
             />
           </div>
 
-          {/* Urgent boosting */}
+          {/* 긴급 부스팅 */}
           <div
             onClick={() => setIsUrgent(!isUrgent)}
             className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
@@ -97,21 +154,17 @@ export default function NewOrderPage() {
                 {isUrgent && <span className="text-white text-xs">✓</span>}
               </div>
               <div>
-                <div className="font-semibold text-sm">
-                  ⚡ 긴급 부스팅 추가 (+1,000원)
-                </div>
-                <div className="text-xs text-gray-500 mt-0.5">
-                  피드 상단에 노출되어 더 빠른 매칭을 받을 수 있습니다
-                </div>
+                <div className="font-semibold text-sm">⚡ 긴급 부스팅 추가 (+1,000원)</div>
+                <div className="text-xs text-gray-500 mt-0.5">피드 상단에 노출되어 더 빠른 매칭을 받을 수 있습니다</div>
               </div>
             </div>
           </div>
 
-          {/* Price summary */}
+          {/* 가격 요약 */}
           <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
             <div className="flex justify-between text-gray-600">
               <span>희망 운임</span>
-              <span>- 원</span>
+              <span>입력한 금액</span>
             </div>
             {isUrgent && (
               <div className="flex justify-between text-orange-600">
@@ -119,7 +172,7 @@ export default function NewOrderPage() {
                 <span>+ 1,000원</span>
               </div>
             )}
-            <div className="flex justify-between text-gray-500 text-xs pt-1 border-t">
+            <div className="flex justify-between text-gray-500 text-xs pt-1 border-t border-gray-200">
               <span>거래 완료 시 수수료 (4%)</span>
               <span>자동 정산</span>
             </div>

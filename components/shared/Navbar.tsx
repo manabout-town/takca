@@ -12,11 +12,12 @@ export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname()
 
   const shipperNav = [
-    { href: "/shipper/dashboard", label: "내 의뢰" },
+    { href: "/shipper/dashboard", label: "대시보드" },
     { href: "/shipper/orders/new", label: "의뢰 등록" },
     { href: "/shipper/mypage", label: "마이페이지" },
   ]
   const driverNav = [
+    { href: "/driver/dashboard", label: "대시보드" },
     { href: "/driver/feed", label: "의뢰 피드" },
     { href: "/driver/matches", label: "내 운송" },
     { href: "/driver/mypage", label: "마이페이지" },

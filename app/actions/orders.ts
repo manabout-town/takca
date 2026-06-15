@@ -15,6 +15,8 @@ export async function createOrder(formData: FormData) {
   const cargoDetail = formData.get("cargoDetail") as string
   const price = parseInt(formData.get("price") as string)
   const pickupAt = formData.get("pickupAt") as string
+  const title = formData.get("title") as string
+  const vehicleType = formData.get("vehicleType") as string
   const isUrgent = formData.get("isUrgent") === "true"
   const urgentFee = isUrgent ? 1000 : 0
 
@@ -26,6 +28,8 @@ export async function createOrder(formData: FormData) {
     cargo_detail: cargoDetail,
     price,
     pickup_at: pickupAt,
+    title,
+    vehicle_type: vehicleType,
     is_urgent: isUrgent,
     urgent_fee: urgentFee,
     status: "pending",
