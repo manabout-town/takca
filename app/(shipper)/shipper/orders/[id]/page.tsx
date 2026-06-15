@@ -184,8 +184,8 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       )}
 
       {/* 완료 확인 */}
-      {order.status === "in_progress" && (
-        <form action={async () => { "use server"; await confirmCompletion(params.id) }}>
+      {order.status === "in_progress" && activeMatch && (
+        <form action={async () => { "use server"; await confirmCompletion(activeMatch.id) }}>
           <button type="submit" className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors">
             운송 완료 확인
           </button>
