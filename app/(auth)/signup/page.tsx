@@ -7,9 +7,15 @@ import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Select } from "@/components/ui/Select"
 import { VEHICLE_TYPES } from "@/lib/types"
+import { Logo } from "@/components/shared/Logo"
 
 const SPECIAL_CHAR_RE = /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/~`]/
 const PHONE_RE = /^01[0-9]\d{7,8}$/
+
+const REGIONS = [
+  "서울","경기","인천","강원","충북","충남","대전","세종",
+  "전북","전남","광주","경북","경남","대구","울산","부산","제주"
+]
 
 function passwordStrength(pw: string): { score: number; label: string; color: string } {
   let score = 0
@@ -35,20 +41,22 @@ function SignupForm() {
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [selectedRoutes, setSelectedRoutes] = useState<string[]>([])
+
+  function toggleRoute(region: string) {
+    setSelectedRoutes(prev =>
+      prev.includes(region) ? prev.filter(r => r !== region) : [...prev, region]
+    )
+  }
 
   function validateForm(formData: FormData): boolean {
     const errors: Record<string, string> = {}
     const pw = formData.get("password") as string
     const phone = formData.get("phone") as string
-
     if (pw.length < 8) errors.password = "비밀번호는 8자 이상이어야 합니다"
     else if (!SPECIAL_CHAR_RE.test(pw)) errors.password = "특수문자를 1개 이상 포함해야 합니다"
     else if (pw !== passwordConfirm) errors.passwordConfirm = "비밀번호가 일치하지 않습니다"
-
-    if (!PHONE_RE.test(phone.replace(/-/g, ""))) {
-      errors.phone = "올바른 휴대폰 번호를 입력해주세요"
-    }
-
+    if (!PHONE_RE.test(phone.replace(/-/g, ""))) errors.phone = "올바른 휴대폰 번호를 입력해주세요"
     setFieldErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -58,13 +66,11 @@ function SignupForm() {
     setError(null)
     const formData = new FormData(e.currentTarget)
     formData.set("role", role)
+    formData.set("routeRegions", JSON.stringify(selectedRoutes))
     if (!validateForm(formData)) return
     setLoading(true)
     const result = await signUp(formData)
-    if (result?.error) {
-      setError(result.error)
-      setLoading(false)
-    }
+    if (result?.error) { setError(result.error); setLoading(false) }
   }
 
   const strength = password ? passwordStrength(password) : null
@@ -73,46 +79,35 @@ function SignupForm() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <span className="text-2xl">🚛</span>
-            <span className="text-xl font-bold text-gray-900 tracking-tight">화물로</span>
-          </Link>
+          <div className="flex justify-center mb-6"><Logo size="lg" /></div>
           <h1 className="text-2xl font-bold text-gray-900">회원가입</h1>
         </div>
 
-        {/* Role selector */}
         <div className="flex gap-1.5 mb-6 p-1.5 bg-gray-100 rounded-xl">
-          {(["shipper", "driver"] as const).map((r) => (
-            <button
-              key={r}
-              type="button"
-              onClick={() => setRole(r)}
+          {(["shipper", "driver"] as const).map(r => (
+            <button key={r} type="button" onClick={() => setRole(r)}
               className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                 role === r ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
+              }`}>
               {r === "shipper" ? "🏢 화주" : "🚛 기사"}
             </button>
           ))}
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>
-          )}
+          {error && <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input name="name" label="이름" placeholder="홍길동" required />
-            <Input name="email" type="email" label="이메일" placeholder="name@example.com" hint="가입 후 이메일 인증이 필요합니다" autoComplete="email" required />
-            <Input name="phone" type="tel" label="휴대폰 번호" placeholder="010-1234-5678" error={fieldErrors.phone} required />
+            <Input name="email" type="email" label="이메일" placeholder="name@example.com"
+              hint="가입 후 이메일 인증이 필요합니다" autoComplete="email" required />
+            <Input name="phone" type="tel" label="휴대폰 번호" placeholder="010-1234-5678"
+              error={fieldErrors.phone} required />
 
-            {/* Password */}
             <div className="space-y-2">
-              <Input
-                name="password" type="password" label="비밀번호"
+              <Input name="password" type="password" label="비밀번호"
                 placeholder="8자 이상, 특수문자 포함"
                 value={password} onChange={e => setPassword(e.target.value)}
-                error={fieldErrors.password} autoComplete="new-password" required
-              />
+                error={fieldErrors.password} autoComplete="new-password" required />
               {password && strength && (
                 <div>
                   <div className="flex gap-1 mb-1">
@@ -120,9 +115,9 @@ function SignupForm() {
                       <div key={i} className={`h-1 flex-1 rounded-full ${i <= strength.score ? strength.color : "bg-gray-200"}`} />
                     ))}
                   </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-gray-400">강도: <span className="font-medium text-gray-700">{strength.label}</span></span>
-                    <div className="flex gap-2 text-gray-400">
+                  <div className="flex justify-between text-xs text-gray-400">
+                    <span>강도: <span className="font-medium text-gray-700">{strength.label}</span></span>
+                    <div className="flex gap-2">
                       <span className={password.length >= 8 ? "text-emerald-600" : ""}>8자+</span>
                       <span className={SPECIAL_CHAR_RE.test(password) ? "text-emerald-600" : ""}>특수문자</span>
                     </div>
@@ -132,12 +127,10 @@ function SignupForm() {
             </div>
 
             <div>
-              <Input
-                name="passwordConfirm" type="password" label="비밀번호 확인"
+              <Input name="passwordConfirm" type="password" label="비밀번호 확인"
                 placeholder="비밀번호 재입력"
                 value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)}
-                error={fieldErrors.passwordConfirm} autoComplete="new-password" required
-              />
+                error={fieldErrors.passwordConfirm} autoComplete="new-password" required />
               {passwordConfirm && password === passwordConfirm && !fieldErrors.passwordConfirm && (
                 <p className="mt-1 text-xs text-emerald-600">✓ 일치합니다</p>
               )}
@@ -147,9 +140,34 @@ function SignupForm() {
               <>
                 <Input name="vehicleNumber" label="차량번호" placeholder="12가 3456" required />
                 <Select name="vehicleType" label="차량 종류"
-                  options={VEHICLE_TYPES.map((v) => ({ value: v, label: v }))}
-                  placeholder="차량 종류 선택" required
-                />
+                  options={VEHICLE_TYPES.map(v => ({ value: v, label: v }))}
+                  placeholder="차량 종류 선택" required />
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">거주지 (활동 지역)</label>
+                  <Select name="homeRegion" label=""
+                    options={REGIONS.map(r => ({ value: r, label: r }))}
+                    placeholder="거주지 선택" required />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">주요 운송 루트 (복수 선택)</label>
+                  <div className="flex flex-wrap gap-2">
+                    {REGIONS.map(region => (
+                      <button key={region} type="button" onClick={() => toggleRoute(region)}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                          selectedRoutes.includes(region)
+                            ? "bg-indigo-600 text-white border-indigo-600"
+                            : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"
+                        }`}>
+                        {region}
+                      </button>
+                    ))}
+                  </div>
+                  {selectedRoutes.length === 0 && (
+                    <p className="mt-1 text-xs text-gray-400">운행 가능한 지역을 선택하세요</p>
+                  )}
+                </div>
               </>
             )}
 
@@ -158,11 +176,6 @@ function SignupForm() {
                 {role === "shipper" ? "화주로 가입하기" : "기사로 가입하기"}
               </Button>
             </div>
-            <p className="text-xs text-gray-400 text-center">
-              <a href="#" className="hover:text-gray-600">이용약관</a>
-              {" · "}
-              <a href="#" className="hover:text-gray-600">개인정보처리방침</a>에 동의하는 것으로 간주됩니다.
-            </p>
           </form>
 
           <div className="mt-5 pt-5 border-t border-gray-100 text-center text-sm text-gray-500">

@@ -1,173 +1,148 @@
 import { createClient } from "@/lib/supabase/server"
-import { redirect, notFound } from "next/navigation"
+import { notFound } from "next/navigation"
 import Link from "next/link"
 import { formatKRW, formatDate } from "@/lib/utils/format"
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/lib/utils/status"
 import { cancelOrder, confirmCompletion } from "@/app/actions/orders"
-import { Card, CardBody, CardHeader } from "@/components/ui/Card"
-import { MapPin, Package, Calendar, User, MessageCircle, AlertTriangle } from "lucide-react"
+import { approveBid, rejectBid } from "@/app/actions/bids"
 
 export default async function ShipperOrderDetail({ params }: { params: { id: string } }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { data: order } = await supabase
-    .from("orders")
-    .select(`
+  const [{ data: order }, { data: bids }] = await Promise.all([
+    supabase.from("orders").select(`
       *,
-      matches(
-        *,
-        drivers:users!driver_id(
-          *,
-          driver_profiles(vehicle_type, vehicle_number, rating_avg, rating_count)
-        )
-      )
-    `)
-    .eq("id", params.id)
-    .eq("shipper_id", user!.id)
-    .single()
+      matches(*, drivers:users!driver_id(*, driver_profiles(vehicle_type, vehicle_number, home_region, route_regions, rating_avg, rating_count)))
+    `).eq("id", params.id).eq("shipper_id", user!.id).single(),
+    supabase.from("bids").select(`*, drivers:users!driver_id(name, phone, driver_profiles(vehicle_type, vehicle_number, home_region, route_regions, rating_avg))`).eq("order_id", params.id).order("created_at", { ascending: true }),
+  ])
 
   if (!order) notFound()
 
-  const activeMatch = order.matches?.find(
-    (m: any) => !["cancelled"].includes(m.status)
-  )
-  const driverProfile = activeMatch?.drivers?.driver_profiles
+  const activeMatch = order.matches?.find((m: any) => !["cancelled"].includes(m.status))
+  const pendingBids = bids?.filter((b: any) => b.status === "pending") || []
+  const acceptedBid = bids?.find((b: any) => b.status === "accepted")
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/shipper/dashboard" className="text-gray-500 hover:text-gray-700 text-sm">
-          ← 내 의뢰
-        </Link>
-        <span className={`badge ${ORDER_STATUS_COLOR[order.status as keyof typeof ORDER_STATUS_COLOR]}`}>
+    <div className="max-w-2xl mx-auto space-y-4">
+      <div className="flex items-center gap-3">
+        <Link href="/shipper/dashboard" className="text-gray-500 hover:text-gray-700 text-sm">← 내 의뢰</Link>
+        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${ORDER_STATUS_COLOR[order.status as keyof typeof ORDER_STATUS_COLOR] || "bg-gray-100 text-gray-700"}`}>
           {ORDER_STATUS_LABEL[order.status as keyof typeof ORDER_STATUS_LABEL]}
         </span>
-        {order.is_urgent && (
-          <span className="badge bg-orange-100 text-orange-700">⚡ 긴급</span>
-        )}
+        {order.is_urgent && <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">⚡ 긴급</span>}
       </div>
 
-      <Card className="mb-4">
-        <CardHeader>
-          <h1 className="text-xl font-bold">운송 의뢰 상세</h1>
-        </CardHeader>
-        <CardBody className="space-y-4">
-          <div className="flex items-start gap-3">
-            <MapPin className="text-blue-500 mt-0.5 shrink-0" size={18} />
-            <div>
-              <div className="text-sm text-gray-500">구간</div>
-              <div className="font-semibold">{order.origin} → {order.destination}</div>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <Package className="text-green-500 mt-0.5 shrink-0" size={18} />
-            <div>
-              <div className="text-sm text-gray-500">화물</div>
-              <div className="font-semibold">{order.cargo_type}</div>
-              {order.cargo_detail && <div className="text-sm text-gray-600 mt-1">{order.cargo_detail}</div>}
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <Calendar className="text-purple-500 mt-0.5 shrink-0" size={18} />
-            <div>
-              <div className="text-sm text-gray-500">픽업 일시</div>
-              <div className="font-semibold">{formatDate(order.pickup_at)}</div>
-            </div>
-          </div>
-          <div className="pt-2 border-t">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-500">희망 금액</span>
-              <span className="text-xl font-bold text-blue-700">{formatKRW(order.price)}</span>
-            </div>
-            {order.is_urgent && (
-              <div className="flex justify-between items-center mt-1 text-sm">
-                <span className="text-orange-600">긴급 부스팅</span>
-                <span className="text-orange-600">+{formatKRW(order.urgent_fee)}</span>
-              </div>
-            )}
-          </div>
-        </CardBody>
-      </Card>
+      {/* 의뢰 정보 */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h1 className="text-xl font-bold mb-4">{order.title || "운송 의뢰"}</h1>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div><p className="text-xs text-gray-500 mb-1">출발지</p><p className="font-semibold">{order.origin}</p></div>
+          <div><p className="text-xs text-gray-500 mb-1">도착지</p><p className="font-semibold">{order.destination}</p></div>
+          <div><p className="text-xs text-gray-500 mb-1">화물 종류</p><p className="font-medium">{order.cargo_type}</p></div>
+          <div><p className="text-xs text-gray-500 mb-1">필요 차량</p><p className="font-medium">{order.vehicle_type || "무관"}</p></div>
+          <div><p className="text-xs text-gray-500 mb-1">희망 운임</p><p className="font-bold text-indigo-700">{formatKRW(order.price)}</p></div>
+          <div><p className="text-xs text-gray-500 mb-1">픽업 일시</p><p className="font-medium">{formatDate(order.pickup_at)}</p></div>
+        </div>
+      </div>
 
-      {activeMatch && (
-        <Card className="mb-4">
-          <CardHeader>
-            <h2 className="font-bold flex items-center gap-2">
-              <User size={16} /> 매칭된 기사
-            </h2>
-          </CardHeader>
-          <CardBody>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-semibold">{activeMatch.drivers?.name}</div>
-                <div className="text-sm text-gray-500">
-                  {driverProfile?.vehicle_type} | {driverProfile?.vehicle_number}
-                </div>
-                <div className="flex items-center gap-1 mt-1">
-                  <span className="text-yellow-500">★</span>
-                  <span className="text-sm font-medium">
-                    {driverProfile?.rating_avg?.toFixed(1) || "신규"}
-                  </span>
-                  <span className="text-sm text-gray-400">
-                    ({driverProfile?.rating_count || 0}건)
-                  </span>
-                </div>
-              </div>
-              <Link
-                href={`/chat/${activeMatch.id}`}
-                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700"
-              >
-                <MessageCircle size={16} /> 채팅
-              </Link>
-            </div>
-          </CardBody>
-        </Card>
-      )}
+      {/* 입찰 목록 (pending 상태일 때) */}
+      {order.status === "pending" && (
+        <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <h2 className="font-bold text-gray-900 mb-4">
+            입찰 현황 <span className="text-indigo-600 ml-1">{pendingBids.length}건</span>
+          </h2>
 
-      {activeMatch && order.status === "matched" && (
-        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
-          <div>
-            <div className="font-semibold text-blue-800 text-sm">기사 매칭 완료!</div>
-            <div className="text-xs text-blue-600 mt-0.5">에스크로 결제 후 운송이 시작됩니다</div>
-          </div>
-          <Link
-            href={`/shipper/orders/${order.id}/pay`}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700"
-          >
-            결제하기
-          </Link>
+          {pendingBids.length === 0 ? (
+            <div className="text-center py-8 text-gray-400">
+              <p className="text-2xl mb-2">🕐</p>
+              <p className="text-sm">아직 입찰한 기사가 없습니다</p>
+              <p className="text-xs mt-1">기사들이 의뢰를 확인하고 입찰할 거예요</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {pendingBids.map((bid: any) => {
+                const dp = bid.drivers?.driver_profiles
+                return (
+                  <div key={bid.id} className="border border-gray-100 rounded-xl p-4 hover:border-indigo-200 transition-colors">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <p className="font-semibold text-gray-900">{bid.drivers?.name}</p>
+                        <p className="text-xs text-gray-500">{dp?.vehicle_type} · {dp?.vehicle_number}</p>
+                        {dp?.home_region && (
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            📍 {dp.home_region}
+                            {dp.route_regions?.length > 0 && ` · 운송루트: ${dp.route_regions.join(", ")}`}
+                          </p>
+                        )}
+                        {dp?.rating_avg > 0 && (
+                          <p className="text-xs text-amber-500 mt-0.5">★ {dp.rating_avg.toFixed(1)}</p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-indigo-700 text-lg">{formatKRW(bid.price)}</p>
+                        <p className="text-xs text-gray-400">{formatDate(bid.created_at)}</p>
+                      </div>
+                    </div>
+                    {bid.message && (
+                      <p className="text-sm text-gray-600 bg-gray-50 rounded-lg px-3 py-2 mb-3">{bid.message}</p>
+                    )}
+                    <div className="flex gap-2">
+                      <form action={async () => { "use server"; await approveBid(bid.id, order.id) }} className="flex-1">
+                        <button type="submit" className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                          ✓ 승인하기
+                        </button>
+                      </form>
+                      <form action={async () => { "use server"; await rejectBid(bid.id, order.id) }}>
+                        <button type="submit" className="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                          거절
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
 
-      <div className="flex gap-3">
-        {order.status === "pending" && (
-          <form action={cancelOrder.bind(null, order.id)} className="flex-1">
-            <button type="submit" className="btn-danger w-full py-2.5 rounded-lg text-sm">
-              의뢰 취소
-            </button>
-          </form>
-        )}
-        {activeMatch && order.status === "in_progress" && (
-          <>
-            <form action={confirmCompletion.bind(null, activeMatch.id)} className="flex-1">
-              <button type="submit" className="btn-primary w-full py-2.5 rounded-lg text-sm">
-                ✓ 운송 완료 확인
-              </button>
-            </form>
-            <Link
-              href={`/shipper/orders/${order.id}/dispute?matchId=${activeMatch.id}`}
-              className="flex items-center gap-1 px-4 py-2.5 rounded-lg text-sm border border-red-300 text-red-600 hover:bg-red-50"
-            >
-              <AlertTriangle size={14} /> 분쟁
+      {/* 매칭된 기사 정보 */}
+      {activeMatch && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6">
+          <h2 className="font-bold text-emerald-800 mb-3">✓ 매칭된 기사</h2>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-lg">🚛</div>
+            <div>
+              <p className="font-semibold">{activeMatch.drivers?.name}</p>
+              <p className="text-sm text-gray-600">{activeMatch.drivers?.driver_profiles?.vehicle_type} · {activeMatch.drivers?.driver_profiles?.vehicle_number}</p>
+              <p className="text-sm text-gray-500">{activeMatch.drivers?.phone}</p>
+            </div>
+          </div>
+          {["accepted","in_progress"].includes(activeMatch.status) && (
+            <Link href={`/chat/${activeMatch.id}`} className="mt-4 flex items-center justify-center gap-2 py-2 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors">
+              💬 기사와 채팅하기
             </Link>
-          </>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
-      <div className="mt-4 text-xs text-gray-400 text-center">
-        의뢰 등록일: {formatDate(order.created_at)}
-      </div>
+      {/* 완료 확인 / 취소 버튼 */}
+      {order.status === "in_progress" && (
+        <form action={async () => { "use server"; await confirmCompletion(params.id) }}>
+          <button type="submit" className="w-full py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-colors">
+            운송 완료 확인
+          </button>
+        </form>
+      )}
+      {order.status === "pending" && (
+        <form action={async () => { "use server"; await cancelOrder(params.id) }}>
+          <button type="submit" className="w-full py-2 border border-gray-200 text-gray-500 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors">
+            의뢰 취소
+          </button>
+        </form>
+      )}
     </div>
   )
 }

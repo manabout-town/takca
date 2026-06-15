@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "@/app/actions/auth"
+import { Logo } from "@/components/shared/Logo"
 import type { User } from "@/lib/types"
 
 interface NavbarProps { user: User }
@@ -31,22 +32,22 @@ export function Navbar({ user }: NavbarProps) {
     : adminNav
 
   const roleBadge = user.role === "shipper" ? "화주" : user.role === "driver" ? "기사" : "관리자"
+  const roleColor = user.role === "shipper" ? "bg-indigo-50 text-indigo-700"
+    : user.role === "driver" ? "bg-emerald-50 text-emerald-700"
+    : "bg-amber-50 text-amber-700"
 
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-lg">🚛</span>
-            <span className="font-bold text-gray-900 text-base tracking-tight">화물로</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-0.5">
-            {nav.map((item) => (
+          <Logo />
+          <div className="hidden md:flex items-center gap-1">
+            {nav.map(item => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  pathname.startsWith(item.href)
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  pathname === item.href
                     ? "bg-gray-100 text-gray-900"
                     : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                 }`}
@@ -57,14 +58,12 @@ export function Navbar({ user }: NavbarProps) {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-700 font-medium">{user.name}</span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">
-              {roleBadge}
-            </span>
+          <div className="hidden sm:flex items-center gap-2">
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${roleColor}`}>{roleBadge}</span>
+            <span className="text-sm font-medium text-gray-700">{user.name}</span>
           </div>
           <form action={signOut}>
-            <button type="submit" className="text-sm text-gray-400 hover:text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors">
+            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors px-2 py-1 rounded hover:bg-gray-100">
               로그아웃
             </button>
           </form>

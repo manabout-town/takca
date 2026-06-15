@@ -1,0 +1,174 @@
+"use client"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { submitBid } from "@/app/actions/bids"
+import { formatKRW, formatDate, calculateFee } from "@/lib/utils/format"
+import Link from "next/link"
+
+interface Order {
+  id: string; title?: string; origin: string; destination: string
+  cargo_type: string; cargo_detail?: string; vehicle_type?: string
+  price: number; status: string; is_urgent: boolean; pickup_at: string
+  shippers?: { name: string; phone?: string }
+}
+interface Bid { id: string; driver_id: string; status: string; price: number }
+
+interface Props {
+  order: Order
+  myBid: Bid | null
+  canBid: boolean
+  driverProfile?: { home_region?: string; route_regions?: string[] } | null
+}
+
+export function DriverOrderDetailClient({ order, myBid, canBid, driverProfile }: Props) {
+  const router = useRouter()
+  const [bidPrice, setBidPrice] = useState(order.price)
+  const [message, setMessage] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+
+  async function handleBid(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    const fd = new FormData()
+    fd.set("orderId", order.id)
+    fd.set("price", bidPrice.toString())
+    fd.set("message", message)
+    const result = await submitBid(fd)
+    setLoading(false)
+    if (result?.error) { setError(result.error); return }
+    setSuccess(true)
+    router.refresh()
+  }
+
+  const { driverPayout } = calculateFee(bidPrice, 0.04)
+
+  const bidStatusBadge = myBid?.status === "accepted"
+    ? <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">✓ 입찰 승인됨</span>
+    : myBid?.status === "rejected"
+    ? <span className="px-2 py-1 bg-red-100 text-red-600 rounded-full text-xs font-semibold">✗ 입찰 거절됨</span>
+    : myBid
+    ? <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold">⏳ 화주 검토 중</span>
+    : null
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-4">
+      <Link href="/driver/feed" className="text-sm text-gray-500 hover:text-gray-700 inline-block">← 의뢰 피드</Link>
+
+      <div className="flex items-center gap-2 flex-wrap">
+        {order.is_urgent && <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">⚡ 긴급</span>}
+        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+          {order.status === "pending" ? "매칭 대기" : "마감"}
+        </span>
+        {bidStatusBadge}
+      </div>
+
+      {/* 의뢰 정보 */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
+        <h1 className="text-xl font-bold">{order.title || "운송 의뢰"}</h1>
+
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className="text-gray-500 text-xs mb-1">출발지</p>
+            <p className="font-semibold">{order.origin}</p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs mb-1">도착지</p>
+            <p className="font-semibold">{order.destination}</p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs mb-1">화물 종류</p>
+            <p className="font-medium">{order.cargo_type}</p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs mb-1">필요 차량</p>
+            <p className="font-medium">{order.vehicle_type || "무관"}</p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs mb-1">희망 운임</p>
+            <p className="font-bold text-indigo-700">{formatKRW(order.price)}</p>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs mb-1">픽업 일시</p>
+            <p className="font-medium">{formatDate(order.pickup_at)}</p>
+          </div>
+        </div>
+
+        {order.cargo_detail && (
+          <div className="pt-3 border-t border-gray-100">
+            <p className="text-xs text-gray-500 mb-1">화물 상세</p>
+            <p className="text-sm text-gray-700">{order.cargo_detail}</p>
+          </div>
+        )}
+      </div>
+
+      {/* 입찰 폼 또는 상태 */}
+      {canBid && !myBid && !success ? (
+        <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <h2 className="font-bold text-gray-900 mb-4">입찰하기</h2>
+          <form onSubmit={handleBid} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">입찰 금액</label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={bidPrice}
+                  onChange={e => setBidPrice(Number(e.target.value))}
+                  min={1000}
+                  step={1000}
+                  className="input pr-8 w-full"
+                  required
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">원</span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                플랫폼 수수료 4% 제외 후 수령액: <span className="font-semibold text-emerald-700">{formatKRW(driverPayout)}</span>
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">화주에게 한마디 <span className="text-gray-400 font-normal">(선택)</span></label>
+              <textarea
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                placeholder="운송 경험, 차량 상태, 픽업 가능 시간 등을 적어주세요"
+                className="input w-full h-24 resize-none"
+                maxLength={300}
+              />
+            </div>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            <button type="submit" disabled={loading}
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50">
+              {loading ? "입찰 중..." : "입찰하기"}
+            </button>
+          </form>
+        </div>
+      ) : success || (myBid && myBid.status === "pending") ? (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+          <div className="text-2xl mb-2">⏳</div>
+          <p className="font-semibold text-amber-800">입찰 완료 — 화주 검토 중</p>
+          <p className="text-sm text-amber-600 mt-1">화주가 승인하면 운송이 시작됩니다</p>
+          <p className="text-sm font-bold text-amber-800 mt-2">입찰 금액: {formatKRW(myBid?.price || bidPrice)}</p>
+        </div>
+      ) : myBid?.status === "accepted" ? (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
+          <div className="text-2xl mb-2">✅</div>
+          <p className="font-semibold text-emerald-800">입찰이 승인되었습니다!</p>
+          <p className="text-sm text-emerald-600 mt-1">내 운송 페이지에서 진행 상황을 확인하세요</p>
+          <Link href="/driver/matches" className="mt-3 inline-block px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700">
+            내 운송 보기
+          </Link>
+        </div>
+      ) : myBid?.status === "rejected" ? (
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center">
+          <p className="text-gray-600">이번 의뢰는 다른 기사님이 선정되었습니다.</p>
+        </div>
+      ) : !canBid && !myBid ? (
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center">
+          <p className="text-gray-600">이미 마감된 의뢰입니다.</p>
+        </div>
+      ) : null}
+    </div>
+  )
+}
