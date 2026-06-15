@@ -3,6 +3,7 @@ import { useState, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { signUp } from "@/app/actions/auth"
+import { sendPhoneOtp, verifyPhoneOtp } from "@/app/actions/phone"
 import { createClient } from "@/lib/supabase/client"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
@@ -46,6 +47,14 @@ function SignupForm() {
   const [passwordConfirm, setPasswordConfirm] = useState("")
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [selectedRoutes, setSelectedRoutes] = useState<string[]>([])
+  // 휴대폰 인증
+  const [phone, setPhone] = useState("")
+  const [otpSent, setOtpSent] = useState(false)
+  const [otpCode, setOtpCode] = useState("")
+  const [phoneVerified, setPhoneVerified] = useState(false)
+  const [phoneLoading, setPhoneLoading] = useState(false)
+  const [phoneError, setPhoneError] = useState<string | null>(null)
+  const [otpDevCode, setOtpDevCode] = useState<string | undefined>()
 
   function toggleRoute(region: string) {
     setSelectedRoutes(prev =>
@@ -53,14 +62,35 @@ function SignupForm() {
     )
   }
 
+  async function handleSendOtp() {
+    setPhoneError(null)
+    const digits = phone.replace(/\D/g, "")
+    if (!PHONE_RE.test(digits)) { setPhoneError("올바른 휴대폰 번호를 입력해주세요"); return }
+    setPhoneLoading(true)
+    const result = await sendPhoneOtp(digits)
+    setPhoneLoading(false)
+    if (result.error) { setPhoneError(result.error); return }
+    setOtpSent(true)
+    if (result.devCode) setOtpDevCode(result.devCode)
+  }
+
+  async function handleVerifyOtp() {
+    setPhoneError(null)
+    setPhoneLoading(true)
+    const digits = phone.replace(/\D/g, "")
+    const result = await verifyPhoneOtp(digits, otpCode)
+    setPhoneLoading(false)
+    if (result.error) { setPhoneError(result.error); return }
+    setPhoneVerified(true)
+  }
+
   function validateForm(formData: FormData): boolean {
     const errors: Record<string, string> = {}
     const pw = formData.get("password") as string
-    const phone = formData.get("phone") as string
     if (pw.length < 8) errors.password = "비밀번호는 8자 이상이어야 합니다"
     else if (!SPECIAL_CHAR_RE.test(pw)) errors.password = "특수문자를 1개 이상 포함해야 합니다"
     else if (pw !== passwordConfirm) errors.passwordConfirm = "비밀번호가 일치하지 않습니다"
-    if (!PHONE_RE.test(phone.replace(/-/g, ""))) errors.phone = "올바른 휴대폰 번호를 입력해주세요"
+    if (!phoneVerified) errors.phone = "휴대폰 본인인증을 완료해주세요"
     setFieldErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -153,8 +183,75 @@ function SignupForm() {
             <Input name="name" label="이름" placeholder="홍길동" required />
             <Input name="email" type="email" label="이메일" placeholder="name@example.com"
               hint="가입 후 이메일 인증이 필요합니다" autoComplete="email" required />
-            <Input name="phone" type="tel" label="휴대폰 번호" placeholder="010-1234-5678"
-              error={fieldErrors.phone} required />
+            {/* 휴대폰 본인인증 */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                휴대폰 번호 <span className="text-red-500">*</span>
+              </label>
+              <div className="flex gap-2">
+                <input
+                  name="phone"
+                  type="tel"
+                  placeholder="010-1234-5678"
+                  value={phone}
+                  onChange={e => { setPhone(e.target.value); setOtpSent(false); setPhoneVerified(false) }}
+                  disabled={phoneVerified}
+                  className={`flex-1 px-3.5 py-2.5 border rounded-xl text-sm transition-all outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
+                    phoneVerified ? "bg-emerald-50 border-emerald-300 text-emerald-700" :
+                    fieldErrors.phone ? "border-red-300 bg-red-50" : "border-gray-200 bg-white"
+                  }`}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={phoneLoading || phoneVerified}
+                  className="px-4 py-2.5 bg-gray-900 hover:bg-gray-700 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
+                >
+                  {phoneLoading ? "전송 중..." : otpSent ? "재전송" : "인증번호 받기"}
+                </button>
+              </div>
+              {phoneVerified && (
+                <p className="mt-1 text-xs text-emerald-600 font-medium">✓ 인증 완료</p>
+              )}
+              {fieldErrors.phone && !phoneVerified && (
+                <p className="mt-1 text-xs text-red-500">{fieldErrors.phone}</p>
+              )}
+
+              {/* OTP 입력 */}
+              {otpSent && !phoneVerified && (
+                <div className="mt-2">
+                  {otpDevCode && (
+                    <div className="mb-2 p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700">
+                      [개발 모드] 인증번호: <strong>{otpDevCode}</strong>
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      placeholder="인증번호 6자리"
+                      value={otpCode}
+                      onChange={e => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                      className="flex-1 px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 tracking-widest"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleVerifyOtp}
+                      disabled={phoneLoading || otpCode.length !== 6}
+                      className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
+                    >
+                      {phoneLoading ? "확인 중..." : "인증 확인"}
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-gray-400">인증번호는 5분 이내에 유효합니다</p>
+                </div>
+              )}
+              {phoneError && (
+                <p className="mt-1 text-xs text-red-500">{phoneError}</p>
+              )}
+            </div>
 
             <div className="space-y-2">
               <Input name="password" type="password" label="비밀번호"

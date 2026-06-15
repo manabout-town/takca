@@ -101,19 +101,22 @@ export async function confirmStart(matchId: string) {
 
 export async function requestCompletion(matchId: string) {
   const supabase = await createClient()
+  const service = createServiceClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "로그인이 필요합니다" }
 
-  // Mark as completion requested via chat system message
   const { data: match } = await supabase
     .from("matches")
-    .select("order_id")
+    .select("order_id, orders!inner(shipper_id, origin, destination)")
     .eq("id", matchId)
     .single()
 
   if (!match) return { error: "매칭을 찾을 수 없습니다" }
 
-  await supabase.from("chats").insert({
+  const { data: driver } = await supabase.from("users").select("name").eq("id", user.id).single()
+
+  // 채팅에 시스템 메시지 삽입 (트리거가 화주에게 알림 전송)
+  await service.from("chats").insert({
     match_id: matchId,
     sender_id: user.id,
     message: "SYSTEM:COMPLETION_REQUESTED",
@@ -121,6 +124,7 @@ export async function requestCompletion(matchId: string) {
   })
 
   revalidatePath(`/chat/${matchId}`)
+  revalidatePath(`/shipper/orders/${match.order_id}`)
   return { success: true }
 }
 

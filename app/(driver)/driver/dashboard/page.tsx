@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { EmptyState } from "@/components/shared/EmptyState"
-import { RouteMap } from "@/components/shared/RouteMap"
+import { KakaoRouteMap } from "@/components/shared/KakaoRouteMap"
 import { DriverRankBadge } from "@/components/shared/DriverRankBadge"
 import { formatKRW } from "@/lib/utils/format"
 import Link from "next/link"
@@ -83,32 +83,50 @@ export default async function DriverDashboardPage() {
 
       {/* Active match with route map */}
       {activeMatch && (
-        <div className="bg-white border border-gray-200 rounded-2xl p-5">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h2 className="font-semibold text-gray-900">{(activeMatch.orders as any)?.title || "진행 중인 운송"}</h2>
-              <div className="flex items-center gap-1.5 mt-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-                <span className="text-xs text-gray-500">{activeMatch.status === "in_progress" ? "운송 중" : "매칭됨"}</span>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+          {/* 상태 배너 */}
+          <div className={`px-5 py-3 flex items-center justify-between ${
+            activeMatch.status === "in_progress"
+              ? "bg-indigo-600 text-white"
+              : "bg-amber-50 border-b border-amber-100"
+          }`}>
+            <div className="flex items-center gap-2">
+              <span className={`text-sm font-semibold ${activeMatch.status === "in_progress" ? "text-white" : "text-amber-800"}`}>
+                {activeMatch.status === "in_progress" ? "🚚 운송 중" : "✓ 매칭 완료 · 운송 대기"}
+              </span>
             </div>
-            <span className="text-sm font-semibold text-emerald-600">
+            <span className={`text-sm font-bold ${activeMatch.status === "in_progress" ? "text-indigo-100" : "text-amber-700"}`}>
               {formatKRW(Math.round(((activeMatch.orders as any)?.price || 0) * 0.96))}
             </span>
           </div>
-          <RouteMap
-            origin={(activeMatch.orders as any)?.origin || ""}
-            destination={(activeMatch.orders as any)?.destination || ""}
-          />
-          <div className="mt-3 flex gap-2">
-            <Link href={`/chat/${activeMatch.id}`}
-              className="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-center py-2.5 rounded-xl text-sm font-semibold transition-colors">
-              채팅하기
-            </Link>
-            <Link href="/driver/matches"
-              className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 text-center py-2.5 rounded-xl text-sm font-semibold transition-colors">
-              상세 보기
-            </Link>
+
+          <div className="p-5">
+            <div className="mb-1">
+              <p className="font-semibold text-gray-900 text-sm">{(activeMatch.orders as any)?.title || "운송 의뢰"}</p>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {(activeMatch.orders as any)?.origin} → {(activeMatch.orders as any)?.destination}
+              </p>
+            </div>
+
+            {/* 카카오 지도 */}
+            <div className="mt-4">
+              <KakaoRouteMap
+                origin={(activeMatch.orders as any)?.origin || ""}
+                destination={(activeMatch.orders as any)?.destination || ""}
+              />
+            </div>
+
+            {/* 액션 버튼 */}
+            <div className="mt-3 flex gap-2">
+              <Link href={`/chat/${activeMatch.id}`}
+                className="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-center py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                💬 채팅하기
+              </Link>
+              <Link href="/driver/matches"
+                className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 text-center rounded-xl text-sm font-semibold transition-colors">
+                상세
+              </Link>
+            </div>
           </div>
         </div>
       )}
