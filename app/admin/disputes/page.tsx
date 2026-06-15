@@ -34,14 +34,14 @@ export default async function AdminDisputesPage() {
                 <td className="px-4 py-3">
                   <span className={`badge ${
                     d.status === "resolved" ? "bg-green-100 text-green-700" :
-                    d.status === "investigating" ? "bg-blue-100 text-blue-700" :
+                    d.status === "investigating" ? "bg-indigo-100 text-indigo-700" :
                     "bg-red-100 text-red-700"
                   }`}>
                     {d.status === "open" ? "미처리" : d.status === "investigating" ? "조사중" : "해결됨"}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <Link href={`/admin/disputes/${d.id}`} className="text-blue-600 hover:underline text-xs">
+                  <Link href={`/admin/disputes/${d.id}`} className="text-indigo-600 hover:underline text-xs">
                     상세
                   </Link>
                 </td>

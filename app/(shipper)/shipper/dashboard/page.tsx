@@ -1,8 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { RouteMap } from "@/components/shared/RouteMap"
+import { AvailableDriversBanner } from "@/components/shared/AvailableDriversBanner"
 import { formatKRW } from "@/lib/utils/format"
 import Link from "next/link"
+import { Suspense } from "react"
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "대기 중", matched: "매칭됨", in_progress: "운송 중",
@@ -97,6 +99,11 @@ export default async function ShipperDashboardPage() {
           </Link>
         ))}
       </div>
+
+      {/* Available drivers banner */}
+      <Suspense fallback={null}>
+        <AvailableDriversBanner />
+      </Suspense>
 
       {/* Order list */}
       <div>

@@ -122,6 +122,19 @@ export const CARGO_TYPES = [
   '기타',
 ] as const
 
+export type NotificationType = 'match_request' | 'order_status' | 'chat' | 'escrow' | 'dispute'
+
+export interface Notification {
+  id: string
+  user_id: string
+  type: NotificationType
+  title: string
+  body: string
+  link?: string
+  is_read: boolean
+  created_at: string
+}
+
 export const VEHICLE_TYPES = [
   '다마스',
   '라보',

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { RouteMap } from "@/components/shared/RouteMap"
+import { DriverRankBadge } from "@/components/shared/DriverRankBadge"
 import { formatKRW } from "@/lib/utils/format"
 import Link from "next/link"
 
@@ -37,7 +38,9 @@ export default async function DriverDashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-gray-900">{profile?.name || "기사"}님, 안녕하세요</h1>
-          <p className="text-sm text-gray-400 mt-0.5">기사 대시보드</p>
+          <div className="mt-1.5">
+            <DriverRankBadge completedCount={completedMatches} size="sm" showProgress={false} />
+          </div>
         </div>
         <Link href="/driver/feed" className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
           의뢰 피드

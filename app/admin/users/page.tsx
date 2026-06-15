@@ -2,6 +2,19 @@ import { createClient } from "@/lib/supabase/server"
 import { formatDate } from "@/lib/utils/format"
 import { PageHeader } from "@/components/shared/PageHeader"
 
+const ROLE_LABEL: Record<string, string> = { shipper: "화주", driver: "기사", admin: "관리자" }
+const ROLE_STYLE: Record<string, string> = {
+  admin: "bg-indigo-100 text-indigo-700",
+  driver: "bg-emerald-100 text-emerald-700",
+  shipper: "bg-sky-100 text-sky-700",
+}
+const STATUS_LABEL: Record<string, string> = { active: "활성", suspended: "정지", pending: "대기" }
+const STATUS_STYLE: Record<string, string> = {
+  active: "bg-emerald-100 text-emerald-700",
+  suspended: "bg-red-100 text-red-700",
+  pending: "bg-gray-100 text-gray-500",
+}
+
 export default async function AdminUsersPage() {
   const supabase = await createClient()
   const { data: users } = await supabase
@@ -12,44 +25,41 @@ export default async function AdminUsersPage() {
   return (
     <div>
       <PageHeader title="회원 관리" description={`총 ${users?.length || 0}명`} />
-      <div className="bg-white rounded-xl border overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              {["이름","이메일","연락처","역할","상태","가입일"].map(h => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500">{h}</th>
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-100">
+              {["이름", "이메일", "연락처", "역할", "상태", "가입일"].map(h => (
+                <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-400 tracking-wide">
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-gray-50">
             {users?.map((u: any) => (
-              <tr key={u.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium">{u.name}</td>
-                <td className="px-4 py-3 text-gray-600">{u.email}</td>
-                <td className="px-4 py-3 text-gray-600">{u.phone || "-"}</td>
-                <td className="px-4 py-3">
-                  <span className={`badge ${
-                    u.role === "admin" ? "bg-purple-100 text-purple-700" :
-                    u.role === "driver" ? "bg-green-100 text-green-700" :
-                    "bg-blue-100 text-blue-700"
-                  }`}>
-                    {u.role === "shipper" ? "화주" : u.role === "driver" ? "기사" : "관리자"}
+              <tr key={u.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-5 py-3.5 font-medium text-gray-900">{u.name}</td>
+                <td className="px-5 py-3.5 text-gray-500">{u.email}</td>
+                <td className="px-5 py-3.5 text-gray-500">{u.phone || "—"}</td>
+                <td className="px-5 py-3.5">
+                  <span className={`badge ${ROLE_STYLE[u.role] || "bg-gray-100 text-gray-600"}`}>
+                    {ROLE_LABEL[u.role] || u.role}
                   </span>
                 </td>
-                <td className="px-4 py-3">
-                  <span className={`badge ${
-                    u.status === "active" ? "bg-green-100 text-green-700" :
-                    u.status === "suspended" ? "bg-red-100 text-red-700" :
-                    "bg-gray-100 text-gray-700"
-                  }`}>
-                    {u.status === "active" ? "활성" : u.status === "suspended" ? "정지" : "대기"}
+                <td className="px-5 py-3.5">
+                  <span className={`badge ${STATUS_STYLE[u.status] || "bg-gray-100 text-gray-500"}`}>
+                    {STATUS_LABEL[u.status] || u.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-gray-500">{formatDate(u.created_at)}</td>
+                <td className="px-5 py-3.5 text-gray-400 text-xs">{formatDate(u.created_at)}</td>
               </tr>
             ))}
           </tbody>
         </table>
+        {(!users || users.length === 0) && (
+          <div className="py-12 text-center text-sm text-gray-400">등록된 회원이 없습니다</div>
+        )}
       </div>
     </div>
   )

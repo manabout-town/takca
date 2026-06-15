@@ -104,10 +104,10 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
           </div>
           <div className="flex justify-between font-bold text-base pt-1 border-t">
             <span>기사 지급액</span>
-            <span className="text-blue-700">{formatKRW(driverPayout)}</span>
+            <span className="text-indigo-700">{formatKRW(driverPayout)}</span>
           </div>
         </div>
-        <div className="bg-blue-50 rounded-lg p-3 text-xs text-blue-700">
+        <div className="bg-indigo-50 rounded-xl p-3 text-xs text-indigo-700">
           💡 결제 금액은 에스크로로 보관됩니다. 운송 완료 확인 후 기사에게 지급됩니다.
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       <button
         onClick={handlePay}
         disabled={!activeMatch || paying}
-        className="w-full bg-blue-600 text-white py-4 rounded-xl text-lg font-bold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-indigo-600 text-white py-4 rounded-xl text-lg font-bold hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {paying ? "결제 진행 중..." : `${formatKRW(order.price)} 에스크로 결제`}
       </button>

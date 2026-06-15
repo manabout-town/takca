@@ -1,11 +1,12 @@
 import Link from "next/link"
 
-export default function VerifyEmailPage({
+export default async function VerifyEmailPage({
   searchParams,
 }: {
-  searchParams: { email?: string }
+  searchParams: Promise<{ email?: string }>
 }) {
-  const email = searchParams.email || "입력하신 이메일"
+  const { email: emailParam } = await searchParams
+  const email = emailParam || "입력하신 이메일"
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -46,7 +47,7 @@ export default function VerifyEmailPage({
         <div className="space-y-3">
           <Link
             href="/login"
-            className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-colors text-sm"
+            className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition-colors text-sm"
           >
             로그인 페이지로 이동
           </Link>

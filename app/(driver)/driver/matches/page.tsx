@@ -3,6 +3,7 @@ import { EmptyState } from "@/components/shared/EmptyState"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { formatKRW, formatDate } from "@/lib/utils/format"
 import { MATCH_STATUS_LABEL } from "@/lib/utils/status"
+import { MatchStatusButtons } from "@/components/driver/MatchStatusButtons"
 import Link from "next/link"
 
 export default async function DriverMatchesPage() {
@@ -33,25 +34,31 @@ export default async function DriverMatchesPage() {
       ) : (
         <div className="grid gap-4">
           {matches.map((match: any) => (
-            <Link key={match.id} href={`/chat/${match.id}`}
-              className="bg-white rounded-xl border border-gray-200 p-5 hover:border-blue-300 hover:shadow-md transition-all">
-              <div className="flex items-start justify-between mb-3">
-                <span className={`badge ${
-                  match.status === "completed" ? "bg-green-100 text-green-700" :
-                  match.status === "in_progress" ? "bg-blue-100 text-blue-700" :
-                  "bg-yellow-100 text-yellow-700"
-                }`}>
-                  {MATCH_STATUS_LABEL[match.status as keyof typeof MATCH_STATUS_LABEL]}
-                </span>
-                <span className="font-bold text-blue-700">{formatKRW(match.orders?.price)}</span>
-              </div>
-              <div className="text-sm font-medium mb-1">
-                {match.orders?.origin} → {match.orders?.destination}
-              </div>
-              <div className="text-xs text-gray-500">
-                화주: {match.orders?.shippers?.name} | {formatDate(match.matched_at)}
-              </div>
-            </Link>
+            <div key={match.id} className="bg-white rounded-xl border border-gray-100 p-5 hover:border-indigo-200 hover:shadow-sm transition-all">
+              <Link href={`/chat/${match.id}`} className="block">
+                <div className="flex items-start justify-between mb-3">
+                  <span className={`badge ${
+                    match.status === "completed" ? "bg-emerald-100 text-emerald-700" :
+                    match.status === "in_progress" ? "bg-indigo-100 text-indigo-700" :
+                    "bg-amber-100 text-amber-700"
+                  }`}>
+                    {MATCH_STATUS_LABEL[match.status as keyof typeof MATCH_STATUS_LABEL]}
+                  </span>
+                  <span className="font-bold text-indigo-700">{formatKRW(match.orders?.price)}</span>
+                </div>
+                <div className="text-sm font-medium mb-1">
+                  {match.orders?.origin} → {match.orders?.destination}
+                </div>
+                <div className="text-xs text-gray-500">
+                  화주: {match.orders?.shippers?.name} | {formatDate(match.matched_at)}
+                </div>
+              </Link>
+              <MatchStatusButtons
+                matchId={match.id}
+                matchStatus={match.status}
+                orderId={match.orders?.id}
+              />
+            </div>
           ))}
         </div>
       )}

@@ -101,7 +101,7 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
         </div>
 
         <textarea
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-6"
           rows={3}
           placeholder="리뷰 내용을 입력해주세요 (선택사항)"
           value={comment}
@@ -118,7 +118,7 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
           <button
             onClick={() => startTransition(submitReview)}
             disabled={rating === 0 || isPending}
-            className="flex-1 py-3 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-50"
+            className="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50"
           >
             {isPending ? "등록 중..." : "리뷰 등록"}
           </button>

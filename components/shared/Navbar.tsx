@@ -3,6 +3,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "@/app/actions/auth"
 import { Logo } from "@/components/shared/Logo"
+import { NotificationBell } from "@/components/shared/NotificationBell"
 import type { User } from "@/lib/types"
 
 interface NavbarProps { user: User }
@@ -13,16 +14,20 @@ export function Navbar({ user }: NavbarProps) {
   const shipperNav = [
     { href: "/shipper/dashboard", label: "대시보드" },
     { href: "/shipper/orders/new", label: "의뢰 등록" },
+    { href: "/shipper/wallet", label: "지갑" },
     { href: "/shipper/mypage", label: "마이페이지" },
   ]
   const driverNav = [
     { href: "/driver/dashboard", label: "대시보드" },
     { href: "/driver/feed", label: "의뢰 피드" },
     { href: "/driver/matches", label: "내 운송" },
+    { href: "/driver/schedule", label: "가용일정" },
+    { href: "/driver/wallet", label: "수익 지갑" },
     { href: "/driver/mypage", label: "마이페이지" },
   ]
   const adminNav = [
     { href: "/admin/dashboard", label: "대시보드" },
+    { href: "/admin/drivers", label: "기사 인증" },
     { href: "/admin/disputes", label: "분쟁 관리" },
     { href: "/admin/users", label: "회원 관리" },
   ]
@@ -57,7 +62,8 @@ export function Navbar({ user }: NavbarProps) {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <NotificationBell userId={user.id} />
           <div className="hidden sm:flex items-center gap-2">
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${roleColor}`}>{roleBadge}</span>
             <span className="text-sm font-medium text-gray-700">{user.name}</span>

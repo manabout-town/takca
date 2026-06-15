@@ -37,7 +37,6 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  // Realtime subscription
   useEffect(() => {
     const channel = supabase
       .channel(`chat:${match.id}`)
@@ -51,7 +50,6 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
         },
         async (payload) => {
           const newMsg = payload.new as Message
-          // Fetch sender info
           const { data: sender } = await supabase
             .from("users")
             .select("id, name, role")
@@ -69,77 +67,83 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
     e.preventDefault()
     if (!input.trim() || sending) return
     setSending(true)
-
     const text = input.trim()
     setInput("")
-
     await supabase.from("chats").insert({
       match_id: match.id,
       sender_id: currentUser.id,
       message: text,
       sent_at: new Date().toISOString(),
     })
-
     setSending(false)
   }
 
   const completionRequested = messages.some(m => m.message === "SYSTEM:COMPLETION_REQUESTED")
-  const statusLabel = match.status === "accepted" ? "매칭 완료" :
+  const statusLabel =
+    match.status === "accepted" ? "매칭 완료" :
     match.status === "in_progress" ? "운송 중" :
     match.status === "completed" ? "완료" : match.status
 
+  const statusStyle =
+    match.status === "completed" ? "bg-emerald-50 text-emerald-700" :
+    match.status === "in_progress" ? "bg-indigo-50 text-indigo-700" :
+    "bg-amber-50 text-amber-700"
+
   return (
-    <div className="flex flex-col h-screen max-w-2xl mx-auto">
+    <div className="flex flex-col h-screen max-w-2xl mx-auto bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
-        <Link href={isShipper ? `/shipper/orders/${order?.id}` : "/driver/matches"}
-          className="text-gray-500 hover:text-gray-700">
+      <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3 shrink-0">
+        <Link
+          href={isShipper ? `/shipper/orders/${order?.id}` : "/driver/matches"}
+          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors text-lg"
+        >
           ←
         </Link>
-        <div className="flex-1">
-          <div className="font-semibold text-sm">{otherUser?.name}</div>
-          <div className="text-xs text-gray-500">
-            {order?.origin} → {order?.destination} | {formatKRW(order?.price)}
+        <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-bold text-indigo-700 shrink-0">
+          {otherUser?.name?.[0] || "?"}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-semibold text-sm text-gray-900 truncate">{otherUser?.name}</div>
+          <div className="text-xs text-gray-400 truncate">
+            {order?.origin} → {order?.destination}
+            <span className="mx-1.5 text-gray-200">|</span>
+            {formatKRW(order?.price)}
           </div>
         </div>
-        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-          match.status === "completed" ? "bg-green-100 text-green-700" :
-          match.status === "in_progress" ? "bg-blue-100 text-blue-700" :
-          "bg-yellow-100 text-yellow-700"
-        }`}>
+        <span className={`text-xs px-2.5 py-1 rounded-full font-medium shrink-0 ${statusStyle}`}>
           {statusLabel}
         </span>
       </div>
 
-      {/* Action banner */}
+      {/* Action banners */}
       {match.status === "accepted" && !isShipper && (
-        <div className="bg-blue-50 border-b border-blue-100 px-4 py-2 flex items-center justify-between">
-          <span className="text-sm text-blue-700">운송을 시작하셨나요?</span>
-          <form action={confirmStart.bind(null, match.id)}>
-            <button type="submit" className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg font-semibold">
+        <div className="bg-indigo-50 border-b border-indigo-100 px-4 py-2.5 flex items-center justify-between shrink-0">
+          <span className="text-sm text-indigo-700">운송을 시작하셨나요?</span>
+          <form action={async () => { await confirmStart(match.id) }}>
+            <button type="submit" className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors">
               운송 시작
             </button>
           </form>
         </div>
       )}
       {match.status === "in_progress" && !isShipper && !completionRequested && (
-        <div className="bg-green-50 border-b border-green-100 px-4 py-2 flex items-center justify-between">
-          <span className="text-sm text-green-700">운송을 완료하셨나요?</span>
-          <form action={requestCompletion.bind(null, match.id)}>
-            <button type="submit" className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg font-semibold">
+        <div className="bg-emerald-50 border-b border-emerald-100 px-4 py-2.5 flex items-center justify-between shrink-0">
+          <span className="text-sm text-emerald-700">운송을 완료하셨나요?</span>
+          <form action={async () => { await requestCompletion(match.id) }}>
+            <button type="submit" className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors">
               완료 요청
             </button>
           </form>
         </div>
       )}
       {completionRequested && isShipper && match.status !== "completed" && (
-        <div className="bg-orange-50 border-b border-orange-100 px-4 py-3 flex items-center justify-between">
+        <div className="bg-amber-50 border-b border-amber-100 px-4 py-3 flex items-center justify-between shrink-0">
           <div>
-            <div className="text-sm font-semibold text-orange-700">기사님이 완료를 요청했습니다</div>
-            <div className="text-xs text-orange-600 mt-0.5">확인 시 에스크로가 해제됩니다</div>
+            <div className="text-sm font-semibold text-amber-800">기사님이 완료를 요청했습니다</div>
+            <div className="text-xs text-amber-600 mt-0.5">확인 시 에스크로가 해제됩니다</div>
           </div>
-          <form action={confirmCompletion.bind(null, match.id)}>
-            <button type="submit" className="text-sm bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold">
+          <form action={async () => { await confirmCompletion(match.id) }}>
+            <button type="submit" className="text-sm bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
               완료 확인
             </button>
           </form>
@@ -147,17 +151,17 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-3">
         {messages.length === 0 && (
-          <div className="text-center text-gray-400 text-sm py-8">
+          <div className="text-center text-gray-400 text-sm py-10">
             매칭이 확정되었습니다! 먼저 인사를 건네보세요 👋
           </div>
         )}
         {messages.map((msg) => {
           if (msg.message === "SYSTEM:COMPLETION_REQUESTED") {
             return (
-              <div key={msg.id} className="flex justify-center">
-                <span className="text-xs bg-gray-100 text-gray-500 px-3 py-1 rounded-full">
+              <div key={msg.id} className="flex justify-center py-1">
+                <span className="text-xs bg-gray-100 text-gray-500 px-3 py-1.5 rounded-full">
                   기사님이 운송 완료를 요청했습니다
                 </span>
               </div>
@@ -165,24 +169,24 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
           }
           const isMe = msg.sender_id === currentUser.id
           return (
-            <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
+            <div key={msg.id} className={`flex items-end gap-2 ${isMe ? "justify-end" : "justify-start"}`}>
               {!isMe && (
-                <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold mr-2 shrink-0 mt-1">
+                <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-700 shrink-0">
                   {msg.sender?.name?.[0] || "?"}
                 </div>
               )}
-              <div className={`max-w-[70%] ${isMe ? "items-end" : "items-start"} flex flex-col gap-1`}>
+              <div className={`max-w-[72%] flex flex-col gap-1 ${isMe ? "items-end" : "items-start"}`}>
                 {!isMe && (
-                  <span className="text-xs text-gray-500 ml-1">{msg.sender?.name}</span>
+                  <span className="text-xs text-gray-400 ml-1">{msg.sender?.name}</span>
                 )}
-                <div className={`px-3 py-2 rounded-2xl text-sm ${
+                <div className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
                   isMe
-                    ? "bg-blue-600 text-white rounded-br-sm"
-                    : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm"
+                    ? "bg-indigo-600 text-white rounded-br-sm"
+                    : "bg-white border border-gray-100 text-gray-800 rounded-bl-sm shadow-sm"
                 }`}>
                   {msg.message}
                 </div>
-                <span className="text-xs text-gray-400 px-1">
+                <span className="text-[10px] text-gray-400 px-1">
                   {new Date(msg.sent_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>
@@ -193,13 +197,13 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t border-gray-200 px-4 py-3">
+      <div className="bg-white border-t border-gray-100 px-4 py-3 shrink-0">
         {match.status === "completed" ? (
-          <div className="text-center text-sm text-gray-500 py-2">거래가 완료되었습니다</div>
+          <div className="text-center text-sm text-gray-400 py-1">거래가 완료되었습니다</div>
         ) : (
           <form onSubmit={sendMessage} className="flex gap-2">
             <input
-              className="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-gray-50"
               placeholder="메시지를 입력하세요..."
               value={input}
               onChange={e => setInput(e.target.value)}
@@ -208,7 +212,7 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
             <button
               type="submit"
               disabled={!input.trim() || sending}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-50 transition"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40 transition-colors"
             >
               전송
             </button>

@@ -10,18 +10,24 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          900: "#1e3a8a",
+          50: "#eef2ff",
+          100: "#e0e7ff",
+          200: "#c7d2fe",
+          500: "#6366f1",
+          600: "#4f46e5",
+          700: "#4338ca",
+          900: "#312e81",
         },
-        accent: {
-          500: "#f97316",
-          600: "#ea580c",
-        }
-      }
+      },
+      fontFamily: {
+        sans: [
+          "var(--font-inter)",
+          "-apple-system",
+          "'Apple SD Gothic Neo'",
+          "'Noto Sans KR'",
+          "sans-serif",
+        ],
+      },
     },
   },
   plugins: [],

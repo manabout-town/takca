@@ -22,7 +22,7 @@ function FailContent() {
           </Link>
           <button
             onClick={() => window.history.back()}
-            className="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700"
+            className="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700"
           >
             다시 시도
           </button>
