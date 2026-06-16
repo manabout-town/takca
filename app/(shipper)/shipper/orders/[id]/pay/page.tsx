@@ -76,7 +76,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-6">에스크로 결제</h1>
+      <h1 className="text-3xl font-bold mb-8 tracking-tight">에스크로 결제</h1>
 
       {!activeMatch && (
         <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-sm text-yellow-800">
@@ -104,10 +104,10 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
           </div>
           <div className="flex justify-between font-bold text-base pt-1 border-t">
             <span>기사 지급액</span>
-            <span className="text-indigo-700">{formatKRW(driverPayout)}</span>
+            <span className="text-indigo-600">{formatKRW(driverPayout)}</span>
           </div>
         </div>
-        <div className="bg-indigo-50 rounded-xl p-3 text-xs text-indigo-700">
+        <div className="bg-orange-50 rounded-xl p-3 text-xs text-orange-700">
           💡 결제 금액은 에스크로로 보관됩니다. 운송 완료 확인 후 기사에게 지급됩니다.
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       <button
         onClick={handlePay}
         disabled={!activeMatch || paying}
-        className="w-full bg-indigo-600 text-white py-4 rounded-xl text-lg font-bold hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-orange-500 text-white py-4 rounded-xl text-lg font-bold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {paying ? "결제 진행 중..." : `${formatKRW(order.price)} 에스크로 결제`}
       </button>

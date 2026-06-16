@@ -109,14 +109,17 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
   const inProgressOrders = orders.filter(o => ["matched","in_progress"].includes(o.status)).length
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">마이페이지</h1>
-        <span className="text-xs text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full font-semibold border border-indigo-100">화주</span>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">마이페이지</h1>
+          <p className="text-base text-gray-400 mt-2">프로필 및 계정 관리</p>
+        </div>
+        <span className="text-xs text-orange-700 bg-orange-50 px-3 py-1.5 rounded-full font-semibold border border-orange-100 mt-1">화주</span>
       </div>
 
       {/* 프로필 요약 */}
-      <div className="bg-gray-950 rounded-2xl p-5 text-white flex items-center gap-4">
+      <div className="bg-gray-950 rounded-2xl p-6 text-white flex items-center gap-5">
         <button onClick={() => avatarInputRef.current?.click()} className="relative shrink-0 group">
           <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-800 border-2 border-gray-700">
             {avatarUrl
@@ -143,7 +146,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
         </div>
         <Link href="/shipper/wallet" className="shrink-0 text-center">
           <p className="text-xs text-gray-400">총 지출</p>
-          <p className="font-bold text-indigo-400 text-lg">{formatKRW(totalSpent)}</p>
+          <p className="font-bold text-orange-400 text-lg">{formatKRW(totalSpent)}</p>
         </Link>
       </div>
 
@@ -169,7 +172,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
             {[
               { label: "총 의뢰", value: `${orders.length}건`, color: "text-gray-900" },
               { label: "완료", value: `${completedOrders.length}건`, color: "text-emerald-700" },
-              { label: "진행 중", value: `${inProgressOrders}건`, color: "text-indigo-700" },
+              { label: "진행 중", value: `${inProgressOrders}건`, color: "text-orange-600" },
               { label: "대기 중", value: `${pendingOrders}건`, color: "text-amber-700" },
             ].map(s => (
               <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
@@ -182,13 +185,13 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
           {/* 빠른 메뉴 */}
           <div className="grid grid-cols-2 gap-3">
             <Link href="/shipper/wallet"
-              className="bg-white rounded-2xl border border-gray-100 p-4 hover:border-indigo-200 transition-colors">
+              className="bg-white rounded-2xl border border-gray-100 p-4 hover:border-orange-200 transition-colors">
               <div className="text-xl mb-1">💳</div>
               <p className="font-semibold text-sm text-gray-900">지갑 · 결제</p>
               <p className="text-xs text-gray-400 mt-0.5">충전, 에스크로, 내역</p>
             </Link>
             <Link href="/shipper/orders/new"
-              className="bg-white rounded-2xl border border-gray-100 p-4 hover:border-indigo-200 transition-colors">
+              className="bg-white rounded-2xl border border-gray-100 p-4 hover:border-orange-200 transition-colors">
               <div className="text-xl mb-1">📦</div>
               <p className="font-semibold text-sm text-gray-900">의뢰 등록</p>
               <p className="text-xs text-gray-400 mt-0.5">새 운송 의뢰 올리기</p>
@@ -209,7 +212,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
                       <p className="text-sm font-medium text-gray-800">{o.origin} → {o.destination}</p>
                       <p className="text-xs text-gray-400 mt-0.5">{o.cargo_type} · {formatDate(o.created_at)}</p>
                     </div>
-                    <p className="font-semibold text-indigo-700 text-sm">{formatKRW(o.price)}</p>
+                    <p className="font-semibold text-orange-500 text-sm">{formatKRW(o.price)}</p>
                   </Link>
                 ))}
               </div>
@@ -233,7 +236,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
               </div>
               <div>
                 <button onClick={() => avatarInputRef.current?.click()} disabled={avatarUploading}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-50">
+                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-50">
                   {avatarUploading ? "업로드 중..." : "사진 변경"}
                 </button>
                 <p className="text-xs text-gray-400 mt-1.5">JPG, PNG, WEBP · 최대 5MB</p>
@@ -263,7 +266,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
               </div>
               <button type="submit" disabled={isPending}
-                className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+                className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
                 {isPending ? "저장 중..." : "정보 저장"}
               </button>
             </form>
@@ -289,7 +292,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
               </div>
               <button type="submit" disabled={isPending}
-                className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+                className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
                 {isPending ? "저장 중..." : "사업자 정보 저장"}
               </button>
             </form>
@@ -301,7 +304,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
             <p className="text-xs text-gray-400 mb-4">사업자등록증 사본을 업로드하세요. 관리자 검토 후 인증 마크가 부여됩니다.</p>
             <div className="flex items-center gap-3">
               <button onClick={() => docInputRef.current?.click()} disabled={docUploading}
-                className="px-4 py-2.5 border-2 border-dashed border-gray-300 hover:border-indigo-400 text-gray-600 hover:text-indigo-700 text-sm font-medium rounded-xl transition-colors disabled:opacity-50">
+                className="px-4 py-2.5 border-2 border-dashed border-gray-300 hover:border-orange-400 text-gray-600 hover:text-orange-600 text-sm font-medium rounded-xl transition-colors disabled:opacity-50">
                 {docUploading ? "업로드 중..." : sp?.business_doc_url ? "서류 재업로드" : "📄 서류 업로드"}
               </button>
               {sp?.business_doc_url && (
@@ -331,7 +334,7 @@ export function ShipperMypageClient({ profile, sp, orders, completedOrders, tota
             </div>
             <p className="text-xs text-gray-400">8자 이상, 특수문자(!@#$% 등) 1개 이상 포함</p>
             <button type="submit" disabled={isPending}
-              className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+              className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
               {isPending ? "변경 중..." : "비밀번호 변경"}
             </button>
           </form>

@@ -26,7 +26,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
   const pendingBids = bids?.filter((b: any) => b.status === "pending") || []
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
+    <div className="max-w-2xl mx-auto space-y-6">
       {/* 헤더 */}
       <div className="flex items-center gap-3">
         <Link href="/shipper/dashboard" className="text-gray-400 hover:text-gray-700 text-sm transition-colors">← 내 의뢰</Link>
@@ -37,14 +37,14 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       </div>
 
       {/* 의뢰 기본 정보 */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5">
-        <h1 className="text-lg font-bold mb-4 text-gray-900">{order.title || "운송 의뢰"}</h1>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm mb-5">
+      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <h1 className="text-2xl font-bold mb-5 text-gray-900 tracking-tight">{order.title || "운송 의뢰"}</h1>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm mb-6">
           <div><p className="text-xs text-gray-400 mb-1">출발지</p><p className="font-semibold text-gray-900">{order.origin}</p></div>
           <div><p className="text-xs text-gray-400 mb-1">도착지</p><p className="font-semibold text-gray-900">{order.destination}</p></div>
           <div><p className="text-xs text-gray-400 mb-1">화물 종류</p><p className="font-medium">{order.cargo_type}</p></div>
           <div><p className="text-xs text-gray-400 mb-1">필요 차량</p><p className="font-medium">{order.vehicle_type || "무관"}</p></div>
-          <div><p className="text-xs text-gray-400 mb-1">희망 운임</p><p className="font-bold text-indigo-600">{formatKRW(order.price)}</p></div>
+          <div><p className="text-xs text-gray-400 mb-1">희망 운임</p><p className="font-bold text-orange-500">{formatKRW(order.price)}</p></div>
           <div><p className="text-xs text-gray-400 mb-1">픽업 일시</p><p className="font-medium">{formatDate(order.pickup_at)}</p></div>
         </div>
 
@@ -88,10 +88,10 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       {/* 에스크로 결제 (매칭됐지만 아직 결제 안 됨) */}
       {activeMatch && !escrow && order.status === "matched" && (
         <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-5">
-          <h2 className="font-semibold text-indigo-800 mb-2 text-sm">💳 에스크로 결제 필요</h2>
-          <p className="text-sm text-indigo-600 mb-4">기사님이 매칭되었습니다. 에스크로 결제 후 운송이 시작됩니다.</p>
+          <h2 className="font-semibold text-orange-800 mb-2 text-sm">💳 에스크로 결제 필요</h2>
+          <p className="text-sm text-orange-600 mb-4">기사님이 매칭되었습니다. 에스크로 결제 후 운송이 시작됩니다.</p>
           <Link href={`/shipper/orders/${order.id}/pay`}
-            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">
             {formatKRW(order.price)} 에스크로 결제 →
           </Link>
         </div>
@@ -101,7 +101,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       {order.status === "pending" && (
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <h2 className="font-semibold text-gray-900 mb-4 text-sm">
-            입찰 현황 <span className="text-indigo-600 ml-1">{pendingBids.length}건</span>
+            입찰 현황 <span className="text-orange-500 ml-1">{pendingBids.length}건</span>
           </h2>
           {pendingBids.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
@@ -110,11 +110,11 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
               <p className="text-xs mt-1">기사들이 의뢰를 확인하고 입찰할 거예요</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {pendingBids.map((bid: any) => {
                 const dp = bid.drivers?.driver_profiles
                 return (
-                  <div key={bid.id} className="border border-gray-100 rounded-xl p-4 hover:border-indigo-200 transition-colors">
+                  <div key={bid.id} className="border border-gray-100 rounded-2xl p-5 hover:border-indigo-200 transition-colors">
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <a href={`/driver/${bid.drivers?.id || bid.driver_id}`} target="_blank" rel="noopener noreferrer"
@@ -133,7 +133,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
                         )}
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-indigo-600 text-base">{formatKRW(bid.price)}</p>
+                        <p className="font-bold text-orange-500 text-base">{formatKRW(bid.price)}</p>
                         <p className="text-xs text-gray-400 mt-0.5">{formatDate(bid.created_at)}</p>
                       </div>
                     </div>
@@ -142,7 +142,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
                     )}
                     <div className="flex gap-2">
                       <form action={async () => { "use server"; await approveBid(bid.id, order.id) }} className="flex-1">
-                        <button type="submit" className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                        <button type="submit" className="w-full py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors">
                           ✓ 승인
                         </button>
                       </form>

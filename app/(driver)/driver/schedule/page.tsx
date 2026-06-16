@@ -30,10 +30,13 @@ export default async function DriverSchedulePage() {
   const past      = schedules?.filter(s => s.status !== "active" || new Date(s.available_date) < new Date()) || []
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">가용 일정 관리</h1>
-        <Link href="/driver/dashboard" className="text-sm text-gray-400 hover:text-gray-700">← 대시보드</Link>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">가용 일정 관리</h1>
+          <p className="text-base text-gray-400 mt-2">운송 가능한 날짜와 지역을 등록하세요</p>
+        </div>
+        <Link href="/driver/dashboard" className="text-sm text-gray-400 hover:text-gray-700 mt-1">← 대시보드</Link>
       </div>
 
       {/* 등록 폼 */}

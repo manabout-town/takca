@@ -41,7 +41,7 @@ export default async function AdminDisputeDetail({ params }: { params: { id: str
         </span>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-5">
         <Card>
           <CardHeader><h2 className="font-bold">신고 내용</h2></CardHeader>
           <CardBody>

@@ -133,14 +133,17 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
   ]
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">마이페이지</h1>
-        <span className="text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full font-semibold border border-emerald-100">기사</span>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">마이페이지</h1>
+          <p className="text-base text-gray-400 mt-2">프로필 및 계정 관리</p>
+        </div>
+        <span className="text-xs text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full font-semibold border border-indigo-100 mt-1">기사</span>
       </div>
 
       {/* 프로필 요약 */}
-      <div className="bg-gray-950 rounded-2xl p-5 text-white flex items-center gap-4">
+      <div className="bg-gray-950 rounded-2xl p-6 text-white flex items-center gap-5">
         <button onClick={() => avatarInputRef.current?.click()} className="relative shrink-0 group">
           <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-800 border-2 border-gray-700">
             {avatarUrl
@@ -271,7 +274,7 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
               <InputField label="별명 (닉네임)" name="nickname" defaultValue={profile?.nickname} placeholder="예: 빠른배송왕" />
               <InputField label="휴대폰 번호" name="phone" type="tel" defaultValue={profile?.phone} placeholder="01012345678" />
               <button type="submit" disabled={isPending}
-                className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
                 {isPending ? "저장 중..." : "정보 저장"}
               </button>
             </form>
@@ -329,7 +332,7 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
               </div>
 
               <button type="submit" disabled={isPending}
-                className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
                 {isPending ? "저장 중..." : "차량 정보 저장"}
               </button>
             </form>
@@ -371,7 +374,7 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
             </div>
             <p className="text-xs text-gray-400">8자 이상, 특수문자(!@#$% 등) 1개 이상 포함</p>
             <button type="submit" disabled={isPending}
-              className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
               {isPending ? "변경 중..." : "비밀번호 변경"}
             </button>
           </form>

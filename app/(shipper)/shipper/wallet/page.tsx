@@ -47,10 +47,13 @@ export default async function ShipperWalletPage() {
   const pointTx = transactions?.filter(t => ["point_earn", "point_use"].includes(t.type)) || []
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">지갑</h1>
-        <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1.5 rounded-full">화주</span>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">지갑</h1>
+          <p className="text-base text-gray-400 mt-2">충전, 에스크로, 거래 내역 관리</p>
+        </div>
+        <span className="text-xs text-orange-700 font-semibold bg-orange-50 border border-orange-100 px-3 py-1.5 rounded-full mt-1">화주</span>
       </div>
 
       {/* 잔액 카드 */}
@@ -72,13 +75,13 @@ export default async function ShipperWalletPage() {
       {/* 충전 / 포인트 사용 */}
       <div className="grid grid-cols-2 gap-4">
         {/* 충전 */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-5">
-          <h2 className="font-semibold text-gray-900 mb-4 text-sm">충전</h2>
+        <div className="bg-white border border-gray-100 rounded-2xl p-6">
+          <h2 className="font-bold text-gray-900 mb-4">충전</h2>
           <form action={async (fd) => { "use server"; await chargeWallet(fd) }} className="space-y-3">
             <div className="grid grid-cols-2 gap-2">
               {[10000, 30000, 50000, 100000].map(amt => (
                 <button key={amt} type="submit" name="amount" value={amt}
-                  className="py-2 text-sm font-semibold border border-gray-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-all">
+                  className="py-2 text-sm font-semibold border border-gray-200 rounded-lg hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-all">
                   {(amt / 10000).toLocaleString()}만원
                 </button>
               ))}
@@ -93,7 +96,7 @@ export default async function ShipperWalletPage() {
                 className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
               <button type="submit"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
                 충전
               </button>
             </div>
@@ -102,8 +105,8 @@ export default async function ShipperWalletPage() {
         </div>
 
         {/* 포인트 사용 */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-5">
-          <h2 className="font-semibold text-gray-900 mb-1 text-sm">포인트 사용</h2>
+        <div className="bg-white border border-gray-100 rounded-2xl p-6">
+          <h2 className="font-bold text-gray-900 mb-1">포인트 사용</h2>
           <p className="text-xs text-gray-400 mb-4">1P = 1원, 100P 이상 사용 가능</p>
           <form action={async (fd) => { "use server"; await usePoints(fd) }} className="space-y-3">
             <div>
@@ -122,7 +125,7 @@ export default async function ShipperWalletPage() {
               />
             </div>
             <button type="submit" disabled={points < 100}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+              className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
               포인트 → 잔액 전환
             </button>
           </form>

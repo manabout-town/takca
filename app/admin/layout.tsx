@@ -17,7 +17,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar user={profile as User} />
-      <main className="max-w-7xl mx-auto px-4 py-8 pb-24 md:pb-8">{children}</main>
+      <main className="max-w-5xl mx-auto px-6 py-10 pb-28 md:pb-10">{children}</main>
       <MobileNav role="admin" />
     </div>
   )

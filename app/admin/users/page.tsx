@@ -25,7 +25,7 @@ export default async function AdminUsersPage() {
   return (
     <div>
       <PageHeader title="회원 관리" description={`총 ${users?.length || 0}명`} />
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-100">

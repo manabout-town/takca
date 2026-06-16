@@ -53,12 +53,13 @@ function OnboardingForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-10">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)] pointer-events-none" />
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-6"><Logo size="lg" /></div>
-          <h1 className="text-xl font-bold text-gray-900">프로필 설정</h1>
-          <p className="text-sm text-gray-400 mt-1">서비스 이용을 위해 정보를 입력해주세요</p>
+          <div className="flex justify-center mb-6"><Logo size="lg" variant="light" /></div>
+          <h1 className="text-xl font-bold text-white">프로필 설정</h1>
+          <p className="text-sm text-gray-500 mt-1">서비스 이용을 위해 정보를 입력해주세요</p>
         </div>
 
         <div className="flex gap-1.5 mb-6 p-1.5 bg-gray-100 rounded-xl">
@@ -72,7 +73,7 @@ function OnboardingForm() {
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div className="bg-white rounded-2xl shadow-2xl shadow-black/30 p-6">
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>
           )}
@@ -125,8 +126,8 @@ function OnboardingForm() {
 export default function OnboardingPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-400 text-sm">로딩 중...</div>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-gray-500 text-sm">로딩 중...</div>
       </div>
     }>
       <OnboardingForm />

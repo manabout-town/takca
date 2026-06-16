@@ -41,7 +41,7 @@ export default async function AdminDriversPage() {
           <h2 className="text-sm font-semibold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg inline-block mb-3">
             ⏳ 인증 대기 {unverified.length}명
           </h2>
-          <div className="grid gap-3">
+          <div className="grid gap-4">
             {unverified.map((d: any) => (
               <DriverCard key={d.id} driver={d} onVerify={verifyDriver} onUnverify={unverifyDriver} />
             ))}
@@ -54,7 +54,7 @@ export default async function AdminDriversPage() {
           <h2 className="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg inline-block mb-3">
             ✓ 인증 완료 {verified.length}명
           </h2>
-          <div className="grid gap-3">
+          <div className="grid gap-4">
             {verified.map((d: any) => (
               <DriverCard key={d.id} driver={d} onVerify={verifyDriver} onUnverify={unverifyDriver} />
             ))}
@@ -83,7 +83,7 @@ function DriverCard({
 }) {
   const user = driver.users
   return (
-    <div className={`bg-white rounded-xl border p-4 flex items-center gap-4 ${driver.is_verified ? "border-emerald-100" : "border-amber-100"}`}>
+    <div className={`bg-white rounded-2xl border p-5 flex items-center gap-5 ${driver.is_verified ? "border-emerald-100" : "border-amber-100"}`}>
       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
         driver.is_verified ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
       }`}>

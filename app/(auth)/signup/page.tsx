@@ -122,11 +122,12 @@ function SignupForm() {
   const strength = password ? passwordStrength(password) : null
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-10">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)] pointer-events-none" />
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-6"><Logo size="lg" /></div>
-          <h1 className="text-2xl font-bold text-gray-900">회원가입</h1>
+          <div className="flex justify-center mb-6"><Logo size="lg" variant="light" /></div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">회원가입</h1>
         </div>
 
         <div className="flex gap-1.5 mb-6 p-1.5 bg-gray-100 rounded-xl">
@@ -140,7 +141,7 @@ function SignupForm() {
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div className="bg-white rounded-2xl shadow-2xl shadow-black/30 p-6">
           {error && <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>}
 
           {/* 소셜 가입 */}
@@ -206,7 +207,7 @@ function SignupForm() {
                   type="button"
                   onClick={handleSendOtp}
                   disabled={phoneLoading || phoneVerified}
-                  className="px-4 py-2.5 bg-gray-900 hover:bg-gray-700 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
+                  className="px-4 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
                 >
                   {phoneLoading ? "전송 중..." : otpSent ? "재전송" : "인증번호 받기"}
                 </button>
@@ -340,7 +341,7 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-400 text-sm">로딩 중...</div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gray-950 flex items-center justify-center"><div className="text-gray-500 text-sm">로딩 중...</div></div>}>
       <SignupForm />
     </Suspense>
   )

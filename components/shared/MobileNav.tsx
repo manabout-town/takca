@@ -27,27 +27,32 @@ const adminItems = [
   { href: "/admin/users", icon: "👥", label: "회원" },
 ]
 
+const roleActiveColor: Record<string, string> = {
+  shipper: "text-orange-500",
+  driver: "text-indigo-600",
+  admin: "text-amber-600",
+}
+
 export function MobileNav({ role }: Props) {
   const pathname = usePathname()
   const items = role === "shipper" ? shipperItems : role === "driver" ? driverItems : adminItems
+  const activeColor = roleActiveColor[role] || "text-gray-900"
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-100 safe-area-inset-bottom">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-100 safe-area-inset-bottom shadow-[0_-1px_8px_rgba(0,0,0,0.06)]">
       <div className="flex items-center">
         {items.map(item => {
-          const active = pathname === item.href
+          const active = pathname === item.href || pathname.startsWith(item.href + "/")
           return (
             <Link
               key={item.href}
               href={item.href}
               className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 transition-colors ${
-                active ? "text-gray-900" : "text-gray-400"
+                active ? activeColor : "text-gray-400"
               }`}
             >
               <span className="text-lg leading-none">{item.icon}</span>
-              <span className={`text-[10px] font-medium ${active ? "text-gray-900" : "text-gray-400"}`}>
-                {item.label}
-              </span>
+              <span className={`text-[10px] font-medium`}>{item.label}</span>
             </Link>
           )
         })}

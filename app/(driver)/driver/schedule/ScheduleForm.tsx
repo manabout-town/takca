@@ -114,8 +114,8 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
                 onClick={() => setSelectedProvince(selectedProvince === p ? null : p)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
                   selectedProvince === p
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                    ? "bg-indigo-600 text-white border-indigo-600"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"
                 }`}>
                 {p}
               </button>
@@ -191,7 +191,7 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
         </div>
 
         <button type="submit" disabled={isPending || destRegions.length === 0}
-          className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+          className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
           {isPending ? "등록 중..." : "가용 일정 등록"}
         </button>
         {destRegions.length === 0 && (

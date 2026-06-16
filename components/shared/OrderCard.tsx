@@ -13,11 +13,11 @@ interface OrderCardProps {
 export function OrderCard({ order, href, showStatus = true }: OrderCardProps) {
   return (
     <Link href={href} className="block">
-      <div className="bg-white rounded-xl border border-gray-100 p-5 hover:border-indigo-200 hover:shadow-sm transition-all duration-200">
+      <div className="bg-white rounded-xl border border-gray-100 p-5 hover:border-orange-200 hover:shadow-sm transition-all duration-200">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             {order.is_urgent && (
-              <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+              <span className="inline-flex items-center gap-1 bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full text-xs font-semibold">
                 <Zap size={10} /> 긴급
               </span>
             )}
@@ -27,12 +27,12 @@ export function OrderCard({ order, href, showStatus = true }: OrderCardProps) {
               </span>
             )}
           </div>
-          <span className="text-base font-bold text-indigo-600">{formatKRW(order.price)}</span>
+          <span className="text-base font-bold text-orange-500">{formatKRW(order.price)}</span>
         </div>
 
         <div className="space-y-2 mb-3">
           <div className="flex items-center gap-2 text-sm">
-            <MapPin size={14} className="text-indigo-400 shrink-0" />
+            <MapPin size={14} className="text-orange-400 shrink-0" />
             <span className="font-medium text-gray-800">{order.origin}</span>
             <span className="text-gray-300">→</span>
             <span className="font-medium text-gray-800">{order.destination}</span>

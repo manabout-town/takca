@@ -181,7 +181,7 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
                 )}
                 <div className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
                   isMe
-                    ? "bg-indigo-600 text-white rounded-br-sm"
+                    ? "bg-orange-500 text-white rounded-br-sm"
                     : "bg-white border border-gray-100 text-gray-800 rounded-bl-sm shadow-sm"
                 }`}>
                   {msg.message}
@@ -203,7 +203,7 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
         ) : (
           <form onSubmit={sendMessage} className="flex gap-2">
             <input
-              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-gray-50"
+              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all bg-gray-50"
               placeholder="메시지를 입력하세요..."
               value={input}
               onChange={e => setInput(e.target.value)}
@@ -212,7 +212,7 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
             <button
               type="submit"
               disabled={!input.trim() || sending}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40 transition-colors"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40 transition-colors"
             >
               전송
             </button>

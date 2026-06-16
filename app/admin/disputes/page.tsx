@@ -13,7 +13,7 @@ export default async function AdminDisputesPage() {
   return (
     <div>
       <PageHeader title="분쟁 관리" description={`전체 ${disputes?.length || 0}건`} />
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>

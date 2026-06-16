@@ -41,7 +41,7 @@ export default function NewOrderPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* 의뢰명 */}
           <Input
             name="title"
@@ -179,7 +179,7 @@ export default function NewOrderPage() {
           </div>
 
           <div className="flex gap-3 pt-2">
-            <a href="/shipper/dashboard" className="btn-secondary flex-1 text-center py-2.5 rounded-lg text-sm">
+            <a href="/shipper/dashboard" className="flex-1 text-center py-2.5 rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
               취소
             </a>
             <Button type="submit" className="flex-1" size="lg" loading={isPending}>

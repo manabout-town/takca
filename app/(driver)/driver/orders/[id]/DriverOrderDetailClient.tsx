@@ -56,7 +56,7 @@ export function DriverOrderDetailClient({ order, myBid, canBid, driverProfile }:
     : null
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
+    <div className="max-w-2xl mx-auto space-y-6">
       <Link href="/driver/feed" className="text-sm text-gray-400 hover:text-gray-700 inline-block transition-colors">← 의뢰 피드</Link>
 
       <div className="flex items-center gap-2 flex-wrap">
@@ -68,8 +68,8 @@ export function DriverOrderDetailClient({ order, myBid, canBid, driverProfile }:
       </div>
 
       {/* 의뢰 정보 + 지도 */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-5">
-        <h1 className="text-lg font-bold text-gray-900">{order.title || "운송 의뢰"}</h1>
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-6">
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{order.title || "운송 의뢰"}</h1>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
           <div><p className="text-gray-400 text-xs mb-1">출발지</p><p className="font-semibold text-gray-900">{order.origin}</p></div>

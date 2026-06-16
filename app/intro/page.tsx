@@ -16,7 +16,7 @@ export default function IntroPage() {
           </div>
           <div className="flex items-center gap-2">
             <Link href="/login" className="text-sm text-gray-500 hover:text-gray-900 px-3 py-1.5 transition-colors">로그인</Link>
-            <Link href="/signup" className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors">시작하기</Link>
+            <Link href="/signup" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors">시작하기</Link>
           </div>
         </div>
       </header>
@@ -36,10 +36,10 @@ export default function IntroPage() {
             화주와 기사를 직접 연결하는 디지털 화물 중개 플랫폼
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/signup?role=shipper" className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
+            <Link href="/signup?role=shipper" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
               화주로 시작하기 →
             </Link>
-            <Link href="/signup?role=driver" className="border border-gray-700 hover:border-gray-500 text-gray-300 px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
+            <Link href="/signup?role=driver" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
               기사로 시작하기
             </Link>
           </div>
@@ -101,7 +101,7 @@ export default function IntroPage() {
               <div className="space-y-5">
                 {["회원가입 (무료)", "의뢰 등록 — 출발/도착/화물/금액 입력", "기사 매칭 알림 수신", "에스크로 결제 후 운송 완료"].map((s, i) => (
                   <div key={s} className="flex items-start gap-4">
-                    <span className="w-6 h-6 bg-gray-900 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i + 1}</span>
                     <span className="text-sm text-gray-600 leading-relaxed">{s}</span>
                   </div>
                 ))}
@@ -112,7 +112,7 @@ export default function IntroPage() {
               <div className="space-y-5">
                 {["회원가입 — 차량 정보 등록", "의뢰 피드에서 원하는 의뢰 수락", "화주와 채팅으로 픽업 일정 조율", "운송 완료 후 에스크로 정산 (4% 수수료)"].map((s, i) => (
                   <div key={s} className="flex items-start gap-4">
-                    <span className="w-6 h-6 bg-gray-900 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i + 1}</span>
                     <span className="text-sm text-gray-600 leading-relaxed">{s}</span>
                   </div>
                 ))}
@@ -154,10 +154,10 @@ export default function IntroPage() {
           <h2 className="text-4xl font-bold mb-4 tracking-tight">지금 시작하세요</h2>
           <p className="text-gray-400 mb-10 text-base">가입비, 월정액 없음. 지금 바로 무료로 시작할 수 있습니다.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/signup?role=shipper" className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
+            <Link href="/signup?role=shipper" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
               화주로 시작하기
             </Link>
-            <Link href="/signup?role=driver" className="border border-gray-700 hover:border-gray-500 text-gray-300 px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
+            <Link href="/signup?role=driver" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors text-sm">
               기사로 시작하기
             </Link>
           </div>

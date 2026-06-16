@@ -261,7 +261,7 @@ export function DriverWalletClient({ wallet, transactions, pendingPayouts, payou
               </div>
             </div>
             <button type="submit" disabled={isPending || balance < 10000}
-              className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
               {isPending ? "신청 중..." : "출금 신청"}
             </button>
             {balance < 10000 && (

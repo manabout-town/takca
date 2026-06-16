@@ -37,17 +37,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)] pointer-events-none" />
+
+      <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <Logo size="lg" />
+            <Logo size="lg" variant="light" />
           </div>
-          <h1 className="text-xl font-bold text-gray-900">로그인</h1>
-          <p className="text-sm text-gray-400 mt-1">계속하려면 로그인하세요</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">로그인</h1>
+          <p className="text-gray-500 mt-2">계속하려면 로그인하세요</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div className="bg-white rounded-2xl p-6 shadow-2xl shadow-black/30">
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">
               {error}
@@ -121,10 +124,10 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="mt-6 text-center text-xs text-gray-400">
-          <a href="#" className="hover:text-gray-600">이용약관</a>
+        <p className="mt-6 text-center text-xs text-gray-600">
+          <a href="#" className="hover:text-gray-400">이용약관</a>
           {" · "}
-          <a href="#" className="hover:text-gray-600">개인정보처리방침</a>
+          <a href="#" className="hover:text-gray-400">개인정보처리방침</a>
         </p>
       </div>
     </div>

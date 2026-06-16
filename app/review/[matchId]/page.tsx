@@ -69,10 +69,10 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl border border-gray-200 p-8 w-full max-w-md">
-        <h1 className="text-xl font-bold text-center mb-2">거래 완료!</h1>
-        <p className="text-gray-500 text-sm text-center mb-8">
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl shadow-black/30">
+        <h1 className="text-2xl font-bold text-center mb-2 tracking-tight">거래 완료!</h1>
+        <p className="text-gray-400 text-center mb-8">
           상대방에 대한 리뷰를 남겨주세요
         </p>
 
@@ -101,7 +101,7 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
         </div>
 
         <textarea
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-6"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 mb-6"
           rows={3}
           placeholder="리뷰 내용을 입력해주세요 (선택사항)"
           value={comment}
@@ -118,7 +118,7 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
           <button
             onClick={() => startTransition(submitReview)}
             disabled={rating === 0 || isPending}
-            className="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50"
+            className="flex-1 py-3 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600 disabled:opacity-50"
           >
             {isPending ? "등록 중..." : "리뷰 등록"}
           </button>
