@@ -1,0 +1,38 @@
+{
+  "name": "화물로 - 화물 중개 플랫폼",
+  "short_name": "화물로",
+  "description": "화주와 기사를 직접 연결하는 디지털 화물 중개 플랫폼",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#030712",
+  "theme_color": "#f97316",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "logistics"],
+  "lang": "ko-KR",
+  "shortcuts": [
+    {
+      "name": "의뢰 등록",
+      "url": "/shipper/orders/new",
+      "description": "새 운송 의뢰 등록"
+    },
+    {
+      "name": "의뢰 피드",
+      "url": "/driver/feed",
+      "description": "기사 의뢰 피드"
+    }
+  ]
+}

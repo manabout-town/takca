@@ -5,7 +5,7 @@ import { formatKRW, formatDate } from "@/lib/utils/format"
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/lib/utils/status"
 import { cancelOrder, confirmCompletion } from "@/app/actions/orders"
 import { approveBid, rejectBid } from "@/app/actions/bids"
-import { RouteMap } from "@/components/shared/RouteMap"
+import { DriverLocationMap } from "@/components/shared/DriverLocationMap"
 
 export default async function ShipperOrderDetail({ params }: { params: { id: string } }) {
   const supabase = await createClient()
@@ -48,8 +48,14 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
           <div><p className="text-xs text-gray-400 mb-1">픽업 일시</p><p className="font-medium">{formatDate(order.pickup_at)}</p></div>
         </div>
 
-        {/* 지도 + 거리 정보 */}
-        <RouteMap origin={order.origin} destination={order.destination} />
+        {/* 지도 + 기사 실시간 위치 */}
+        <DriverLocationMap
+          origin={order.origin}
+          destination={order.destination}
+          driverId={activeMatch?.driver_id}
+          matchId={activeMatch?.id}
+          showTracking={order.status === "in_progress"}
+        />
       </div>
 
       {/* 에스크로 현황 */}

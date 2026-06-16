@@ -1,16 +1,23 @@
 "use client"
-import { KakaoRouteMap } from "./KakaoRouteMap"
+import { LeafletRouteMap } from "./LeafletRouteMap"
+import type { RouteMapInfo } from "./LeafletMapClient"
 
 interface RouteMapProps {
   origin: string
   destination: string
+  driverLocation?: { lat: number; lng: number } | null
+  onRouteInfo?: (info: RouteMapInfo) => void
   className?: string
 }
 
-export function RouteMap({ origin, destination, className = "" }: RouteMapProps) {
+export function RouteMap({ origin, destination, driverLocation, onRouteInfo, className = "" }: RouteMapProps) {
   return (
-    <div className={className}>
-      <KakaoRouteMap origin={origin} destination={destination} />
-    </div>
+    <LeafletRouteMap
+      origin={origin}
+      destination={destination}
+      driverLocation={driverLocation}
+      onRouteInfo={onRouteInfo}
+      className={className}
+    />
   )
 }

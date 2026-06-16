@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { EmptyState } from "@/components/shared/EmptyState"
-import { KakaoRouteMap } from "@/components/shared/KakaoRouteMap"
+import { RouteMap } from "@/components/shared/RouteMap"
 import { DriverRankBadge } from "@/components/shared/DriverRankBadge"
+import { LocationTracker } from "@/components/driver/LocationTracker"
 import { formatKRW } from "@/lib/utils/format"
 import Link from "next/link"
 
@@ -34,6 +35,11 @@ export default async function DriverDashboardPage() {
 
   return (
     <div className="space-y-8">
+      <LocationTracker
+        driverId={user!.id}
+        matchId={activeMatch?.id ?? null}
+        active={activeMatch?.status === "in_progress"}
+      />
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
@@ -105,7 +111,7 @@ export default async function DriverDashboardPage() {
               {(activeMatch.orders as any)?.origin} → {(activeMatch.orders as any)?.destination}
             </p>
             <div className="mt-5">
-              <KakaoRouteMap
+              <RouteMap
                 origin={(activeMatch.orders as any)?.origin || ""}
                 destination={(activeMatch.orders as any)?.destination || ""}
               />

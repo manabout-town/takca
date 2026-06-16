@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button"
 import { CARGO_TYPES } from "@/lib/types"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { RouteMap } from "@/components/shared/RouteMap"
+import { GpsAddressInput } from "@/components/shared/GpsAddressInput"
 
 const VEHICLE_TYPES = ["1톤 트럭", "2.5톤 트럭", "5톤 트럭", "11톤 트럭", "25톤 트럭", "윙바디", "냉동 탑차", "카고 트럭", "트레일러", "상관없음"]
 
@@ -52,30 +53,22 @@ export default function NewOrderPage() {
 
           {/* 출발 / 도착 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="label">출발지</label>
-              <input
-                type="text"
-                name="origin"
-                className="input"
-                placeholder="예: 서울시 강남구"
-                value={origin}
-                onChange={e => setOrigin(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label className="label">도착지</label>
-              <input
-                type="text"
-                name="destination"
-                className="input"
-                placeholder="예: 부산시 해운대구"
-                value={destination}
-                onChange={e => setDestination(e.target.value)}
-                required
-              />
-            </div>
+            <GpsAddressInput
+              name="origin"
+              label="출발지"
+              placeholder="예: 서울시 강남구"
+              value={origin}
+              onChange={setOrigin}
+              required
+            />
+            <GpsAddressInput
+              name="destination"
+              label="도착지"
+              placeholder="예: 부산시 해운대구"
+              value={destination}
+              onChange={setDestination}
+              required
+            />
           </div>
 
           {/* Route preview */}
