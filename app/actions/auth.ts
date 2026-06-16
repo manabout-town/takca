@@ -71,14 +71,14 @@ export async function signIn(formData: FormData) {
 
   if (!email || !password) return { error: "이메일과 비밀번호를 입력해주세요" }
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error) {
     if (error.message === "Invalid login credentials") return { error: "이메일 또는 비밀번호가 올바르지 않습니다" }
     if (error.message.includes("Email not confirmed")) return { error: "이메일 인증을 완료해주세요. 메일함을 확인하세요." }
     return { error: error.message }
   }
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = data.user
   if (!user) return { error: "로그인 실패" }
 
   const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).single()

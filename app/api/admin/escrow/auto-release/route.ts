@@ -11,21 +11,37 @@ export async function POST(req: NextRequest) {
   const service = createServiceClient()
   const cutoff = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString()
 
-  // Find matches where completion was requested > 72h ago but not confirmed
-  const { data: expiredEscrows } = await service
-    .from("escrow")
-    .select("*, matches(id, driver_id, order_id, orders(price))")
-    .eq("status", "held")
-    .lt("held_at", cutoff)
+  // Find matches where completion was requested > 72h ago but shipper hasn't confirmed
+  const { data: expiredMatches } = await service
+    .from("matches")
+    .select("id, driver_id, order_id, orders(price)")
+    .not("completion_requested_at", "is", null)
+    .lt("completion_requested_at", cutoff)
+    .eq("status", "in_progress")
 
-  if (!expiredEscrows?.length) {
+  if (!expiredMatches?.length) {
     return NextResponse.json({ released: 0 })
   }
 
+  const matchIds = expiredMatches.map((m) => m.id)
+  const { data: heldEscrows } = await service
+    .from("escrow")
+    .select("id, match_id")
+    .in("match_id", matchIds)
+    .eq("status", "held")
+
+  if (!heldEscrows?.length) {
+    return NextResponse.json({ released: 0 })
+  }
+
+  const escrowByMatchId = Object.fromEntries(heldEscrows.map((e) => [e.match_id, e]))
+
   let released = 0
-  for (const escrow of expiredEscrows) {
-    const match = escrow.matches as any
-    const totalAmount = match?.orders?.price || 0
+  for (const match of expiredMatches) {
+    const escrow = escrowByMatchId[match.id]
+    if (!escrow) continue
+
+    const totalAmount = (match.orders as any)?.price || 0
     const platformFee = Math.floor(totalAmount * 0.04)
     const driverPayout = totalAmount - platformFee
 

@@ -48,6 +48,9 @@ export async function acceptOrder(orderId: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "로그인이 필요합니다" }
 
+  const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).single()
+  if (profile?.role !== "driver") return { error: "기사만 의뢰를 수락할 수 있습니다" }
+
   // Check order is still pending
   const { data: order } = await supabase
     .from("orders")
@@ -71,7 +74,10 @@ export async function acceptOrder(orderId: string) {
     .select()
     .single()
 
-  if (matchError) return { error: matchError.message }
+  if (matchError) {
+    if (matchError.code === "23505") return { error: "이미 다른 기사가 수락한 의뢰입니다" }
+    return { error: matchError.message }
+  }
 
   // Update order status
   await supabase
@@ -107,13 +113,12 @@ export async function requestCompletion(matchId: string) {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("order_id, orders!inner(shipper_id, origin, destination)")
+    .select("order_id, driver_id, orders!inner(shipper_id, origin, destination)")
     .eq("id", matchId)
     .single()
 
   if (!match) return { error: "매칭을 찾을 수 없습니다" }
-
-  const { data: driver } = await supabase.from("users").select("name").eq("id", user.id).single()
+  if (match.driver_id !== user.id) return { error: "기사만 완료 요청을 할 수 있습니다" }
 
   // 채팅에 시스템 메시지 삽입 (트리거가 화주에게 알림 전송)
   await service.from("chats").insert({
@@ -122,6 +127,10 @@ export async function requestCompletion(matchId: string) {
     message: "SYSTEM:COMPLETION_REQUESTED",
     sent_at: new Date().toISOString(),
   })
+
+  await service.from("matches").update({
+    completion_requested_at: new Date().toISOString(),
+  }).eq("id", matchId)
 
   revalidatePath(`/chat/${matchId}`)
   revalidatePath(`/shipper/orders/${match.order_id}`)
@@ -136,11 +145,12 @@ export async function confirmCompletion(matchId: string) {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("order_id, driver_id, orders(price)")
+    .select("order_id, driver_id, orders(shipper_id, price)")
     .eq("id", matchId)
     .single()
 
   if (!match) return { error: "매칭을 찾을 수 없습니다" }
+  if ((match.orders as any)?.shipper_id !== user.id) return { error: "화주만 완료 확인할 수 있습니다" }
 
   const totalAmount = (match.orders as any)?.price || 0
   const platformFee = Math.floor(totalAmount * 0.04)
@@ -176,6 +186,8 @@ export async function confirmCompletion(matchId: string) {
       status: "pending",
     })
   }
+
+  await service.rpc("increment_driver_completed_count", { p_driver_id: match.driver_id })
 
   revalidatePath(`/chat/${matchId}`)
   redirect(`/review/${matchId}`)

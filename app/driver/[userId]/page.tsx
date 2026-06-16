@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Logo } from "@/components/shared/Logo"
+import { DriverRankBadge } from "@/components/shared/DriverRankBadge"
 
 export default async function DriverProfilePage({
   params,
@@ -54,11 +55,12 @@ export default async function DriverProfilePage({
             {user?.name?.[0] ?? "기"}
           </div>
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{user?.name ?? "기사"}</h1>
               {profile.is_verified && (
                 <span className="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full font-semibold">인증 기사</span>
               )}
+              <DriverRankBadge completedCount={completedCount ?? 0} size="sm" showProgress={false} />
             </div>
             <div className="flex items-center gap-1 mb-3">
               {stars(profile.rating_avg)}

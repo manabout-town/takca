@@ -44,21 +44,22 @@ export async function requestWithdrawal(formData: FormData) {
     updated_at: new Date().toISOString(),
   }).eq("user_id", user.id)
 
+  const { data: withdrawalReq } = await service.from("withdrawal_requests").insert({
+    user_id: user.id,
+    amount,
+    bank_name: bankName,
+    account_number: accountNumber,
+    account_holder: accountHolder,
+    status: "pending",
+  }).select("id").single()
+
   await service.from("wallet_transactions").insert({
     user_id: user.id,
     type: "withdrawal",
     amount: -amount,
     balance_after: newBalance,
     description: `출금 신청 — ${bankName} ${accountNumber} (${accountHolder})`,
-    status: "pending",
-  })
-
-  await service.from("withdrawal_requests").insert({
-    user_id: user.id,
-    amount,
-    bank_name: bankName,
-    account_number: accountNumber,
-    account_holder: accountHolder,
+    reference_id: withdrawalReq?.id ?? null,
     status: "pending",
   })
 

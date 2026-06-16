@@ -6,6 +6,7 @@ import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/lib/utils/status"
 import { cancelOrder, confirmCompletion } from "@/app/actions/orders"
 import { approveBid, rejectBid } from "@/app/actions/bids"
 import { DriverLocationMap } from "@/components/shared/DriverLocationMap"
+import { DriverRankBadge } from "@/components/shared/DriverRankBadge"
 
 export default async function ShipperOrderDetail({ params }: { params: { id: string } }) {
   const supabase = await createClient()
@@ -16,7 +17,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       *,
       matches(*, drivers:users!driver_id(*, driver_profiles(vehicle_type, vehicle_number, home_region, route_regions, rating_avg, rating_count)))
     `).eq("id", params.id).eq("shipper_id", user!.id).single(),
-    supabase.from("bids").select(`*, drivers:users!driver_id(name, phone, driver_profiles(vehicle_type, vehicle_number, home_region, route_regions, rating_avg))`).eq("order_id", params.id).order("created_at", { ascending: true }),
+    supabase.from("bids").select(`*, drivers:users!driver_id(name, phone, driver_profiles(vehicle_type, vehicle_number, home_region, route_regions, rating_avg, completed_count))`).eq("order_id", params.id).order("created_at", { ascending: true }),
     supabase.from("escrow").select("*").eq("order_id", params.id).maybeSingle(),
   ])
 
@@ -137,6 +138,9 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
                         {dp?.rating_avg > 0 && (
                           <p className="text-xs text-amber-500 mt-0.5">★ {dp.rating_avg.toFixed(1)}</p>
                         )}
+                        <div className="mt-1">
+                          <DriverRankBadge completedCount={dp?.completed_count ?? 0} size="sm" showProgress={false} />
+                        </div>
                       </div>
                       <div className="text-right">
                         <p className="font-bold text-orange-500 text-base">{formatKRW(bid.price)}</p>

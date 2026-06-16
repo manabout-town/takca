@@ -28,12 +28,16 @@ export default function LoginPage() {
 
   async function handleSocial(provider: Provider) {
     setSocialLoading(provider)
+    setError(null)
     const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     })
-    setSocialLoading(null)
+    if (oauthError) {
+      setError(oauthError.message)
+      setSocialLoading(null)
+    }
   }
 
   return (

@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
 import { formatKRW } from "@/lib/utils/format"
 import { requestCompletion, confirmCompletion, confirmStart } from "@/app/actions/orders"
+import { CargoPhotoSection } from "@/components/shared/CargoPhotoSection"
 import type { User } from "@/lib/types"
 
 interface Message {
@@ -61,7 +62,9 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
-  }, [match.id, supabase])
+  // supabase client is a stable singleton from createBrowserClient
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [match.id])
 
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault()
@@ -195,6 +198,13 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
         })}
         <div ref={bottomRef} />
       </div>
+
+      {/* Cargo photos */}
+      <CargoPhotoSection
+        matchId={match.id}
+        isDriver={!isShipper}
+        matchStatus={match.status}
+      />
 
       {/* Input */}
       <div className="bg-white border-t border-gray-100 px-4 py-3 shrink-0">
