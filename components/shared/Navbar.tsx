@@ -14,6 +14,7 @@ export function Navbar({ user }: NavbarProps) {
   const shipperNav = [
     { href: "/shipper/dashboard", label: "대시보드" },
     { href: "/shipper/orders/new", label: "의뢰 등록" },
+    { href: "/shipper/calendar", label: "캘린더" },
     { href: "/shipper/wallet", label: "지갑" },
     { href: "/shipper/mypage", label: "마이페이지" },
   ]
@@ -21,6 +22,7 @@ export function Navbar({ user }: NavbarProps) {
     { href: "/driver/dashboard", label: "대시보드" },
     { href: "/driver/feed", label: "의뢰 피드" },
     { href: "/driver/matches", label: "내 운송" },
+    { href: "/driver/calendar", label: "캘린더" },
     { href: "/driver/schedule", label: "가용일정" },
     { href: "/driver/wallet", label: "수익 지갑" },
     { href: "/driver/mypage", label: "마이페이지" },

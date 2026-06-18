@@ -57,6 +57,7 @@ export default async function DriverMatchesPage() {
                 matchId={match.id}
                 matchStatus={match.status}
                 orderId={match.orders?.id}
+                orderPrice={match.orders?.price ?? 0}
               />
             </div>
           ))}

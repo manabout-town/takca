@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { formatKRW, formatDate } from "@/lib/utils/format"
 import { chargeWallet, usePoints } from "@/app/actions/wallet"
 import Link from "next/link"
+import { LedgerView } from "@/components/shared/LedgerView"
 
 const TX_TYPE_LABEL: Record<string, string> = {
   deposit: "충전",
@@ -225,6 +226,17 @@ export default async function ShipperWalletPage() {
           </div>
         </div>
       )}
+
+      {/* 가계부 */}
+      <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-50">
+          <h2 className="font-semibold text-gray-900 text-sm">가계부</h2>
+          <p className="text-xs text-gray-400 mt-0.5">수입/지출 일·주·월 단위 조회</p>
+        </div>
+        <div className="p-4">
+          <LedgerView transactions={transactions || []} role="shipper" />
+        </div>
+      </div>
     </div>
   )
 }

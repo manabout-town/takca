@@ -2,10 +2,11 @@
 import { useState, useTransition } from "react"
 import { requestWithdrawal, chargeWallet, usePoints } from "@/app/actions/wallet"
 import { formatKRW, formatDate } from "@/lib/utils/format"
+import { LedgerView } from "@/components/shared/LedgerView"
 
 const BANKS = ["국민은행","신한은행","우리은행","하나은행","농협은행","기업은행","카카오뱅크","토스뱅크","케이뱅크","SC제일은행","부산은행","대구은행","경남은행","광주은행","전북은행"]
 
-type Tab = "overview" | "charge" | "withdraw" | "history"
+type Tab = "overview" | "charge" | "withdraw" | "history" | "ledger"
 type HistoryTab = "income" | "withdrawal"
 
 interface Props {
@@ -57,6 +58,7 @@ export function DriverWalletClient({ wallet, transactions, pendingPayouts, payou
     { id: "charge",    label: "충전" },
     { id: "withdraw",  label: "출금" },
     { id: "history",   label: "내역" },
+    { id: "ledger",    label: "가계부" },
   ]
 
   const incomeTransactions   = transactions.filter(t => t.amount > 0 || t.points_change > 0)
@@ -369,6 +371,10 @@ export function DriverWalletClient({ wallet, transactions, pendingPayouts, payou
             </div>
           )}
         </div>
+      )}
+      {/* ── 가계부 탭 ── */}
+      {tab === "ledger" && (
+        <LedgerView transactions={transactions} role="driver" />
       )}
     </div>
   )

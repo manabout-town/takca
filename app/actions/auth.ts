@@ -59,9 +59,9 @@ export async function signUp(formData: FormData) {
   }
 
   if (!data.session) {
-    redirect(`/verify-email?email=${encodeURIComponent(email)}`)
+    return { redirect: `/verify-email?email=${encodeURIComponent(email)}` }
   }
-  redirect(role === "driver" ? "/driver/dashboard" : "/shipper/dashboard")
+  return { redirect: role === "driver" ? "/driver/dashboard" : "/shipper/dashboard" }
 }
 
 export async function signIn(formData: FormData) {
@@ -83,10 +83,10 @@ export async function signIn(formData: FormData) {
 
   const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).single()
   const role = profile?.role
-  if (role === "shipper") redirect("/shipper/dashboard")
-  if (role === "driver") redirect("/driver/dashboard")
-  if (role === "admin") redirect("/admin/dashboard")
-  redirect("/")
+  if (role === "shipper") return { redirect: "/shipper/dashboard" }
+  if (role === "driver") return { redirect: "/driver/dashboard" }
+  if (role === "admin") return { redirect: "/admin/dashboard" }
+  return { redirect: "/" }
 }
 
 export async function signOut() {

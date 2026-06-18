@@ -1,5 +1,6 @@
 "use client"
 import { useState, Suspense } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { signUp } from "@/app/actions/auth"
@@ -36,6 +37,7 @@ function passwordStrength(pw: string): { score: number; label: string; color: st
 }
 
 function SignupForm() {
+  const router = useRouter()
   const params = useSearchParams()
   const [role, setRole] = useState<"shipper" | "driver">(
     (params.get("role") as "shipper" | "driver") || "shipper"
@@ -121,6 +123,11 @@ function SignupForm() {
     setLoading(true)
     const result = await signUp(formData)
     if (result?.error) { setError(result.error); setLoading(false) }
+    else if (result?.redirect) {
+      sessionStorage.setItem("hwamulro_session_active", "true")
+      sessionStorage.setItem("hwamulro_last_active", Date.now().toString())
+      router.push(result.redirect)
+    }
   }
 
   const strength = password ? passwordStrength(password) : null

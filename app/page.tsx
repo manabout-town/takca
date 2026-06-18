@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
+import { LandingHeader } from "@/components/shared/LandingHeader"
 
 // ─── Static landing page (no SSR data fetch — use Suspense wrapper if needed) ───
 
@@ -10,51 +11,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
 
-      {/* ══════════════════════════════════════════
-          HEADER
-      ══════════════════════════════════════════ */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-950/95 backdrop-blur-md border-b border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 h-15 flex items-center justify-between" style={{height:'60px'}}>
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-orange-500 flex items-center justify-center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <rect x="1" y="3" width="15" height="13" rx="2" stroke="white" strokeWidth="2"/>
-                <path d="M16 8h4l3 3v5h-7V8z" stroke="white" strokeWidth="2" strokeLinejoin="round"/>
-                <circle cx="5.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
-                <circle cx="18.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
-              </svg>
-            </div>
-            <span className="text-white font-extrabold text-base tracking-tight">화물로</span>
-          </div>
-
-          {/* Nav */}
-          <nav className="hidden md:flex items-center gap-1 text-sm">
-            {[
-              { label: "서비스 소개", href: "#about" },
-              { label: "이용 방법", href: "#how" },
-              { label: "핵심 기능", href: "#features" },
-              { label: "의뢰 현황", href: "#orders" },
-            ].map(n => (
-              <a key={n.label} href={n.href}
-                className="px-3 py-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-all">
-                {n.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <Link href="/login"
-              className="text-sm text-gray-400 hover:text-white px-4 py-2 rounded-lg transition-colors">
-              로그인
-            </Link>
-            <Link href="/signup"
-              className="bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all hover:shadow-lg hover:shadow-orange-500/20">
-              무료 시작
-            </Link>
-          </div>
-        </div>
-      </header>
+      <LandingHeader />
 
       {/* ══════════════════════════════════════════
           HERO — Higgsfield AI generated background

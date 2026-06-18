@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { signIn } from "@/app/actions/auth"
 import { createClient } from "@/lib/supabase/client"
@@ -10,6 +11,7 @@ import { Logo } from "@/components/shared/Logo"
 type Provider = "kakao" | "google" | "apple"
 
 export default function LoginPage() {
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<Provider | null>(null)
@@ -23,6 +25,10 @@ export default function LoginPage() {
     if (result?.error) {
       setError(result.error)
       setLoading(false)
+    } else if (result?.redirect) {
+      sessionStorage.setItem("hwamulro_session_active", "true")
+      sessionStorage.setItem("hwamulro_last_active", Date.now().toString())
+      router.push(result.redirect)
     }
   }
 
