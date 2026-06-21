@@ -1,4 +1,4 @@
-import { createServerClient } from "@supabase/ssr"
+import { createServerClient, type CookieOptions } from "@supabase/ssr"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) {
           cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value)
             response.cookies.set(name, value, options)
@@ -30,14 +30,14 @@ export async function middleware(request: NextRequest) {
 
   // Public paths (no auth required)
   const publicPaths = ["/", "/login", "/signup", "/intro", "/verify-email", "/auth/callback"]
-  const isPublic = publicPaths.some(p => path === p || path.startsWith("/auth/")) || path.startsWith("/driver/")
+  const isPublic = publicPaths.some(p => path === p || path.startsWith("/auth/")) || path.startsWith("/driver/") || path.startsWith("/api/")
 
   if (!user && !isPublic && path !== "/onboarding") {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 
-  // Redirect logged-in users away from auth pages
-  if (user && (path === "/login" || path === "/signup")) {
+  // Redirect logged-in users away from auth/landing pages
+  if (user && (path === "/" || path === "/login" || path === "/signup")) {
     const { data: profile } = await supabase
       .from("users")
       .select("role")
