@@ -5,6 +5,11 @@ import { AvailableDriversBanner } from "@/components/shared/AvailableDriversBann
 import { formatKRW } from "@/lib/utils/format"
 import Link from "next/link"
 import { Suspense } from "react"
+import {
+  ClipboardPlus, LayoutList, Wallet, User,
+  ClipboardList, TrendingUp, Loader2, CheckCircle2, Zap,
+  ArrowRight, MessageCircle,
+} from "lucide-react"
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "대기 중", matched: "매칭됨", in_progress: "운송 중",
@@ -32,6 +37,20 @@ export default async function ShipperDashboardPage() {
   const totalSpent = orders?.filter(o => o.status === "completed").reduce((s, o) => s + (o.price || 0), 0) || 0
   const activeOrder = orders?.find(o => ["in_progress","matched"].includes(o.status))
 
+  const stats = [
+    { label: "전체 의뢰", value: totalOrders, suffix: "건", accent: false, icon: ClipboardList },
+    { label: "진행 중", value: activeOrders, suffix: "건", accent: activeOrders > 0, icon: Loader2 },
+    { label: "완료", value: completedOrders, suffix: "건", accent: false, icon: CheckCircle2 },
+    { label: "총 거래액", value: formatKRW(totalSpent), suffix: "", accent: false, icon: TrendingUp },
+  ]
+
+  const quickActions = [
+    { href: "/shipper/orders/new", Icon: ClipboardPlus, label: "의뢰 등록", color: "orange" },
+    { href: "/shipper/dashboard", Icon: LayoutList, label: "의뢰 목록", color: "gray" },
+    { href: "/shipper/wallet", Icon: Wallet, label: "에스크로", color: "gray" },
+    { href: "/shipper/mypage", Icon: User, label: "마이페이지", color: "gray" },
+  ]
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -42,25 +61,38 @@ export default async function ShipperDashboardPage() {
           </h1>
           <p className="text-base text-gray-400 mt-2">화주 대시보드</p>
         </div>
-        <Link href="/shipper/orders/new"
-          className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shrink-0 mt-1">
-          + 의뢰 등록
+        <Link
+          href="/shipper/orders/new"
+          className="flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shrink-0 mt-1"
+        >
+          <ClipboardPlus className="w-4 h-4" />
+          의뢰 등록
         </Link>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: "전체 의뢰", value: totalOrders, suffix: "건", accent: false },
-          { label: "진행 중", value: activeOrders, suffix: "건", accent: activeOrders > 0 },
-          { label: "완료", value: completedOrders, suffix: "건", accent: false },
-          { label: "총 거래액", value: formatKRW(totalSpent), suffix: "", accent: false },
-        ].map((s) => (
-          <div key={s.label} className={`rounded-2xl p-6 border ${s.accent ? "bg-orange-50 border-orange-100" : "bg-white border-gray-100"}`}>
-            <div className={`text-3xl font-bold tracking-tight ${s.accent ? "text-orange-600" : "text-gray-900"}`}>{s.value}{s.suffix}</div>
-            <div className="text-sm text-gray-400 mt-1.5">{s.label}</div>
-          </div>
-        ))}
+        {stats.map((s) => {
+          const Icon = s.icon
+          return (
+            <div
+              key={s.label}
+              className={`rounded-2xl p-5 border relative overflow-hidden ${
+                s.accent ? "bg-orange-50 border-orange-100" : "bg-white border-gray-100"
+              }`}
+            >
+              <Icon
+                className={`w-5 h-5 absolute top-4 right-4 ${
+                  s.accent ? "text-orange-300" : "text-gray-200"
+                }`}
+              />
+              <div className={`text-3xl font-bold tracking-tight ${s.accent ? "text-orange-600" : "text-gray-900"}`}>
+                {s.value}{s.suffix}
+              </div>
+              <div className="text-sm text-gray-400 mt-1.5">{s.label}</div>
+            </div>
+          )
+        })}
       </div>
 
       {/* Active order with route map */}
@@ -69,7 +101,7 @@ export default async function ShipperDashboardPage() {
           <div className="flex items-start justify-between mb-5">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <span className={`w-2 h-2 rounded-full ${STATUS_DOT[activeOrder.status]} animate-pulse`}></span>
+                <span className={`w-2 h-2 rounded-full ${STATUS_DOT[activeOrder.status]} animate-pulse`} />
                 <span className="text-sm font-semibold text-orange-600">{STATUS_LABEL[activeOrder.status]}</span>
               </div>
               <h2 className="text-lg font-bold text-gray-900">{activeOrder.title || "진행 중인 운송"}</h2>
@@ -82,7 +114,13 @@ export default async function ShipperDashboardPage() {
               <span className="text-sm text-gray-600">
                 배정 기사: <span className="font-semibold text-gray-900">{(activeOrder.matches[0] as any).drivers?.name}</span>
               </span>
-              <Link href={`/chat/${activeOrder.matches[0].id}`} className="text-sm font-semibold text-orange-600 hover:underline">채팅 →</Link>
+              <Link
+                href={`/chat/${activeOrder.matches[0].id}`}
+                className="flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:underline"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                채팅
+              </Link>
             </div>
           )}
         </div>
@@ -90,16 +128,22 @@ export default async function ShipperDashboardPage() {
 
       {/* Quick actions */}
       <div className="grid grid-cols-4 gap-3">
-        {[
-          { href: "/shipper/orders/new", icon: "📝", label: "의뢰 등록" },
-          { href: "/shipper/dashboard", icon: "📋", label: "의뢰 목록" },
-          { href: "/shipper/wallet", icon: "💳", label: "에스크로" },
-          { href: "/shipper/mypage", icon: "👤", label: "마이페이지" },
-        ].map(a => (
-          <Link key={a.href} href={a.href}
-            className="bg-white border border-gray-100 rounded-2xl p-5 text-center hover:border-orange-200 hover:bg-orange-50/30 transition-colors">
-            <div className="text-2xl mb-2">{a.icon}</div>
-            <div className="text-sm text-gray-600 font-medium">{a.label}</div>
+        {quickActions.map(({ href, Icon, label, color }) => (
+          <Link
+            key={href}
+            href={href}
+            className={`group bg-white border border-gray-100 rounded-2xl p-5 text-center hover:border-orange-200 hover:bg-orange-50/30 transition-all`}
+          >
+            <div className="flex justify-center mb-2.5">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                color === "orange"
+                  ? "bg-orange-100 text-orange-600"
+                  : "bg-gray-100 text-gray-500 group-hover:bg-orange-100 group-hover:text-orange-600"
+              } transition-colors`}>
+                <Icon className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="text-xs text-gray-600 font-medium leading-tight">{label}</div>
           </Link>
         ))}
       </div>
@@ -113,28 +157,45 @@ export default async function ShipperDashboardPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900">최근 의뢰</h2>
-          <Link href="/shipper/orders" className="text-sm text-gray-400 hover:text-orange-500 transition-colors">전체 →</Link>
+          <Link href="/shipper/orders" className="text-sm text-gray-400 hover:text-orange-500 transition-colors flex items-center gap-1">
+            전체 <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
         {!orders || orders.length === 0 ? (
-          <EmptyState icon="📋" title="등록된 의뢰가 없습니다" description="첫 번째 의뢰를 등록해보세요"
-            action={<Link href="/shipper/orders/new" className="btn-primary px-5 py-2.5 rounded-xl text-sm inline-block">의뢰 등록하기</Link>}
+          <EmptyState
+            icon={<ClipboardList className="w-12 h-12 text-gray-200" />}
+            title="등록된 의뢰가 없습니다"
+            description="첫 번째 의뢰를 등록해보세요"
+            action={
+              <Link href="/shipper/orders/new" className="btn-primary px-5 py-2.5 rounded-xl text-sm inline-block">
+                의뢰 등록하기
+              </Link>
+            }
           />
         ) : (
           <div className="space-y-3">
             {orders.slice(0, 5).map((order) => (
-              <Link key={order.id} href={`/shipper/orders/${order.id}`}
-                className="flex items-center gap-5 bg-white border border-gray-100 rounded-2xl p-5 hover:border-orange-200 transition-colors">
+              <Link
+                key={order.id}
+                href={`/shipper/orders/${order.id}`}
+                className="flex items-center gap-5 bg-white border border-gray-100 rounded-2xl p-5 hover:border-orange-200 transition-colors"
+              >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     {order.title && <span className="font-semibold text-gray-900 truncate">{order.title}</span>}
-                    {order.is_urgent && <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full shrink-0">⚡ 긴급</span>}
+                    {order.is_urgent && (
+                      <span className="inline-flex items-center gap-0.5 text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full shrink-0">
+                        <Zap className="w-2.5 h-2.5" />
+                        긴급
+                      </span>
+                    )}
                   </div>
                   <div className="text-sm text-gray-400 truncate">{order.origin} → {order.destination}</div>
                 </div>
                 <div className="text-right flex-shrink-0">
                   <div className="font-bold text-orange-500">{formatKRW(order.price)}</div>
                   <div className="flex items-center gap-1 justify-end mt-1">
-                    <span className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[order.status] || "bg-gray-300"}`}></span>
+                    <span className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[order.status] || "bg-gray-300"}`} />
                     <span className="text-xs text-gray-400">{STATUS_LABEL[order.status]}</span>
                   </div>
                 </div>
