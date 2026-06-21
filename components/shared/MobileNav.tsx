@@ -8,7 +8,7 @@ interface Props { role: UserRole }
 const shipperItems = [
   { href: "/shipper/dashboard", icon: "🏠", label: "홈" },
   { href: "/shipper/orders/new", icon: "➕", label: "의뢰 등록" },
-  { href: "/shipper/calendar", icon: "📅", label: "캘린더" },
+  { href: "/shipper/drivers", icon: "🚛", label: "기사 찾기" },
   { href: "/shipper/wallet", icon: "💳", label: "지갑" },
   { href: "/shipper/mypage", icon: "👤", label: "마이" },
 ]

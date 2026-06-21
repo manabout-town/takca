@@ -14,7 +14,7 @@ export function Navbar({ user }: NavbarProps) {
   const shipperNav = [
     { href: "/shipper/dashboard", label: "대시보드" },
     { href: "/shipper/orders/new", label: "의뢰 등록" },
-    { href: "/shipper/calendar", label: "캘린더" },
+    { href: "/shipper/drivers", label: "기사 찾기" },
     { href: "/shipper/wallet", label: "지갑" },
     { href: "/shipper/mypage", label: "마이페이지" },
   ]
