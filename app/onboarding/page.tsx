@@ -15,6 +15,8 @@ const REGIONS = [
   "전북","전남","광주","경북","경남","대구","울산","부산","제주"
 ]
 
+const BUSINESS_TYPES = ["법인사업자", "개인사업자", "개인(사업자등록 없음)"]
+
 function OnboardingForm() {
   const params = useSearchParams()
   const initialRole = (params.get("role") as "shipper" | "driver") || "shipper"
@@ -83,6 +85,16 @@ function OnboardingForm() {
               value={name} onChange={e => setName(e.target.value)}
             />
             <Input name="phone" type="tel" label="휴대폰 번호" placeholder="010-1234-5678" required />
+
+            {role === "shipper" && (
+              <>
+                <Input name="companyName" label="회사명 (선택)" placeholder="(주)화물로컴퍼니" />
+                <Select name="businessType" label="사업자 유형 (선택)"
+                  options={BUSINESS_TYPES.map(t => ({ value: t, label: t }))}
+                  placeholder="사업자 유형 선택" />
+                <Input name="businessNumber" label="사업자번호 (선택)" placeholder="000-00-00000" />
+              </>
+            )}
 
             {role === "driver" && (
               <>

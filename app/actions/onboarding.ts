@@ -21,6 +21,9 @@ export async function completeProfile(formData: FormData) {
   const homeRegion = formData.get("homeRegion") as string
   const routeRegionsRaw = formData.get("routeRegions") as string
   const routeRegions = routeRegionsRaw ? JSON.parse(routeRegionsRaw) : []
+  const companyName = (formData.get("companyName") as string)?.trim() || null
+  const businessType = (formData.get("businessType") as string) || null
+  const businessNumber = (formData.get("businessNumber") as string)?.replace(/-/g, "").trim() || null
 
   if (!name || !phone || !role) return { error: "모든 필수 항목을 입력해주세요" }
   if (!PHONE_RE.test(phone)) return { error: "올바른 휴대폰 번호를 입력해주세요 (예: 01012345678)" }
@@ -43,7 +46,11 @@ export async function completeProfile(formData: FormData) {
       rating_count: 0,
     })
   } else {
-    await service.from("shipper_profiles").upsert({ user_id: user.id })
+    await service.from("shipper_profiles").upsert({
+      user_id: user.id,
+      company_name: companyName,
+      business_number: businessNumber,
+    })
   }
 
   await service.from("wallets").upsert({ user_id: user.id, balance: 0 })
