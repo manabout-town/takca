@@ -51,7 +51,10 @@ export function LandingHeader() {
               <circle cx="18.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
             </svg>
           </div>
-          <span className="text-white font-extrabold text-base tracking-tight">화물로</span>
+          <div className="flex flex-col leading-none">
+            <span className="text-white font-extrabold text-base tracking-tight">탁카</span>
+            <span className="text-orange-400 text-[9px] font-semibold tracking-widest">카 캐리어 전문</span>
+          </div>
         </div>
 
         {/* Nav */}

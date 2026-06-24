@@ -60,20 +60,20 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 bg-white/6 border border-white/10
             text-gray-300 text-xs px-4 py-2 rounded-full mb-8">
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-            실시간 운영 중 · 전국 화물 중개 플랫폼
+            실시간 운영 중 · 전국 카 캐리어 탁송 중개 플랫폼
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-[4.5rem] lg:text-[5.5rem] font-extrabold text-white
             tracking-tight mb-5 leading-[1.06]">
-            화물 운송,<br />
+            차량 탁송,<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">
               직접 연결.
             </span>
           </h1>
 
           <p className="text-gray-400 text-base md:text-lg max-w-lg mx-auto mb-4 leading-relaxed">
-            화주와 기사를 중간 없이 잇는 화물 중개 플랫폼.<br />
-            에스크로 안전결제로 양쪽 모두 보호합니다.
+            카 캐리어 차량 탁송 전문 플랫폼.<br />
+            전국 카 캐리어 기사와 의뢰인을 실시간으로 연결합니다.
           </p>
 
           {/* ── 나는 누구인가요? 즉시 선택 ── */}
@@ -85,8 +85,8 @@ export default function HomePage() {
             {[
               "✓ 가입비 없음",
               "✓ 의뢰 등록 무료",
-              "✓ 에스크로 안전결제",
-              "✓ 평균 47분 매칭",
+              "✓ 에스크로 안전결제 (토스페이먼츠)",
+              "✓ 전국 서비스 (서울~부산~제주)",
             ].map(t => <span key={t}>{t}</span>)}
           </div>
         </div>

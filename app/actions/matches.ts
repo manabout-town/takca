@@ -11,7 +11,7 @@ export async function cancelMatch(matchId: string, reason: string = "") {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("id, order_id, driver_id, status, orders!inner(shipper_id, price, origin, destination)")
+    .select("id, order_id, driver_id, status, orders!inner(shipper_id, price, origin, destination, pickup_at)")
     .eq("id", matchId)
     .single()
 
@@ -20,13 +20,32 @@ export async function cancelMatch(matchId: string, reason: string = "") {
   if (!["accepted", "in_progress"].includes(match.status)) return { error: "취소할 수 없는 상태입니다" }
 
   const order = match.orders as any
-  const orderPrice = order?.price || 0
-  const penaltyAmount = Math.floor(orderPrice * 0.2)
-  const shipperId = order?.shipper_id
+  const orderPrice: number = order?.price || 0
+  const shipperId: string = order?.shipper_id
   const routeLabel = `${order?.origin} → ${order?.destination}`
 
+  // Time-based penalty calculation
+  // 당일 취소 → 운임의 30%, 12시간 이내 취소 → 운임의 20%, 그 외 → 0
+  const now = new Date()
+  const pickup = new Date(order?.pickup_at)
+  const hoursUntilPickup = (pickup.getTime() - now.getTime()) / (1000 * 60 * 60)
+  const isSameDay = now.toDateString() === pickup.toDateString()
+
+  let penaltyRate = 0
+  let penaltyLabel = ""
+  if (isSameDay) {
+    penaltyRate = 0.30
+    penaltyLabel = "당일 취소 위약금 (운임의 30%)"
+  } else if (hoursUntilPickup <= 12) {
+    penaltyRate = 0.20
+    penaltyLabel = "단기 취소 위약금 (운임의 20%)"
+  }
+
+  const penaltyAmount = Math.floor(orderPrice * penaltyRate)
+  let penaltyStatus: "none" | "pending" | "collected" = "none"
+
   if (penaltyAmount > 0) {
-    // Deduct from driver
+    // Deduct from driver wallet
     const { data: driverWallet } = await service
       .from("wallets")
       .select("balance")
@@ -44,7 +63,7 @@ export async function cancelMatch(matchId: string, reason: string = "") {
       type: "withdrawal",
       amount: -penaltyAmount,
       balance_after: newDriverBalance,
-      description: `위약금 — ${routeLabel} (운임의 20%)`,
+      description: `${penaltyLabel} — ${routeLabel}`,
       reference_id: matchId,
       status: "completed",
     })
@@ -71,14 +90,17 @@ export async function cancelMatch(matchId: string, reason: string = "") {
       reference_id: matchId,
       status: "completed",
     })
+
+    penaltyStatus = "collected"
   }
 
   await service.from("matches").update({
     status: "cancelled",
-    cancelled_by: "driver",
-    cancelled_at: new Date().toISOString(),
+    cancelled_at: now.toISOString(),
+    cancelled_by_user: user.id,
     cancel_reason: reason || null,
     penalty_amount: penaltyAmount,
+    penalty_status: penaltyStatus,
   }).eq("id", matchId)
 
   await service.from("orders").update({ status: "pending" }).eq("id", match.order_id)
@@ -87,14 +109,18 @@ export async function cancelMatch(matchId: string, reason: string = "") {
     {
       user_id: user.id,
       title: "운송 취소 완료",
-      body: `${routeLabel} 취소. 위약금 ${penaltyAmount.toLocaleString()}원 부과.`,
+      body: penaltyAmount > 0
+        ? `${routeLabel} 취소. ${penaltyLabel}: ${penaltyAmount.toLocaleString()}원 부과.`
+        : `${routeLabel} 취소 처리되었습니다.`,
       type: "match_cancelled",
       reference_id: matchId,
     },
     {
       user_id: shipperId,
       title: "기사 취소 알림",
-      body: `기사가 ${routeLabel} 운송을 취소했습니다. 위약금 ${penaltyAmount.toLocaleString()}원 지급.`,
+      body: penaltyAmount > 0
+        ? `기사가 ${routeLabel} 운송을 취소했습니다. 위약금 ${penaltyAmount.toLocaleString()}원이 지급됩니다.`
+        : `기사가 ${routeLabel} 운송을 취소했습니다. 의뢰가 재공개됩니다.`,
       type: "match_cancelled",
       reference_id: matchId,
     },
@@ -106,5 +132,5 @@ export async function cancelMatch(matchId: string, reason: string = "") {
   revalidatePath("/shipper/dashboard")
   revalidatePath("/shipper/wallet")
 
-  return { success: true, penaltyAmount }
+  return { success: true, penaltyAmount, penaltyLabel }
 }
