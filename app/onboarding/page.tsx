@@ -87,7 +87,7 @@ function OnboardingForm() {
 
             {role === "shipper" && (
               <>
-                <Input name="companyName" label="회사명 (선택)" placeholder="(주)화물로컴퍼니" />
+                <Input name="companyName" label="회사명 (선택)" placeholder="(주)탁카컴퍼니" />
                 <Select name="businessType" label="사업자 유형 (선택)"
                   options={BUSINESS_TYPES.map(t => ({ value: t, label: t }))}
                   placeholder="사업자 유형 선택" />

@@ -40,7 +40,7 @@ export async function sendPhoneOtp(phone: string) {
   //   method: "POST",
   //   headers: { "X-Secret-Key": smsKey, "Content-Type": "application/json" },
   //   body: JSON.stringify({
-  //     body: `[화물로] 인증번호 ${code}를 입력해주세요. (5분 이내 유효)`,
+  //     body: `[탁카] 인증번호 ${code}를 입력해주세요. (5분 이내 유효)`,
   //     sendNo: smsSenderId,
   //     recipientList: [{ recipientNo: formatKoreanPhone(phone) }],
   //   }),

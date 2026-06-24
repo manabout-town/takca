@@ -7,14 +7,14 @@ import { PwaInstallBanner } from "@/components/shared/PwaInstallBanner"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "화물로 - 화물 중개 플랫폼",
-  description: "화주와 기사를 직접 연결하는 디지털 화물 중개 플랫폼",
-  keywords: ["화물", "중개", "운송", "트럭", "배송"],
+  title: "탁카 (TakCa) - 전국 카 캐리어 탁송 중개 플랫폼",
+  description: "딜러사·경매장·개인을 카 캐리어 기사와 직접 연결하는 차량 탁송 중개 플랫폼",
+  keywords: ["카 캐리어", "차량 탁송", "탁카", "takca", "자동차 운반"],
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "화물로",
+    title: "탁카",
   },
   formatDetection: { telephone: false },
 }

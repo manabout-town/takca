@@ -173,7 +173,7 @@ export default function IntroPage() {
             <a href="#" className="hover:text-gray-400 transition-colors">개인정보처리방침</a>
             <a href="#" className="hover:text-gray-400 transition-colors">고객센터</a>
           </div>
-          <div className="text-xs text-gray-700">© 2024 화물로</div>
+          <div className="text-xs text-gray-700">© 2026 탁카 (TakCa)</div>
         </div>
       </footer>
     </div>

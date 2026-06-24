@@ -33,7 +33,7 @@ export default async function VerifyEmailPage({
           <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 mb-6 text-left space-y-4">
             {[
               { step: "1", title: "이메일 메일함 열기", desc: "스팸 폴더도 확인해주세요" },
-              { step: "2", title: "화물로 인증 메일 찾기", desc: "발신자: noreply@supabase.io" },
+              { step: "2", title: "탁카 인증 메일 찾기", desc: "발신자: noreply@supabase.io" },
               { step: "3", title: "인증 링크 클릭", desc: "링크 클릭 후 자동으로 로그인됩니다" },
             ].map(s => (
               <div key={s.step} className="flex items-start gap-3">

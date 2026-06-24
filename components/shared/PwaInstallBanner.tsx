@@ -44,7 +44,7 @@ export function PwaInstallBanner() {
         🚛
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-900">화물로 앱 설치</p>
+        <p className="text-sm font-semibold text-gray-900">탁카 앱 설치</p>
         <p className="text-xs text-gray-400 mt-0.5">홈 화면에 추가하면 더 빠르게 이용해요</p>
       </div>
       <div className="flex flex-col gap-1 shrink-0">
