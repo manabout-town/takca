@@ -106,10 +106,10 @@ export default function HomePage() {
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
           {[
-            { num: "94.7%", label: "매칭 성공률", sub: "전국 기사 네트워크" },
+            { num: "94.7%", label: "매칭 성공률", sub: "전국 카 캐리어 네트워크" },
             { num: "47분", label: "평균 매칭 시간", sub: "긴급 건 3분 이내" },
             { num: "4.8점", label: "기사 평균 평점", sub: "5점 만점" },
-            { num: "4%", label: "기사 수수료", sub: "화주 등록 무료" },
+            { num: "4%", label: "거래 수수료", sub: "의뢰 등록 무료" },
           ].map(s => (
             <div key={s.label}>
               <div className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-1 tabular-nums">{s.num}</div>
@@ -127,13 +127,13 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-14">
             <div className="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
-              화물로란?
+              탁카란?
             </div>
             <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-3">
               두 타입의 사용자를 위한 플랫폼
             </h2>
             <p className="text-gray-500 max-w-sm mx-auto text-sm">
-              화주는 의뢰를 올리고, 기사는 원하는 건을 골라 수락합니다.
+              화주는 탁송 의뢰를 올리고, 카 캐리어 기사는 원하는 건을 골라 수락합니다.
             </p>
           </div>
 
@@ -151,20 +151,20 @@ export default function HomePage() {
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
                       stroke="white" strokeWidth="2.5" strokeLinejoin="round"/>
                   </svg>
-                  화주 (보내는 사람)
+                  화주 (탁송 의뢰인)
                 </div>
                 <h3 className="text-2xl font-extrabold text-gray-900 mb-2">
-                  화물을 보내야 한다면
+                  차량 탁송이 필요하다면
                 </h3>
                 <p className="text-gray-500 text-sm mb-7 leading-relaxed">
-                  의뢰만 올리면 전국 검증 기사님이 직접 연락합니다.
+                  딜러사·경매장·리스업체·개인 — 의뢰만 올리면 전국 카 캐리어 기사님이 직접 연락합니다.
                 </p>
                 <div className="space-y-3 mb-8">
                   {[
-                    { n: "01", text: "무료 의뢰 등록 — 출발지·도착지·화물 종류·희망 금액" },
-                    { n: "02", text: "기사님 매칭 알림 수신 (평균 47분, 긴급은 3분)" },
-                    { n: "03", text: "에스크로 안전결제 후 운송 시작" },
-                    { n: "04", text: "완료 후 평가 — 다음 거래가 더 빠릅니다" },
+                    { n: "01", text: "무료 의뢰 등록 — 출발지·도착지·차량 수 및 차종·희망 금액" },
+                    { n: "02", text: "카 캐리어 기사 매칭 알림 수신 (평균 47분, 긴급은 3분)" },
+                    { n: "03", text: "에스크로 안전결제 후 탁송 시작 (토스페이먼츠)" },
+                    { n: "04", text: "인도 리포트 확인 후 자동 정산 — 다음 거래가 더 빠릅니다" },
                   ].map(s => (
                     <div key={s.n} className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-orange-100 text-orange-600 rounded-md
@@ -198,20 +198,20 @@ export default function HomePage() {
                     <circle cx="5.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2.5"/>
                     <circle cx="18.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2.5"/>
                   </svg>
-                  기사 (운송하는 사람)
+                  기사 (카 캐리어 기사)
                 </div>
                 <h3 className="text-2xl font-extrabold text-gray-900 mb-2">
-                  화물을 운송하고 싶다면
+                  카 캐리어 기사라면
                 </h3>
                 <p className="text-gray-500 text-sm mb-7 leading-relaxed">
                   피드에서 원하는 건만 골라 수락. 강요 없이 자유롭게.
                 </p>
                 <div className="space-y-3 mb-8">
                   {[
-                    { n: "01", text: "가입 — 차량 정보 등록 (가입비 0원)" },
-                    { n: "02", text: "실시간 의뢰 피드에서 원하는 건 선택" },
+                    { n: "01", text: "가입 — 카 캐리어 차량 정보 등록 (가입비 0원)" },
+                    { n: "02", text: "실시간 탁송 의뢰 피드에서 원하는 건 선택" },
                     { n: "03", text: "화주와 1:1 채팅으로 픽업 일정 조율" },
-                    { n: "04", text: "운송 완료 후 에스크로 정산 (수수료 4%)" },
+                    { n: "04", text: "탁송 완료 후 에스크로 정산 (수수료 4%)" },
                   ].map(s => (
                     <div key={s.n} className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-indigo-100 text-indigo-600 rounded-md
@@ -248,7 +248,7 @@ export default function HomePage() {
             <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-3">
               안심하고 거래할 수 있는 이유
             </h2>
-            <p className="text-gray-500 text-sm">6가지 핵심 기능으로 화주와 기사 모두를 보호합니다</p>
+            <p className="text-gray-500 text-sm">5가지 핵심 기능으로 화주와 카 캐리어 기사 모두를 보호합니다</p>
           </div>
 
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -290,7 +290,7 @@ export default function HomePage() {
               실시간 업데이트
             </div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">지금 이 순간도</h2>
-            <p className="text-gray-400 text-sm">전국에서 의뢰가 올라오고 있습니다</p>
+            <p className="text-gray-400 text-sm">전국에서 차량 탁송 의뢰가 올라오고 있습니다</p>
           </div>
 
           {/* Mock order cards (실제 데이터는 로그인 후 확인) */}
@@ -336,7 +336,7 @@ export default function HomePage() {
           {/* CTA to see all */}
           <div className="text-center p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <p className="text-sm text-gray-500 mb-4">
-              전체 의뢰를 확인하고 매칭을 받으려면 로그인하세요
+              전체 탁송 의뢰를 확인하고 매칭을 받으려면 로그인하세요
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/login"
@@ -409,14 +409,14 @@ export default function HomePage() {
                 <circle cx="18.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
               </svg>
             </div>
-            <span className="text-white font-bold text-sm">화물로</span>
+            <span className="text-white font-bold text-sm">탁카 (TakCa)</span>
           </div>
           <div className="flex gap-6 text-sm text-gray-600">
             <Link href="/intro" className="hover:text-white transition-colors">서비스 소개</Link>
             <a href="#" className="hover:text-white transition-colors">이용약관</a>
             <a href="#" className="hover:text-white transition-colors">개인정보처리방침</a>
           </div>
-          <div className="text-xs text-gray-700">© 2025 화물로</div>
+          <div className="text-xs text-gray-700">© 2026 탁카 (TakCa)</div>
         </div>
       </footer>
 
@@ -490,61 +490,61 @@ function RoleSelector() {
 const FEATURES = [
   {
     color: "text-orange-400", bg: "bg-orange-400/10", borderHover: "hover:border-orange-200",
-    icon: <path d="M12 2L4 6v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z"
+    icon: <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
       stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>,
-    title: "에스크로 안전결제",
-    desc: "결제금을 제3자가 보관, 운송 완료 후 자동 정산. 사기 불가.",
+    title: "픽업 전 차량 상태 리포트",
+    desc: "탁송 전 기사가 차량 사진 + 체크리스트 작성. 데미지 분쟁을 원천 차단.",
     tag: "화주·기사 모두",
   },
   {
     color: "text-amber-400", bg: "bg-amber-400/10", borderHover: "hover:border-amber-200",
     icon: <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
       stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" fill="none"/>,
-    title: "긴급 부스팅",
-    desc: "1,000원으로 피드 최상단 노출. 평균 3분 내 매칭.",
-    tag: "화주 전용",
+    title: "앱 실시간 PUSH 알림",
+    desc: "매칭·픽업·도착 알림을 앱으로 즉시 수신. 카카오톡 오픈채팅 불필요.",
+    tag: "화주·기사 모두",
   },
   {
     color: "text-blue-400", bg: "bg-blue-400/10", borderHover: "hover:border-blue-200",
-    icon: <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+    icon: <path d="M12 2L4 6v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z"
       stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>,
-    title: "실시간 채팅",
-    desc: "매칭 즉시 1:1 채팅방 개설. 모든 소통 한 곳에서.",
+    title: "에스크로 디지털 결제",
+    desc: "토스페이먼츠 에스크로 보관. 인도 확인 or 72시간 후 자동 정산.",
     tag: "화주·기사 모두",
   },
   {
     color: "text-emerald-400", bg: "bg-emerald-400/10", borderHover: "hover:border-emerald-200",
     icon: (
       <>
-        <rect x="1" y="3" width="15" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <path d="M16 8h4l3 3v5h-7V8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
-        <circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="1.5"/>
       </>
     ),
-    title: "차량 맞춤 매칭",
-    desc: "화물 종류와 무게에 맞는 최적 차량 자동 필터링.",
+    title: "사전 예약 오더",
+    desc: "긴급 탁송 + 일반 사전 예약 모두 지원. 원하는 날짜에 미리 확정.",
     tag: "화주 전용",
   },
   {
-    color: "text-purple-400", bg: "bg-purple-400/10", borderHover: "hover:border-purple-200",
+    color: "text-red-400", bg: "bg-red-400/10", borderHover: "hover:border-red-200",
     icon: (
       <>
-        <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-          stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
       </>
     ),
-    title: "경로 시각화",
-    desc: "출발·도착지를 지도로 한눈에 확인.",
-    tag: "화주·기사 모두",
+    title: "취소 패널티 자동 부과",
+    desc: "기사 갑작스런 취소 방지. 12시간 이내 20% / 당일 30% 패널티 자동 적용.",
+    tag: "화주 보호",
   },
   {
     color: "text-yellow-400", bg: "bg-yellow-400/10", borderHover: "hover:border-yellow-200",
     icon: <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
       stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>,
     title: "상호 평가",
-    desc: "완료 후 화주·기사 양쪽 평가. 신뢰 기반 거래.",
+    desc: "완료 후 화주·기사 양쪽 평가. 신뢰 기반 카 캐리어 거래.",
     tag: "화주·기사 모두",
   },
 ]
@@ -572,16 +572,16 @@ function FeatureCard({ color, bg, borderHover, icon, title, desc, tag }: typeof 
 // ══════════════════════════════════════════
 const HOW_STEPS = {
   shipper: [
-    { icon: "📝", title: "의뢰 등록", desc: "출발지·도착지·화물 종류·희망 금액 입력 후 등록. 5분이면 충분.", action: "의뢰 등록하기 →", href: "/signup?role=shipper" },
-    { icon: "🔔", title: "기사 매칭 알림", desc: "검증된 기사님들이 의뢰를 보고 직접 제안합니다. 평균 47분.", action: null, href: null },
-    { icon: "💳", title: "에스크로 결제", desc: "결제금이 제3자에게 안전 보관됩니다. 운송 완료 전엔 기사에게 지급되지 않습니다.", action: null, href: null },
-    { icon: "✅", title: "완료 & 평가", desc: "운송 완료 확인 후 에스크로 정산. 기사 평점을 남겨주세요.", action: "지금 시작하기 →", href: "/signup?role=shipper" },
+    { icon: "📝", title: "의뢰 등록", desc: "출발지·도착지·차량 수 및 차종·희망 금액 입력 후 등록. 5분이면 충분.", action: "의뢰 등록하기 →", href: "/signup?role=shipper" },
+    { icon: "🔔", title: "카 캐리어 매칭 알림", desc: "전국 카 캐리어 기사님들이 의뢰를 보고 직접 수락합니다. 평균 47분.", action: null, href: null },
+    { icon: "📸", title: "픽업 리포트 확인", desc: "기사님이 픽업 전 차량 상태 사진 + 체크리스트를 제출합니다. 데미지 분쟁 방지.", action: null, href: null },
+    { icon: "✅", title: "인도 리포트 & 정산", desc: "탁송 완료 후 인도 리포트 확인. 에스크로 자동 정산 (확인 후 or 72시간).", action: "지금 시작하기 →", href: "/signup?role=shipper" },
   ],
   driver: [
-    { icon: "🚚", title: "차량 정보 등록", desc: "가입 후 차량 종류와 허용 적재 무게를 등록합니다. 가입비 없음.", action: "기사 가입하기 →", href: "/signup?role=driver" },
-    { icon: "📋", title: "의뢰 피드 확인", desc: "실시간으로 올라오는 의뢰 중 내 차량과 경로에 맞는 건을 선택합니다.", action: null, href: null },
-    { icon: "💬", title: "화주와 채팅 조율", desc: "1:1 채팅으로 픽업 시간과 세부 사항을 빠르게 조율합니다.", action: null, href: null },
-    { icon: "💰", title: "에스크로 정산", desc: "운송 완료 후 자동 정산. 수수료 4%만 차감 후 즉시 입금.", action: "지금 시작하기 →", href: "/signup?role=driver" },
+    { icon: "🚚", title: "카 캐리어 정보 등록", desc: "가입 후 카 캐리어 차량 정보와 운행 지역을 등록합니다. 가입비 없음.", action: "기사 가입하기 →", href: "/signup?role=driver" },
+    { icon: "📋", title: "탁송 의뢰 피드 확인", desc: "실시간으로 올라오는 탁송 의뢰 중 내 경로에 맞는 건을 선택합니다.", action: null, href: null },
+    { icon: "📷", title: "픽업 리포트 제출", desc: "차량 픽업 전 상태 사진 촬영 + 체크리스트 작성. 인도 시에도 동일.", action: null, href: null },
+    { icon: "💰", title: "에스크로 정산", desc: "탁송 완료 후 자동 정산. 수수료 4%만 차감 후 즉시 입금.", action: "지금 시작하기 →", href: "/signup?role=driver" },
   ],
 }
 
@@ -603,7 +603,7 @@ function HowItWorksTabs() {
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
               stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
           </svg>
-          화주 (보내는 사람)
+          화주 (탁송 의뢰인)
         </button>
         <button
           onClick={() => setTab("driver")}
@@ -617,7 +617,7 @@ function HowItWorksTabs() {
             <circle cx="5.5" cy="18.5" r="2.5" stroke="currentColor" strokeWidth="2"/>
             <circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" strokeWidth="2"/>
           </svg>
-          기사 (운송하는 사람)
+          카 캐리어 기사
         </button>
       </div>
 
@@ -657,8 +657,8 @@ function HowItWorksTabs() {
 //  MOCK ORDERS (UI preview without auth)
 // ══════════════════════════════════════════
 const MOCK_ORDERS = [
-  { origin: "서울 강남구", destination: "부산 해운대구", cargoType: "가전제품", vehicleType: "5톤 트럭", price: "320,000원", urgent: false },
-  { origin: "인천 남동구", destination: "대구 달서구", cargoType: "건자재", vehicleType: "1톤 트럭", price: "180,000원", urgent: true },
-  { origin: "경기 수원시", destination: "광주 서구", cargoType: "의류", vehicleType: "2.5톤 트럭", price: "240,000원", urgent: false },
-  { origin: "대전 유성구", destination: "울산 남구", cargoType: "식자재", vehicleType: "냉동차", price: "410,000원", urgent: false },
+  { origin: "서울 강남구", destination: "부산 해운대구", cargoType: "신차 3대", vehicleType: "8열 카 캐리어", price: "520,000원", urgent: false },
+  { origin: "인천 남동구", destination: "대구 달서구", cargoType: "중고차 1대", vehicleType: "2열 카 캐리어", price: "180,000원", urgent: true },
+  { origin: "경기 수원시", destination: "광주 서구", cargoType: "렌트카 4대", vehicleType: "4열 카 캐리어", price: "340,000원", urgent: false },
+  { origin: "대전 유성구", destination: "제주도", cargoType: "경매 낙찰차 2대", vehicleType: "2열 카 캐리어", price: "610,000원", urgent: false },
 ]
