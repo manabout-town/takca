@@ -29,8 +29,11 @@ export function Navbar({ user }: NavbarProps) {
   ]
   const adminNav = [
     { href: "/admin/dashboard", label: "대시보드" },
+    { href: "/admin/kyc", label: "KYC 검토" },
+    { href: "/admin/orders", label: "의뢰 관리" },
     { href: "/admin/drivers", label: "기사 인증" },
     { href: "/admin/disputes", label: "분쟁 관리" },
+    { href: "/admin/settlements", label: "정산 관리" },
     { href: "/admin/users", label: "회원 관리" },
   ]
 

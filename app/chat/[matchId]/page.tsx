@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect, notFound } from "next/navigation"
 import { ChatWindow } from "@/components/chat/ChatWindow"
-import type { User, Match, Order } from "@/lib/types"
+import type { User } from "@/lib/types"
 
-export default async function ChatPage({ params }: { params: { matchId: string } }) {
+export default async function ChatPage({ params }: { params: Promise<{ matchId: string }> }) {
+  const { matchId } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
@@ -15,7 +16,7 @@ export default async function ChatPage({ params }: { params: { matchId: string }
       orders(*, shippers:users!shipper_id(*)),
       drivers:users!driver_id(*)
     `)
-    .eq("id", params.matchId)
+    .eq("id", matchId)
     .single()
 
   if (!match) notFound()
@@ -34,9 +35,19 @@ export default async function ChatPage({ params }: { params: { matchId: string }
   const { data: initialMessages } = await supabase
     .from("chats")
     .select("*, sender:users!sender_id(id, name, role)")
-    .eq("match_id", params.matchId)
+    .eq("match_id", matchId)
     .order("sent_at", { ascending: true })
     .limit(100)
+
+  // Fetch condition reports for this match
+  const { data: conditionReports } = await supabase
+    .from("condition_reports")
+    .select("*")
+    .eq("match_id", matchId)
+    .order("created_at", { ascending: true })
+
+  const pickupReport = conditionReports?.find(r => r.type === "pickup") ?? null
+  const deliveryReport = conditionReports?.find(r => r.type === "delivery") ?? null
 
   return (
     <ChatWindow
@@ -44,6 +55,8 @@ export default async function ChatPage({ params }: { params: { matchId: string }
       currentUser={currentUser as User}
       initialMessages={initialMessages || []}
       isShipper={isShipper}
+      pickupReport={pickupReport}
+      deliveryReport={deliveryReport}
     />
   )
 }

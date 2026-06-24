@@ -2,16 +2,16 @@
 import { createServiceClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 
-export async function approveKYC(submissionId: string) {
+export async function approveKYC(submissionId: string): Promise<void> {
   const service = createServiceClient()
 
-  const { data: submission, error } = await service
+  const { data: submission } = await service
     .from("kyc_submissions")
     .select("user_id")
     .eq("id", submissionId)
     .single()
 
-  if (error || !submission) return { error: "제출 내역을 찾을 수 없습니다" }
+  if (!submission) return
 
   await service
     .from("kyc_submissions")
@@ -24,19 +24,18 @@ export async function approveKYC(submissionId: string) {
     .eq("id", submission.user_id)
 
   revalidatePath("/admin/kyc")
-  return { success: true }
 }
 
-export async function rejectKYC(submissionId: string, reason: string) {
+export async function rejectKYC(submissionId: string, reason: string): Promise<void> {
   const service = createServiceClient()
 
-  const { data: submission, error } = await service
+  const { data: submission } = await service
     .from("kyc_submissions")
     .select("user_id")
     .eq("id", submissionId)
     .single()
 
-  if (error || !submission) return { error: "제출 내역을 찾을 수 없습니다" }
+  if (!submission) return
 
   await service
     .from("kyc_submissions")
@@ -53,5 +52,4 @@ export async function rejectKYC(submissionId: string, reason: string) {
     .eq("id", submission.user_id)
 
   revalidatePath("/admin/kyc")
-  return { success: true }
 }

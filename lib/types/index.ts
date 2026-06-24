@@ -159,3 +159,29 @@ export const CARRIER_VEHICLE_TYPES = [
   '카 캐리어 (중형, 5~8대)',
   '카 캐리어 (대형, 9~12대)',
 ] as const
+
+export interface ConditionReportChecklist {
+  exterior_ok?: boolean
+  glass_ok?: boolean
+  tires_ok?: boolean
+  interior_ok?: boolean
+  engine_ok?: boolean
+  mileage?: number | null
+}
+
+export interface ConditionReportPhoto {
+  url: string
+  caption: string
+}
+
+export interface ConditionReport {
+  id: string
+  match_id: string
+  type: 'pickup' | 'delivery'
+  photos: ConditionReportPhoto[]
+  checklist: ConditionReportChecklist
+  notes?: string | null
+  submitted_by: string
+  shipper_confirmed: boolean
+  created_at: string
+}

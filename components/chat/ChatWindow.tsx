@@ -5,7 +5,9 @@ import Link from "next/link"
 import { formatKRW } from "@/lib/utils/format"
 import { requestCompletion, confirmCompletion, confirmStart } from "@/app/actions/orders"
 import { CargoPhotoSection } from "@/components/shared/CargoPhotoSection"
+import { ConditionReportView } from "@/components/shared/ConditionReportView"
 import type { User } from "@/lib/types"
+import type { ConditionReport } from "@/components/shared/ConditionReportView"
 
 interface Message {
   id: string
@@ -21,13 +23,23 @@ interface ChatWindowProps {
   currentUser: User
   initialMessages: Message[]
   isShipper: boolean
+  pickupReport: ConditionReport | null
+  deliveryReport: ConditionReport | null
 }
 
-export function ChatWindow({ match, currentUser, initialMessages, isShipper }: ChatWindowProps) {
+export function ChatWindow({
+  match,
+  currentUser,
+  initialMessages,
+  isShipper,
+  pickupReport,
+  deliveryReport,
+}: ChatWindowProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [input, setInput] = useState("")
   const [sending, setSending] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const [showReports, setShowReports] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
@@ -92,6 +104,9 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
     match.status === "in_progress" ? "bg-indigo-50 text-indigo-700" :
     "bg-amber-50 text-amber-700"
 
+  const hasAnyReport = !!(pickupReport || deliveryReport)
+  const reportCount = [pickupReport, deliveryReport].filter(Boolean).length
+
   return (
     <div className="flex flex-col h-[100dvh] max-w-2xl mx-auto bg-gray-50">
       {/* Header */}
@@ -113,10 +128,54 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
             {formatKRW(order?.price)}
           </div>
         </div>
-        <span className={`text-xs px-2.5 py-1 rounded-full font-medium shrink-0 ${statusStyle}`}>
-          {statusLabel}
-        </span>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Condition reports button */}
+          {(hasAnyReport || !isShipper) && (match.status === "accepted" || match.status === "in_progress" || hasAnyReport) && (
+            <button
+              onClick={() => setShowReports(v => !v)}
+              className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
+                hasAnyReport
+                  ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+            >
+              📋 {reportCount > 0 ? `${reportCount}/2` : "리포트"}
+            </button>
+          )}
+          <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${statusStyle}`}>
+            {statusLabel}
+          </span>
+        </div>
       </div>
+
+      {/* Condition Reports Panel */}
+      {showReports && (
+        <div className="bg-white border-b border-gray-100 px-4 py-4 space-y-4 shrink-0">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-gray-900">차량 상태 리포트</h3>
+            <button onClick={() => setShowReports(false)} className="text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-gray-500 mb-2">픽업 전</p>
+            <ConditionReportView report={pickupReport} type="pickup" isShipper={isShipper} />
+          </div>
+          {(match.status === "in_progress" || match.status === "completed" || deliveryReport) && (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 mb-2">인도 후</p>
+              <ConditionReportView report={deliveryReport} type="delivery" isShipper={isShipper} />
+            </div>
+          )}
+          {/* Driver: link to submit report */}
+          {!isShipper && match.status !== "completed" && match.status !== "cancelled" && (
+            <Link
+              href={`/driver/matches/${match.id}/condition-report?type=${match.status === "accepted" ? "pickup" : "delivery"}`}
+              className="block w-full text-center py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-xl transition-colors"
+            >
+              {match.status === "accepted" ? "픽업 전 리포트 작성" : "인도 후 리포트 작성"}
+            </Link>
+          )}
+        </div>
+      )}
 
       {/* Action banners */}
       {match.status === "accepted" && !isShipper && (
@@ -150,6 +209,30 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
               완료 확인
             </button>
           </form>
+        </div>
+      )}
+
+      {/* Pickup report nudge for driver */}
+      {!isShipper && match.status === "accepted" && !pickupReport && (
+        <div className="bg-amber-50 border-b border-amber-100 px-4 py-2.5 flex items-center justify-between shrink-0">
+          <span className="text-xs text-amber-700">픽업 전 차량 상태를 기록하세요</span>
+          <Link
+            href={`/driver/matches/${match.id}/condition-report?type=pickup`}
+            className="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors"
+          >
+            기록하기
+          </Link>
+        </div>
+      )}
+      {!isShipper && match.status === "in_progress" && !deliveryReport && (
+        <div className="bg-amber-50 border-b border-amber-100 px-4 py-2.5 flex items-center justify-between shrink-0">
+          <span className="text-xs text-amber-700">인도 후 차량 상태를 기록하세요</span>
+          <Link
+            href={`/driver/matches/${match.id}/condition-report?type=delivery`}
+            className="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors"
+          >
+            기록하기
+          </Link>
         </div>
       )}
 

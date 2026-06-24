@@ -251,7 +251,7 @@ function StatCard({
 function RejectForm({ submissionId }: { submissionId: string }) {
   return (
     <form
-      action={async (formData: FormData) => {
+      action={async (formData: FormData): Promise<void> => {
         "use server"
         const reason = formData.get("reason") as string
         await rejectKYC(submissionId, reason || "관리자 거절")

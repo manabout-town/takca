@@ -12,7 +12,7 @@ export default async function DriverMatchesPage() {
 
   const { data: matches } = await supabase
     .from("matches")
-    .select("*, orders(*, shippers:users!shipper_id(name, phone))")
+    .select("*, orders(id, origin, destination, price, pickup_at, shippers:users!shipper_id(name, phone))")
     .eq("driver_id", user!.id)
     .order("matched_at", { ascending: false })
 
@@ -58,6 +58,7 @@ export default async function DriverMatchesPage() {
                 matchStatus={match.status}
                 orderId={match.orders?.id}
                 orderPrice={match.orders?.price ?? 0}
+                pickupAt={match.orders?.pickup_at}
               />
             </div>
           ))}

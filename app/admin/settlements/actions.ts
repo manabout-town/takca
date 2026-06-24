@@ -2,10 +2,10 @@
 import { createServiceClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 
-export async function markPayoutPaid(payoutId: string) {
+export async function markPayoutPaid(payoutId: string): Promise<void> {
   const service = createServiceClient()
 
-  const { error } = await service
+  await service
     .from("payouts")
     .update({
       status: "paid",
@@ -14,8 +14,5 @@ export async function markPayoutPaid(payoutId: string) {
     .eq("id", payoutId)
     .eq("status", "pending")
 
-  if (error) return { error: "정산 처리 중 오류가 발생했습니다" }
-
   revalidatePath("/admin/settlements")
-  return { success: true }
 }

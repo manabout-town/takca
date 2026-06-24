@@ -24,8 +24,11 @@ const driverItems = [
 
 const adminItems = [
   { href: "/admin/dashboard", icon: "🏠", label: "홈" },
-  { href: "/admin/drivers", icon: "✓", label: "기사 인증" },
+  { href: "/admin/kyc", icon: "🪪", label: "KYC" },
+  { href: "/admin/orders", icon: "📦", label: "의뢰" },
+  { href: "/admin/drivers", icon: "✓", label: "기사" },
   { href: "/admin/disputes", icon: "⚠️", label: "분쟁" },
+  { href: "/admin/settlements", icon: "💳", label: "정산" },
   { href: "/admin/users", icon: "👥", label: "회원" },
 ]
 

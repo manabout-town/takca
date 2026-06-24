@@ -1,6 +1,7 @@
 "use client"
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { confirmStart, requestCompletion } from "@/app/actions/orders"
 import { cancelMatch } from "@/app/actions/matches"
 
@@ -9,16 +10,32 @@ interface Props {
   matchStatus: string
   orderId: string
   orderPrice?: number
+  pickupAt?: string
 }
 
-export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice = 0 }: Props) {
+function computePenalty(orderPrice: number, pickupAt?: string): { amount: number; label: string } {
+  if (!pickupAt || orderPrice <= 0) return { amount: 0, label: "" }
+  const now = new Date()
+  const pickup = new Date(pickupAt)
+  const hoursUntilPickup = (pickup.getTime() - now.getTime()) / (1000 * 60 * 60)
+  const isSameDay = now.toDateString() === pickup.toDateString()
+
+  if (isSameDay) {
+    return { amount: Math.floor(orderPrice * 0.3), label: "당일 취소 (운임의 30%)" }
+  } else if (hoursUntilPickup <= 12) {
+    return { amount: Math.floor(orderPrice * 0.2), label: "12시간 이내 취소 (운임의 20%)" }
+  }
+  return { amount: 0, label: "위약금 없음" }
+}
+
+export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice = 0, pickupAt }: Props) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [cancelReason, setCancelReason] = useState("")
   const router = useRouter()
 
-  const penaltyAmount = Math.floor(orderPrice * 0.2)
+  const { amount: penaltyAmount, label: penaltyLabel } = computePenalty(orderPrice, pickupAt)
 
   function handleStart() {
     setError(null)
@@ -56,6 +73,23 @@ export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice =
 
   return (
     <div className="mt-3 space-y-2" onClick={e => e.preventDefault()}>
+      {/* Condition report link */}
+      {(matchStatus === "accepted" || matchStatus === "in_progress") && (
+        <Link
+          href={`/driver/matches/${matchId}/condition-report?type=${matchStatus === "accepted" ? "pickup" : "delivery"}`}
+          className="flex items-center justify-between w-full px-3 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl transition-colors"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-sm">📋</span>
+            <span className="text-xs font-semibold text-amber-800">
+              {matchStatus === "accepted" ? "픽업 전 차량 상태 기록" : "인도 후 차량 상태 기록"}
+            </span>
+          </div>
+          <span className="text-xs text-amber-500">→</span>
+        </Link>
+      )}
+
       <div className="flex gap-2">
         {matchStatus === "accepted" && (
           <button
@@ -97,15 +131,19 @@ export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice =
             <div className="text-center">
               <div className="text-3xl mb-2">⚠️</div>
               <h3 className="font-bold text-gray-900 text-lg">운송 취소</h3>
-              <p className="text-sm text-gray-500 mt-1">취소 시 위약금이 부과됩니다</p>
+              <p className="text-sm text-gray-500 mt-1">취소 전 아래 내용을 확인하세요</p>
             </div>
 
-            <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center">
-              <div className="text-xs text-red-500 mb-1">부과 위약금 (운임의 20%)</div>
-              <div className="text-2xl font-bold text-red-600">
-                {penaltyAmount.toLocaleString()}원
+            <div className={`border rounded-xl p-4 text-center ${
+              penaltyAmount > 0 ? "bg-red-50 border-red-100" : "bg-gray-50 border-gray-100"
+            }`}>
+              <div className={`text-xs mb-1 ${penaltyAmount > 0 ? "text-red-500" : "text-gray-500"}`}>
+                {penaltyLabel}
               </div>
-              {orderPrice > 0 && (
+              <div className={`text-2xl font-bold ${penaltyAmount > 0 ? "text-red-600" : "text-gray-600"}`}>
+                {penaltyAmount > 0 ? `${penaltyAmount.toLocaleString()}원` : "위약금 없음"}
+              </div>
+              {orderPrice > 0 && penaltyAmount > 0 && (
                 <div className="text-xs text-gray-400 mt-1">기준 운임: {orderPrice.toLocaleString()}원</div>
               )}
             </div>
@@ -139,7 +177,7 @@ export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice =
             </div>
 
             <p className="text-xs text-gray-400 text-center">
-              취소 후 의뢰가 재공개되며 화주에게 위약금이 지급됩니다
+              취소 후 의뢰가 재공개되며{penaltyAmount > 0 ? " 화주에게 위약금이 지급됩니다" : " 위약금이 부과되지 않습니다"}
             </p>
           </div>
         </div>
