@@ -22,8 +22,9 @@ type SearchParams = {
 export default async function ShipperDriversPage({
   searchParams,
 }: {
-  searchParams: SearchParams
+  searchParams: Promise<SearchParams>
 }) {
+  const { date, origin, dest, vehicle } = await searchParams
   const supabase = await createClient()
   const today = new Date().toISOString().split("T")[0]
 
@@ -41,22 +42,22 @@ export default async function ShipperDriversPage({
     .order("available_date", { ascending: true })
     .limit(100)
 
-  if (searchParams.date) {
-    query = query.eq("available_date", searchParams.date)
+  if (date) {
+    query = query.eq("available_date", date)
   }
-  if (searchParams.origin) {
-    query = query.eq("origin_city", searchParams.origin)
+  if (origin) {
+    query = query.eq("origin_city", origin)
   }
-  if (searchParams.vehicle) {
-    query = query.eq("vehicle_type", searchParams.vehicle)
+  if (vehicle) {
+    query = query.eq("vehicle_type", vehicle)
   }
 
   const { data: schedules } = await query
 
   // dest 필터는 클라이언트에서 (배열 contains 필터)
-  const filtered = searchParams.dest
+  const filtered = dest
     ? schedules?.filter((s: any) =>
-        s.dest_regions?.some((r: string) => r.startsWith(searchParams.dest!))
+        s.dest_regions?.some((r: string) => r.startsWith(dest))
       )
     : schedules
 
@@ -64,8 +65,8 @@ export default async function ShipperDriversPage({
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">가용 기사 찾기</h1>
-          <p className="text-base text-gray-400 mt-2">운행 가능한 기사님을 찾아 의뢰하세요</p>
+          <h1 className="text-xl md:text-3xl font-bold text-gray-900 tracking-tight">가용 기사 찾기</h1>
+          <p className="text-sm md:text-base text-gray-400 mt-1 md:mt-2">운행 가능한 기사님을 찾아 의뢰하세요</p>
         </div>
       </div>
 
@@ -74,10 +75,10 @@ export default async function ShipperDriversPage({
         <DriversFilter
           provinces={PROVINCES}
           vehicleTypes={VEHICLE_TYPES}
-          initialDate={searchParams.date}
-          initialOrigin={searchParams.origin}
-          initialDest={searchParams.dest}
-          initialVehicle={searchParams.vehicle}
+          initialDate={date}
+          initialOrigin={origin}
+          initialDest={dest}
+          initialVehicle={vehicle}
         />
       </Suspense>
 

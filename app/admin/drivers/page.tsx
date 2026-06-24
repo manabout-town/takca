@@ -83,43 +83,45 @@ function DriverCard({
 }) {
   const user = driver.users
   return (
-    <div className={`bg-white rounded-2xl border p-5 flex items-center gap-5 ${driver.is_verified ? "border-emerald-100" : "border-amber-100"}`}>
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-        driver.is_verified ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
-      }`}>
-        {user?.name?.[0] ?? "기"}
+    <div className={`bg-white rounded-2xl border p-4 md:p-5 flex flex-col sm:flex-row sm:items-center gap-3 md:gap-5 ${driver.is_verified ? "border-emerald-100" : "border-amber-100"}`}>
+      <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+          driver.is_verified ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+        }`}>
+          {user?.name?.[0] ?? "기"}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <a href={`/driver/${user?.id}`} target="_blank" rel="noopener noreferrer"
+              className="font-semibold text-gray-900 hover:text-indigo-600 transition-colors text-sm">
+              {user?.name} ↗
+            </a>
+            {driver.is_verified
+              ? <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-semibold">인증</span>
+              : <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">미인증</span>
+            }
+          </div>
+          <div className="text-xs text-gray-500 flex flex-wrap gap-x-3 gap-y-0.5">
+            <span>{driver.vehicle_type} · {driver.vehicle_number}</span>
+            {driver.business_number && <span>사업자: {driver.business_number}</span>}
+            <span>{user?.email}</span>
+            {user?.phone && <span>{user.phone}</span>}
+          </div>
+          <div className="text-xs text-gray-400 mt-0.5">
+            평점 {driver.rating_avg.toFixed(1)} ({driver.rating_count}건) · 가입 {new Date(user?.created_at).toLocaleDateString("ko-KR")}
+          </div>
+        </div>
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-0.5">
-          <a href={`/driver/${user?.id}`} target="_blank" rel="noopener noreferrer"
-            className="font-semibold text-gray-900 hover:text-indigo-600 transition-colors text-sm">
-            {user?.name} ↗
-          </a>
-          {driver.is_verified
-            ? <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-semibold">인증</span>
-            : <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">미인증</span>
-          }
-        </div>
-        <div className="text-xs text-gray-500 flex flex-wrap gap-x-3 gap-y-0.5">
-          <span>{driver.vehicle_type} · {driver.vehicle_number}</span>
-          {driver.business_number && <span>사업자: {driver.business_number}</span>}
-          <span>{user?.email}</span>
-          {user?.phone && <span>{user.phone}</span>}
-        </div>
-        <div className="text-xs text-gray-400 mt-0.5">
-          평점 {driver.rating_avg.toFixed(1)} ({driver.rating_count}건) · 가입 {new Date(user?.created_at).toLocaleDateString("ko-KR")}
-        </div>
-      </div>
-      <div className="shrink-0">
+      <div className="shrink-0 sm:ml-auto">
         {driver.is_verified ? (
           <form action={unverifyDriver.bind(null, driver.id)}>
-            <button type="submit" className="text-xs text-gray-400 hover:text-red-600 border border-gray-200 px-3 py-1.5 rounded-lg hover:border-red-200 transition-colors">
+            <button type="submit" className="text-xs text-gray-400 hover:text-red-600 border border-gray-200 px-4 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg hover:border-red-200 transition-colors w-full sm:w-auto">
               인증 취소
             </button>
           </form>
         ) : (
           <form action={verifyDriver.bind(null, driver.id)}>
-            <button type="submit" className="text-xs text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg font-semibold transition-colors">
+            <button type="submit" className="text-xs text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg font-semibold transition-colors w-full sm:w-auto">
               인증하기
             </button>
           </form>

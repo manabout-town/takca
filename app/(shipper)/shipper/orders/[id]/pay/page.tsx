@@ -45,7 +45,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push("/login"); return }
 
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hwamulro.vercel.app"
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://takca.vercel.app"
       const toss = TossPayments(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY)
 
       await toss.requestPayment("카드", {
@@ -76,7 +76,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-8 tracking-tight">에스크로 결제</h1>
+      <h1 className="text-xl md:text-3xl font-bold mb-6 md:mb-8 tracking-tight">에스크로 결제</h1>
 
       {!activeMatch && (
         <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-sm text-yellow-800">
@@ -84,10 +84,10 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border p-6 mb-6 space-y-3 text-sm">
-        <div className="flex justify-between">
-          <span className="text-gray-500">구간</span>
-          <span className="font-medium">{order.origin} → {order.destination}</span>
+      <div className="bg-white rounded-2xl border p-4 md:p-6 mb-6 space-y-3 text-sm">
+        <div className="flex justify-between gap-3">
+          <span className="text-gray-500 shrink-0">구간</span>
+          <span className="font-medium text-right">{order.origin} → {order.destination}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">화물</span>
@@ -115,7 +115,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       <button
         onClick={handlePay}
         disabled={!activeMatch || paying}
-        className="w-full bg-orange-500 text-white py-4 rounded-xl text-lg font-bold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-orange-500 text-white py-4 rounded-xl text-base md:text-lg font-bold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[56px]"
       >
         {paying ? "결제 진행 중..." : `${formatKRW(order.price)} 에스크로 결제`}
       </button>

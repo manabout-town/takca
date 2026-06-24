@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { ServiceWorkerRegister } from "@/components/shared/ServiceWorkerRegister"
+import { PwaInstallBanner } from "@/components/shared/PwaInstallBanner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -39,6 +41,8 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         {children}
+        <ServiceWorkerRegister />
+        <PwaInstallBanner />
       </body>
     </html>
   )

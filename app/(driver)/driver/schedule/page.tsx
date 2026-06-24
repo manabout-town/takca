@@ -31,12 +31,12 @@ export default async function DriverSchedulePage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-start justify-between mb-2">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">가용 일정 관리</h1>
-          <p className="text-base text-gray-400 mt-2">운송 가능한 날짜와 지역을 등록하세요</p>
+          <h1 className="text-xl md:text-3xl font-bold text-gray-900 tracking-tight">가용 일정 관리</h1>
+          <p className="text-sm md:text-base text-gray-400 mt-2">운송 가능한 날짜와 지역을 등록하세요</p>
         </div>
-        <Link href="/driver/dashboard" className="text-sm text-gray-400 hover:text-gray-700 mt-1">← 대시보드</Link>
+        <Link href="/driver/dashboard" className="text-sm text-gray-400 hover:text-gray-700 sm:mt-1 min-h-[44px] flex items-center">← 대시보드</Link>
       </div>
 
       {/* 등록 폼 */}
@@ -50,10 +50,10 @@ export default async function DriverSchedulePage() {
           </div>
           <div className="divide-y divide-gray-50">
             {active.map((s: any) => (
-              <div key={s.id} className="px-5 py-4">
-                <div className="flex items-start justify-between mb-2">
+              <div key={s.id} className="px-4 md:px-5 py-4">
+                <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="font-bold text-gray-900">{formatDate(s.available_date)}</span>
                       <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${STATUS_STYLE[s.status]}`}>
                         {STATUS_LABEL[s.status]}
@@ -65,7 +65,7 @@ export default async function DriverSchedulePage() {
                     </p>
                   </div>
                   {s.vehicle_type && (
-                    <span className="text-xs bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full font-medium border border-indigo-100">
+                    <span className="text-xs bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full font-medium border border-indigo-100 shrink-0">
                       {s.vehicle_type}
                     </span>
                   )}
@@ -86,13 +86,13 @@ export default async function DriverSchedulePage() {
                 <div className="flex gap-2">
                   <form action={async () => { "use server"; await markScheduleFilled(s.id) }}>
                     <button type="submit"
-                      className="text-xs px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors font-medium">
+                      className="text-xs px-3 py-2 min-h-[44px] bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors font-medium">
                       마감 처리
                     </button>
                   </form>
                   <form action={async () => { "use server"; await cancelSchedule(s.id) }}>
                     <button type="submit"
-                      className="text-xs px-3 py-1.5 border border-gray-200 text-gray-500 rounded-lg hover:bg-gray-50 transition-colors">
+                      className="text-xs px-3 py-2 min-h-[44px] border border-gray-200 text-gray-500 rounded-lg hover:bg-gray-50 transition-colors">
                       취소
                     </button>
                   </form>

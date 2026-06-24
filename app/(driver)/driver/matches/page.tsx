@@ -34,22 +34,22 @@ export default async function DriverMatchesPage() {
       ) : (
         <div className="grid gap-4">
           {matches.map((match: any) => (
-            <div key={match.id} className="bg-white rounded-2xl border border-gray-100 p-6 hover:border-indigo-200 hover:shadow-sm transition-all">
+            <div key={match.id} className="bg-white rounded-2xl border border-gray-100 p-4 md:p-6 hover:border-indigo-200 hover:shadow-sm transition-all">
               <Link href={`/chat/${match.id}`} className="block">
-                <div className="flex items-start justify-between mb-4">
-                  <span className={`badge ${
+                <div className="flex items-start justify-between gap-3 mb-3 md:mb-4">
+                  <span className={`badge shrink-0 ${
                     match.status === "completed" ? "bg-emerald-100 text-emerald-700" :
                     match.status === "in_progress" ? "bg-indigo-100 text-indigo-700" :
                     "bg-amber-100 text-amber-700"
                   }`}>
                     {MATCH_STATUS_LABEL[match.status as keyof typeof MATCH_STATUS_LABEL]}
                   </span>
-                  <span className="font-bold text-lg text-indigo-600">{formatKRW(match.orders?.price)}</span>
+                  <span className="font-bold text-base md:text-lg text-indigo-600 text-right">{formatKRW(match.orders?.price)}</span>
                 </div>
-                <div className="font-semibold text-gray-900 mb-1">
+                <div className="font-semibold text-gray-900 mb-1 text-sm md:text-base">
                   {match.orders?.origin} → {match.orders?.destination}
                 </div>
-                <div className="text-sm text-gray-400">
+                <div className="text-xs md:text-sm text-gray-400">
                   화주: {match.orders?.shippers?.name} · {formatDate(match.matched_at)}
                 </div>
               </Link>

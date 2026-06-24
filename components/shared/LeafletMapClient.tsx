@@ -40,7 +40,7 @@ async function geocode(address: string): Promise<[number, number] | null> {
     const q = encodeURIComponent(address.includes("한국") ? address : address + " 한국")
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&countrycodes=kr`,
-      { headers: { "Accept-Language": "ko", "User-Agent": "hwamulro-app/1.0" } }
+      { headers: { "Accept-Language": "ko", "User-Agent": "takca-app/1.0" } }
     )
     const data = await res.json()
     if (data.length > 0) return [parseFloat(data[0].lat), parseFloat(data[0].lon)]

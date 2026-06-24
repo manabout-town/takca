@@ -54,16 +54,16 @@ export default async function ShipperDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-xl md:text-3xl font-bold text-gray-900 tracking-tight">
             {profile?.name || "화주"}님, 안녕하세요
           </h1>
-          <p className="text-base text-gray-400 mt-2">화주 대시보드</p>
+          <p className="text-sm md:text-base text-gray-400 mt-1 md:mt-2">화주 대시보드</p>
         </div>
         <Link
           href="/shipper/orders/new"
-          className="flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shrink-0 mt-1"
+          className="flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors shrink-0 mt-1 min-h-[44px]"
         >
           <ClipboardPlus className="w-4 h-4" />
           의뢰 등록
@@ -71,13 +71,13 @@ export default async function ShipperDashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {stats.map((s) => {
           const Icon = s.icon
           return (
             <div
               key={s.label}
-              className={`rounded-2xl p-5 border relative overflow-hidden ${
+              className={`rounded-2xl p-4 md:p-5 border relative overflow-hidden ${
                 s.accent ? "bg-orange-50 border-orange-100" : "bg-white border-gray-100"
               }`}
             >
@@ -86,10 +86,10 @@ export default async function ShipperDashboardPage() {
                   s.accent ? "text-orange-300" : "text-gray-200"
                 }`}
               />
-              <div className={`text-3xl font-bold tracking-tight ${s.accent ? "text-orange-600" : "text-gray-900"}`}>
+              <div className={`text-2xl md:text-3xl font-bold tracking-tight ${s.accent ? "text-orange-600" : "text-gray-900"}`}>
                 {s.value}{s.suffix}
               </div>
-              <div className="text-sm text-gray-400 mt-1.5">{s.label}</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-1.5">{s.label}</div>
             </div>
           )
         })}
@@ -97,16 +97,16 @@ export default async function ShipperDashboardPage() {
 
       {/* Active order with route map */}
       {activeOrder && (
-        <div className="bg-white border border-orange-100 rounded-2xl p-6 ring-1 ring-orange-200/50">
-          <div className="flex items-start justify-between mb-5">
+        <div className="bg-white border border-orange-100 rounded-2xl p-4 md:p-6 ring-1 ring-orange-200/50">
+          <div className="flex items-start justify-between gap-2 mb-4 md:mb-5">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
                 <span className={`w-2 h-2 rounded-full ${STATUS_DOT[activeOrder.status]} animate-pulse`} />
                 <span className="text-sm font-semibold text-orange-600">{STATUS_LABEL[activeOrder.status]}</span>
               </div>
-              <h2 className="text-lg font-bold text-gray-900">{activeOrder.title || "진행 중인 운송"}</h2>
+              <h2 className="text-base md:text-lg font-bold text-gray-900">{activeOrder.title || "진행 중인 운송"}</h2>
             </div>
-            <span className="text-xl font-bold text-orange-500">{formatKRW(activeOrder.price)}</span>
+            <span className="text-lg md:text-xl font-bold text-orange-500 shrink-0">{formatKRW(activeOrder.price)}</span>
           </div>
           <RouteMap origin={activeOrder.origin} destination={activeOrder.destination} />
           {activeOrder.matches?.[0] && (
@@ -127,23 +127,23 @@ export default async function ShipperDashboardPage() {
       )}
 
       {/* Quick actions */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-2 md:gap-3">
         {quickActions.map(({ href, Icon, label, color }) => (
           <Link
             key={href}
             href={href}
-            className={`group bg-white border border-gray-100 rounded-2xl p-5 text-center hover:border-orange-200 hover:bg-orange-50/30 transition-all`}
+            className={`group bg-white border border-gray-100 rounded-2xl p-3 md:p-5 text-center hover:border-orange-200 hover:bg-orange-50/30 transition-all min-h-[72px] flex flex-col items-center justify-center`}
           >
-            <div className="flex justify-center mb-2.5">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+            <div className="flex justify-center mb-1.5 md:mb-2.5">
+              <div className={`w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
                 color === "orange"
                   ? "bg-orange-100 text-orange-600"
                   : "bg-gray-100 text-gray-500 group-hover:bg-orange-100 group-hover:text-orange-600"
               } transition-colors`}>
-                <Icon className="w-5 h-5" />
+                <Icon className="w-4 h-4 md:w-5 md:h-5" />
               </div>
             </div>
-            <div className="text-xs text-gray-600 font-medium leading-tight">{label}</div>
+            <div className="text-[11px] md:text-xs text-gray-600 font-medium leading-tight">{label}</div>
           </Link>
         ))}
       </div>
@@ -156,7 +156,7 @@ export default async function ShipperDashboardPage() {
       {/* Order list */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">최근 의뢰</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">최근 의뢰</h2>
           <Link href="/shipper/orders" className="text-sm text-gray-400 hover:text-orange-500 transition-colors flex items-center gap-1">
             전체 <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -178,7 +178,7 @@ export default async function ShipperDashboardPage() {
               <Link
                 key={order.id}
                 href={`/shipper/orders/${order.id}`}
-                className="flex items-center gap-5 bg-white border border-gray-100 rounded-2xl p-5 hover:border-orange-200 transition-colors"
+                className="flex items-center gap-3 md:gap-5 bg-white border border-gray-100 rounded-2xl p-4 md:p-5 hover:border-orange-200 transition-colors"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">

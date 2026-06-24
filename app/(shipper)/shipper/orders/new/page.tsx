@@ -4,12 +4,9 @@ import { createOrder } from "@/app/actions/orders"
 import { Input } from "@/components/ui/Input"
 import { Select } from "@/components/ui/Select"
 import { Button } from "@/components/ui/Button"
-import { CARGO_TYPES } from "@/lib/types"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { RouteMap } from "@/components/shared/RouteMap"
 import { GpsAddressInput } from "@/components/shared/GpsAddressInput"
-
-const VEHICLE_TYPES = ["1톤 트럭", "2.5톤 트럭", "5톤 트럭", "11톤 트럭", "25톤 트럭", "윙바디", "냉동 탑차", "카고 트럭", "트레일러", "상관없음"]
 
 export default function NewOrderPage() {
   const [isPending, startTransition] = useTransition()
@@ -35,7 +32,7 @@ export default function NewOrderPage() {
     <div className="max-w-2xl mx-auto">
       <PageHeader title="의뢰 등록" description="운송 의뢰 정보를 입력해주세요" />
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6 shadow-sm">
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
             {error}
@@ -79,34 +76,30 @@ export default function NewOrderPage() {
             />
           )}
 
-          {/* 화물 종류 */}
-          <Select
-            name="cargoType"
-            label="화물 종류"
-            options={CARGO_TYPES.map(c => ({ value: c, label: c }))}
-            placeholder="화물 종류 선택"
-            required
-          />
-
-          {/* 필요 차량 */}
+          {/* 차량 수 */}
           <div>
-            <label className="label">필요 차량</label>
-            <select name="vehicleType" className="input">
-              {VEHICLE_TYPES.map(v => (
-                <option key={v} value={v}>{v}</option>
-              ))}
-            </select>
+            <label className="label">차량 수 <span className="text-red-500">*</span></label>
+            <input
+              type="number"
+              name="vehicleCount"
+              className="input"
+              min={1}
+              max={20}
+              defaultValue={1}
+              required
+            />
           </div>
 
-          {/* 화물 상세 */}
+          {/* 차량 상세 (비고) */}
           <div>
-            <label className="label">화물 상세 설명</label>
+            <label className="label">차량 상세 (비고)</label>
             <textarea
-              name="cargoDetail"
+              name="vehicleNotes"
               className="input resize-none"
-              rows={3}
-              placeholder="화물의 크기, 무게, 주의사항 등을 자유롭게 입력하세요"
+              rows={2}
+              placeholder="예: 아반떼 2대, 그랜저 1대"
             />
+            <p className="text-xs text-gray-400 mt-1">차종과 대수를 구체적으로 적어주세요</p>
           </div>
 
           {/* 금액 + 픽업 */}
@@ -172,10 +165,10 @@ export default function NewOrderPage() {
           </div>
 
           <div className="flex gap-3 pt-2">
-            <a href="/shipper/dashboard" className="flex-1 text-center py-2.5 rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+            <a href="/shipper/dashboard" className="flex-1 text-center py-3 rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors min-h-[44px] flex items-center justify-center">
               취소
             </a>
-            <Button type="submit" className="flex-1" size="lg" loading={isPending}>
+            <Button type="submit" className="flex-1 min-h-[44px]" size="lg" loading={isPending}>
               의뢰 등록
             </Button>
           </div>

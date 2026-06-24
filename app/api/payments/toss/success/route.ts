@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   const orderId = searchParams.get("orderId")
   const amount = searchParams.get("amount")
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hwamulro.vercel.app"
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://takca.vercel.app"
 
   if (!paymentKey || !orderId || !amount) {
     return NextResponse.redirect(

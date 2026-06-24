@@ -53,7 +53,7 @@ export default async function DriverDashboardPage() {
   ]
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <LocationTracker
         driverId={user!.id}
         matchId={activeMatch?.id ?? null}
@@ -61,9 +61,9 @@ export default async function DriverDashboardPage() {
       />
 
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-xl md:text-3xl font-bold text-gray-900 tracking-tight">
             {profile?.name || "기사"}님, 안녕하세요
           </h1>
           <div className="mt-2">
@@ -72,7 +72,7 @@ export default async function DriverDashboardPage() {
         </div>
         <Link
           href="/driver/feed"
-          className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shrink-0 mt-1"
+          className="flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors sm:shrink-0 sm:mt-1 min-h-[44px]"
         >
           <LayoutList className="w-4 h-4" />
           의뢰 피드
@@ -80,13 +80,13 @@ export default async function DriverDashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {stats.map((s) => {
           const Icon = s.icon
           return (
             <div
               key={s.label}
-              className={`rounded-2xl p-5 border relative overflow-hidden ${
+              className={`rounded-2xl p-4 border relative overflow-hidden ${
                 s.accent ? "bg-indigo-50 border-indigo-100" : "bg-white border-gray-100"
               }`}
             >
@@ -95,10 +95,10 @@ export default async function DriverDashboardPage() {
                   s.accent ? "text-indigo-300" : "text-gray-200"
                 }`}
               />
-              <div className={`text-3xl font-bold tracking-tight ${s.accent ? "text-indigo-600" : "text-gray-900"}`}>
+              <div className={`text-xl md:text-3xl font-bold tracking-tight ${s.accent ? "text-indigo-600" : "text-gray-900"}`}>
                 {s.value}
               </div>
-              <div className="text-sm text-gray-400 mt-1.5">{s.label}</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-1.5">{s.label}</div>
             </div>
           )
         })}
@@ -106,16 +106,16 @@ export default async function DriverDashboardPage() {
 
       {/* Driver profile card */}
       {driverProfile && (
-        <div className="bg-gray-950 rounded-2xl p-6 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-indigo-500/15 border border-indigo-500/20 rounded-2xl flex items-center justify-center shrink-0">
-                <Truck className="w-7 h-7 text-indigo-400" />
+        <div className="bg-gray-950 rounded-2xl p-5 md:p-6 text-white">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 md:gap-4 min-w-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-indigo-500/15 border border-indigo-500/20 rounded-2xl flex items-center justify-center shrink-0">
+                <Truck className="w-6 h-6 md:w-7 md:h-7 text-indigo-400" />
               </div>
-              <div>
-                <div className="font-bold text-lg leading-none">{profile?.name}</div>
-                <div className="text-gray-400 text-sm mt-1.5">{driverProfile.vehicle_type} · {driverProfile.vehicle_number}</div>
-                <div className="flex items-center gap-2 mt-1.5">
+              <div className="min-w-0">
+                <div className="font-bold text-base md:text-lg leading-none">{profile?.name}</div>
+                <div className="text-gray-400 text-xs md:text-sm mt-1.5 truncate">{driverProfile.vehicle_type} · {driverProfile.vehicle_number}</div>
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   <span className="flex items-center gap-0.5 text-amber-400 text-sm font-semibold">
                     <Star className="w-3.5 h-3.5 fill-amber-400" />
                     {driverProfile.rating_avg?.toFixed(1) || "0.0"}
@@ -132,7 +132,7 @@ export default async function DriverDashboardPage() {
             </div>
             <Link
               href="/driver/mypage"
-              className="text-xs text-gray-500 hover:text-indigo-400 transition-colors flex items-center gap-0.5"
+              className="text-xs text-gray-500 hover:text-indigo-400 transition-colors flex items-center gap-0.5 shrink-0 min-h-[44px] min-w-[44px] justify-end"
             >
               편집 <ArrowRight className="w-3 h-3" />
             </Link>
@@ -143,38 +143,38 @@ export default async function DriverDashboardPage() {
       {/* Active match with route map */}
       {activeMatch && (
         <div className="bg-white border border-indigo-100 rounded-2xl overflow-hidden ring-1 ring-indigo-200/50">
-          <div className={`px-6 py-4 flex items-center justify-between ${
+          <div className={`px-4 md:px-6 py-4 flex items-center justify-between gap-3 ${
             activeMatch.status === "in_progress"
               ? "bg-indigo-600 text-white"
               : "bg-indigo-50 border-b border-indigo-100"
           }`}>
-            <span className={`flex items-center gap-2 font-bold ${
+            <span className={`flex items-center gap-2 font-bold text-sm md:text-base ${
               activeMatch.status === "in_progress" ? "text-white" : "text-indigo-800"
             }`}>
               {activeMatch.status === "in_progress" ? (
                 <>
-                  <Truck className="w-4 h-4" />
+                  <Truck className="w-4 h-4 shrink-0" />
                   운송 중
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
                   매칭 완료 · 운송 대기
                 </>
               )}
             </span>
-            <span className={`text-lg font-bold ${
+            <span className={`text-base md:text-lg font-bold shrink-0 ${
               activeMatch.status === "in_progress" ? "text-indigo-100" : "text-indigo-600"
             }`}>
               {formatKRW(Math.round(((activeMatch.orders as any)?.price || 0) * 0.96))}
             </span>
           </div>
-          <div className="p-6">
-            <p className="font-bold text-gray-900 text-lg mb-1">{(activeMatch.orders as any)?.title || "운송 의뢰"}</p>
+          <div className="p-4 md:p-6">
+            <p className="font-bold text-gray-900 text-base md:text-lg mb-1">{(activeMatch.orders as any)?.title || "운송 의뢰"}</p>
             <p className="text-sm text-gray-400">
               {(activeMatch.orders as any)?.origin} → {(activeMatch.orders as any)?.destination}
             </p>
-            <div className="mt-5">
+            <div className="mt-4 md:mt-5">
               <RouteMap
                 origin={(activeMatch.orders as any)?.origin || ""}
                 destination={(activeMatch.orders as any)?.destination || ""}
@@ -183,14 +183,14 @@ export default async function DriverDashboardPage() {
             <div className="mt-4 flex gap-3">
               <Link
                 href={`/chat/${activeMatch.id}`}
-                className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition-colors min-h-[44px] text-sm md:text-base"
               >
                 <MessageCircle className="w-4 h-4" />
                 채팅하기
               </Link>
               <Link
                 href="/driver/matches"
-                className="px-5 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl font-semibold transition-colors"
+                className="px-5 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl font-semibold transition-colors min-h-[44px] text-sm md:text-base flex items-center"
               >
                 상세
               </Link>
@@ -200,19 +200,19 @@ export default async function DriverDashboardPage() {
       )}
 
       {/* Quick actions */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-2 md:gap-3">
         {quickActions.map(({ href, Icon, label }) => (
           <Link
             key={href}
             href={href}
-            className="group bg-white border border-gray-100 rounded-2xl p-5 text-center hover:border-indigo-200 hover:bg-indigo-50/30 transition-all"
+            className="group bg-white border border-gray-100 rounded-2xl p-3 md:p-5 text-center hover:border-indigo-200 hover:bg-indigo-50/30 transition-all min-h-[72px] flex flex-col items-center justify-center"
           >
-            <div className="flex justify-center mb-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 group-hover:bg-indigo-100 group-hover:text-indigo-600 flex items-center justify-center transition-colors">
-                <Icon className="w-5 h-5" />
+            <div className="flex justify-center mb-1.5 md:mb-2.5">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gray-100 text-gray-500 group-hover:bg-indigo-100 group-hover:text-indigo-600 flex items-center justify-center transition-colors">
+                <Icon className="w-4 h-4 md:w-5 md:h-5" />
               </div>
             </div>
-            <div className="text-xs text-gray-600 font-medium leading-tight">{label}</div>
+            <div className="text-[11px] md:text-xs text-gray-600 font-medium leading-tight">{label}</div>
           </Link>
         ))}
       </div>

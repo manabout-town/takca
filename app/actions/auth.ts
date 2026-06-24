@@ -16,11 +16,6 @@ export async function signUp(formData: FormData) {
   const name = (formData.get("name") as string).trim()
   const phone = (formData.get("phone") as string).replace(/-/g, "").trim()
   const role = formData.get("role") as UserRole
-  const vehicleNumber = formData.get("vehicleNumber") as string
-  const vehicleType = formData.get("vehicleType") as string
-  const homeRegion = formData.get("homeRegion") as string
-  const routeRegionsRaw = formData.get("routeRegions") as string
-  const routeRegions = routeRegionsRaw ? JSON.parse(routeRegionsRaw) : []
 
   if (!email || !password || !name || !phone) return { error: "모든 필수 항목을 입력해주세요" }
   if (password.length < 8) return { error: "비밀번호는 8자 이상이어야 합니다" }
@@ -31,7 +26,7 @@ export async function signUp(formData: FormData) {
     email, password,
     options: {
       data: { name, role },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://hwamulro.vercel.app"}/auth/callback`,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
     },
   })
   if (error) return { error: error.message }
@@ -39,17 +34,22 @@ export async function signUp(formData: FormData) {
 
   const { error: profileError } = await service
     .from("users")
-    .insert({ id: data.user.id, email, name, phone, role, status: "active" })
+    .insert({
+      id: data.user.id,
+      email,
+      name,
+      phone,
+      role,
+      status: "active",
+      verification_status: "unverified",
+    })
   if (profileError) return { error: profileError.message }
 
   if (role === "driver") {
-    if (!vehicleNumber || !vehicleType) return { error: "차량 정보를 입력해주세요" }
     await service.from("driver_profiles").insert({
       user_id: data.user.id,
-      vehicle_number: vehicleNumber,
-      vehicle_type: vehicleType,
-      home_region: homeRegion || null,
-      route_regions: routeRegions,
+      vehicle_number: "",
+      vehicle_type: "",
       is_verified: false,
       rating_avg: 0,
       rating_count: 0,
@@ -61,7 +61,7 @@ export async function signUp(formData: FormData) {
   if (!data.session) {
     return { redirect: `/verify-email?email=${encodeURIComponent(email)}` }
   }
-  return { redirect: role === "driver" ? "/driver/dashboard" : "/shipper/dashboard" }
+  return { redirect: "/verification" }
 }
 
 export async function signIn(formData: FormData) {
@@ -81,11 +81,22 @@ export async function signIn(formData: FormData) {
   const user = data.user
   if (!user) return { error: "로그인 실패" }
 
-  const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).single()
-  const role = profile?.role
-  if (role === "shipper") return { redirect: "/shipper/dashboard" }
-  if (role === "driver") return { redirect: "/driver/dashboard" }
-  if (role === "admin") return { redirect: "/admin/dashboard" }
+  const { data: profile } = await supabase
+    .from("users")
+    .select("role, verification_status")
+    .eq("id", user.id)
+    .single()
+
+  if (!profile) return { redirect: "/onboarding" }
+
+  // Unverified users go to KYC
+  if (profile.verification_status !== "verified") {
+    return { redirect: "/verification" }
+  }
+
+  if (profile.role === "shipper") return { redirect: "/shipper/dashboard" }
+  if (profile.role === "driver") return { redirect: "/driver/dashboard" }
+  if (profile.role === "admin") return { redirect: "/admin/dashboard" }
   return { redirect: "/" }
 }
 

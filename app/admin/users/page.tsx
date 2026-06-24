@@ -26,37 +26,39 @@ export default async function AdminUsersPage() {
     <div>
       <PageHeader title="회원 관리" description={`총 ${users?.length || 0}명`} />
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-100">
-              {["이름", "이메일", "연락처", "역할", "상태", "가입일"].map(h => (
-                <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-400 tracking-wide">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50">
-            {users?.map((u: any) => (
-              <tr key={u.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-5 py-3.5 font-medium text-gray-900">{u.name}</td>
-                <td className="px-5 py-3.5 text-gray-500">{u.email}</td>
-                <td className="px-5 py-3.5 text-gray-500">{u.phone || "—"}</td>
-                <td className="px-5 py-3.5">
-                  <span className={`badge ${ROLE_STYLE[u.role] || "bg-gray-100 text-gray-600"}`}>
-                    {ROLE_LABEL[u.role] || u.role}
-                  </span>
-                </td>
-                <td className="px-5 py-3.5">
-                  <span className={`badge ${STATUS_STYLE[u.status] || "bg-gray-100 text-gray-500"}`}>
-                    {STATUS_LABEL[u.status] || u.status}
-                  </span>
-                </td>
-                <td className="px-5 py-3.5 text-gray-400 text-xs">{formatDate(u.created_at)}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[560px]">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-100">
+                {["이름", "이메일", "연락처", "역할", "상태", "가입일"].map(h => (
+                  <th key={h} className="px-4 md:px-5 py-3 text-left text-xs font-semibold text-gray-400 tracking-wide whitespace-nowrap">
+                    {h}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {users?.map((u: any) => (
+                <tr key={u.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 md:px-5 py-3 md:py-3.5 font-medium text-gray-900 whitespace-nowrap">{u.name}</td>
+                  <td className="px-4 md:px-5 py-3 md:py-3.5 text-gray-500 max-w-[180px] truncate">{u.email}</td>
+                  <td className="px-4 md:px-5 py-3 md:py-3.5 text-gray-500 whitespace-nowrap">{u.phone || "—"}</td>
+                  <td className="px-4 md:px-5 py-3 md:py-3.5">
+                    <span className={`badge ${ROLE_STYLE[u.role] || "bg-gray-100 text-gray-600"}`}>
+                      {ROLE_LABEL[u.role] || u.role}
+                    </span>
+                  </td>
+                  <td className="px-4 md:px-5 py-3 md:py-3.5">
+                    <span className={`badge ${STATUS_STYLE[u.status] || "bg-gray-100 text-gray-500"}`}>
+                      {STATUS_LABEL[u.status] || u.status}
+                    </span>
+                  </td>
+                  <td className="px-4 md:px-5 py-3 md:py-3.5 text-gray-400 text-xs whitespace-nowrap">{formatDate(u.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         {(!users || users.length === 0) && (
           <div className="py-12 text-center text-sm text-gray-400">등록된 회원이 없습니다</div>
         )}

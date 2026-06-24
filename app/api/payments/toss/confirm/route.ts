@@ -48,19 +48,26 @@ export async function POST(req: NextRequest) {
 
       const { platformFee, driverPayout } = calculateFee(amount)
 
-      await service.from("escrow").insert({
-        order_id: dbOrderId,
-        match_id: activeMatch.id,
-        total_amount: amount,
-        platform_fee: platformFee,
-        driver_payout: driverPayout,
-        status: "held",
-        pg_transaction_id: payment.paymentKey,
-        held_at: new Date().toISOString(),
-      })
+      const { data: existingEscrow } = await service
+        .from("escrow")
+        .select("id")
+        .eq("match_id", activeMatch.id)
+        .maybeSingle()
 
-      await service.from("orders").update({ status: "in_progress" }).eq("id", dbOrderId)
-      await service.from("matches").update({ status: "in_progress" }).eq("id", activeMatch.id)
+      if (!existingEscrow) {
+        await service.from("escrow").insert({
+          order_id: dbOrderId,
+          match_id: activeMatch.id,
+          total_amount: amount,
+          platform_fee: platformFee,
+          driver_payout: driverPayout,
+          status: "held",
+          pg_transaction_id: payment.paymentKey,
+          held_at: new Date().toISOString(),
+        })
+        await service.from("orders").update({ status: "in_progress" }).eq("id", dbOrderId)
+        await service.from("matches").update({ status: "in_progress" }).eq("id", activeMatch.id)
+      }
     }
 
     if (type === "urgent") {

@@ -29,9 +29,9 @@ export default async function AdminDisputeDetail({ params }: { params: { id: str
   const escrow = match?.escrow?.[0]
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-0 md:px-0">
       <div className="flex items-center gap-3 mb-6">
-        <a href="/admin/disputes" className="text-sm text-gray-500 hover:text-gray-700">← 분쟁 목록</a>
+        <a href="/admin/disputes" className="text-sm text-gray-500 hover:text-gray-700 min-h-[44px] inline-flex items-center">← 분쟁 목록</a>
         <span className={`badge ${
           dispute.status === "open" ? "bg-red-100 text-red-700" :
           dispute.status === "investigating" ? "bg-indigo-100 text-indigo-700" :
@@ -53,7 +53,7 @@ export default async function AdminDisputeDetail({ params }: { params: { id: str
         <Card>
           <CardHeader><h2 className="font-bold">거래 정보</h2></CardHeader>
           <CardBody className="space-y-3 text-sm">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <div className="text-gray-500 mb-1">화주</div>
                 <div className="font-medium">{order?.shippers?.name}</div>
@@ -88,17 +88,17 @@ export default async function AdminDisputeDetail({ params }: { params: { id: str
             <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <form action={async () => { "use server"; await resolveDispute(dispute.id, "driver_win") }}>
-                  <button type="submit" className="w-full py-3 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700">
+                  <button type="submit" className="w-full py-3 min-h-[52px] bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 active:bg-green-800">
                     ✓ 기사 승리<br/><span className="text-xs opacity-80">(에스크로 해제)</span>
                   </button>
                 </form>
                 <form action={async () => { "use server"; await resolveDispute(dispute.id, "shipper_win") }}>
-                  <button type="submit" className="w-full py-3 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700">
+                  <button type="submit" className="w-full py-3 min-h-[52px] bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 active:bg-indigo-800">
                     ↩ 화주 승리<br/><span className="text-xs opacity-80">(화주 환불)</span>
                   </button>
                 </form>
                 <form action={async () => { "use server"; await resolveDispute(dispute.id, "partial_refund") }}>
-                  <button type="submit" className="w-full py-3 bg-yellow-600 text-white rounded-xl text-sm font-semibold hover:bg-yellow-700">
+                  <button type="submit" className="w-full py-3 min-h-[52px] bg-yellow-600 text-white rounded-xl text-sm font-semibold hover:bg-yellow-700 active:bg-yellow-800">
                     ⚖ 절충 처리<br/><span className="text-xs opacity-80">(50% 분할)</span>
                   </button>
                 </form>

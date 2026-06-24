@@ -10,7 +10,7 @@ export default async function VerifyEmailPage({
   const email = emailParam || "입력하신 이메일"
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 overflow-x-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.06)_0%,_transparent_60%)] pointer-events-none" />
 
       <div className="w-full max-w-sm text-center relative z-10">
@@ -18,11 +18,11 @@ export default async function VerifyEmailPage({
           <Logo size="lg" variant="light" />
         </div>
 
-        <div className="bg-white rounded-2xl p-8 shadow-2xl shadow-black/30">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl shadow-black/30">
           <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl">
             📧
           </div>
-          <h1 className="text-xl font-bold text-gray-900 mb-3">이메일 인증 필요</h1>
+          <h1 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">이메일 인증 필요</h1>
           <p className="text-gray-500 text-sm mb-2">
             <span className="font-semibold text-gray-800">{email}</span>으로
           </p>
@@ -49,13 +49,13 @@ export default async function VerifyEmailPage({
           <div className="space-y-3">
             <Link
               href="/login"
-              className="block w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition-colors text-sm"
+              className="block w-full bg-orange-500 hover:bg-orange-600 text-white py-3 min-h-[44px] flex items-center justify-center rounded-xl font-semibold transition-colors text-sm"
             >
               로그인 페이지로 이동
             </Link>
             <Link
               href="/signup"
-              className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold transition-colors text-sm"
+              className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 min-h-[44px] flex items-center justify-center rounded-xl font-semibold transition-colors text-sm"
             >
               다른 이메일로 다시 가입
             </Link>

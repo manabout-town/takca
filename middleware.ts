@@ -28,26 +28,48 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const path = request.nextUrl.pathname
 
-  // Public paths (no auth required)
+  // Public paths — no auth required
   const publicPaths = ["/", "/login", "/signup", "/intro", "/verify-email", "/auth/callback"]
-  const isPublic = publicPaths.some(p => path === p || path.startsWith("/auth/")) || path.startsWith("/driver/") || path.startsWith("/api/")
+  const isPublic = publicPaths.some(p => path === p || path.startsWith("/auth/")) || path.startsWith("/api/")
 
   if (!user && !isPublic && path !== "/onboarding") {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 
-  // Redirect logged-in users away from auth/landing pages
-  if (user && (path === "/" || path === "/login" || path === "/signup")) {
-    const { data: profile } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user.id)
-      .single()
-    const role = profile?.role
-    if (!role) return NextResponse.redirect(new URL("/onboarding", request.url))
+  if (!user) return response
+
+  // Fetch profile (role + verification_status)
+  const { data: profile } = await supabase
+    .from("users")
+    .select("role, verification_status")
+    .eq("id", user.id)
+    .single()
+
+  // No profile yet → onboarding
+  if (!profile?.role) {
+    if (path !== "/onboarding") return NextResponse.redirect(new URL("/onboarding", request.url))
+    return response
+  }
+
+  const { role, verification_status } = profile
+
+  // Redirect logged-in verified users away from auth/landing pages
+  if (path === "/" || path === "/login" || path === "/signup") {
+    if (verification_status !== "verified") {
+      return NextResponse.redirect(new URL("/verification", request.url))
+    }
     if (role === "shipper") return NextResponse.redirect(new URL("/shipper/dashboard", request.url))
     if (role === "driver") return NextResponse.redirect(new URL("/driver/dashboard", request.url))
     if (role === "admin") return NextResponse.redirect(new URL("/admin/dashboard", request.url))
+  }
+
+  // KYC gate — unverified/rejected users must complete verification
+  // (Allow: /verification itself, /intro, /profile, API routes, onboarding)
+  const kycExempt = ["/verification", "/onboarding", "/intro", "/profile"]
+  const isKycExempt = kycExempt.some(p => path === p || path.startsWith(p + "/")) || path.startsWith("/api/")
+
+  if (!isKycExempt && verification_status !== "verified") {
+    return NextResponse.redirect(new URL("/verification", request.url))
   }
 
   return response
@@ -55,6 +77,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 }

@@ -23,15 +23,17 @@ export default async function DriverCalendarPage() {
   }))
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">스케줄</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">스케줄</h1>
           <p className="text-sm text-gray-400 mt-1">배정된 운송 일정</p>
         </div>
-        <span className="text-xs text-indigo-700 font-semibold bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-full">기사</span>
+        <span className="text-xs text-indigo-700 font-semibold bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-full shrink-0">기사</span>
       </div>
-      <CalendarView events={events} role="driver" />
+      <div className="overflow-x-auto">
+        <CalendarView events={events} role="driver" />
+      </div>
     </div>
   )
 }

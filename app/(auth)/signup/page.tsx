@@ -9,7 +9,6 @@ import { createClient } from "@/lib/supabase/client"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Select } from "@/components/ui/Select"
-import { VEHICLE_TYPES } from "@/lib/types"
 import { Logo } from "@/components/shared/Logo"
 
 type Provider = "kakao" | "google" | "apple"
@@ -124,8 +123,6 @@ function SignupForm() {
     const result = await signUp(formData)
     if (result?.error) { setError(result.error); setLoading(false) }
     else if (result?.redirect) {
-      sessionStorage.setItem("hwamulro_session_active", "true")
-      sessionStorage.setItem("hwamulro_last_active", Date.now().toString())
       router.push(result.redirect)
     }
   }
@@ -133,7 +130,7 @@ function SignupForm() {
   const strength = password ? passwordStrength(password) : null
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-10 overflow-x-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)] pointer-events-none" />
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
@@ -152,13 +149,13 @@ function SignupForm() {
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl shadow-black/30 p-6">
+        <div className="bg-white rounded-2xl shadow-2xl shadow-black/30 p-5 sm:p-6">
           {error && <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>}
 
           {/* 소셜 가입 */}
           <div className="space-y-2.5 mb-5">
             <button type="button" onClick={() => handleSocial("kakao")} disabled={!!socialLoading}
-              className="w-full flex items-center justify-center gap-2.5 bg-[#FEE500] hover:bg-[#F0D800] text-[#191919] font-semibold text-sm py-3 rounded-xl transition-colors disabled:opacity-60">
+              className="w-full flex items-center justify-center gap-2.5 bg-[#FEE500] hover:bg-[#F0D800] text-[#191919] font-semibold text-sm py-3 min-h-[44px] rounded-xl transition-colors disabled:opacity-60">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                 <path fillRule="evenodd" clipRule="evenodd"
                   d="M9 1C4.582 1 1 3.896 1 7.455c0 2.272 1.52 4.267 3.818 5.394L3.91 16.06a.2.2 0 00.296.215L8.42 13.86c.189.014.38.022.58.022 4.418 0 8-2.896 8-6.427C17 3.896 13.418 1 9 1z" fill="#191919"/>
@@ -166,7 +163,7 @@ function SignupForm() {
               {socialLoading === "kakao" ? "연결 중..." : "카카오로 시작하기"}
             </button>
             <button type="button" onClick={() => handleSocial("google")} disabled={!!socialLoading}
-              className="w-full flex items-center justify-center gap-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm py-3 rounded-xl border border-gray-200 transition-colors disabled:opacity-60">
+              className="w-full flex items-center justify-center gap-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm py-3 min-h-[44px] rounded-xl border border-gray-200 transition-colors disabled:opacity-60">
               <svg width="18" height="18" viewBox="0 0 18 18">
                 <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
                 <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.859-3.048.859-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
@@ -176,7 +173,7 @@ function SignupForm() {
               {socialLoading === "google" ? "연결 중..." : "구글로 시작하기"}
             </button>
             <button type="button" onClick={() => handleSocial("apple")} disabled={!!socialLoading}
-              className="w-full flex items-center justify-center gap-2.5 bg-black hover:bg-gray-900 text-white font-semibold text-sm py-3 rounded-xl transition-colors disabled:opacity-60">
+              className="w-full flex items-center justify-center gap-2.5 bg-black hover:bg-gray-900 text-white font-semibold text-sm py-3 min-h-[44px] rounded-xl transition-colors disabled:opacity-60">
               <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
                 <path d="M13.117 9.57c-.02-2.107 1.72-3.12 1.8-3.172-.978-1.43-2.5-1.626-3.048-1.647-1.3-.131-2.54.764-3.198.764-.66 0-1.677-.746-2.76-.727-1.42.02-2.73.824-3.46 2.1-1.477 2.56-.38 6.356 1.062 8.434.703 1.018 1.542 2.16 2.641 2.12 1.06-.042 1.46-.683 2.742-.683 1.282 0 1.64.683 2.76.66 1.14-.02 1.86-1.038 2.558-2.059.806-1.18 1.138-2.322 1.158-2.38-.025-.01-2.218-.85-2.238-3.37h.002z" fill="white"/>
                 <path d="M10.98 2.795c.582-.706.976-1.688.868-2.665-.84.034-1.858.56-2.46 1.265-.54.623-1.014 1.622-.888 2.578.936.072 1.898-.475 2.48-1.178z" fill="white"/>
@@ -208,7 +205,7 @@ function SignupForm() {
                   value={phone}
                   onChange={e => { setPhone(e.target.value); setOtpSent(false); setPhoneVerified(false) }}
                   disabled={phoneVerified}
-                  className={`flex-1 px-3.5 py-2.5 border rounded-xl text-sm transition-all outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
+                  className={`flex-1 min-w-0 px-3.5 py-2.5 border rounded-xl text-sm transition-all outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
                     phoneVerified ? "bg-emerald-50 border-emerald-300 text-emerald-700" :
                     fieldErrors.phone ? "border-red-300 bg-red-50" : "border-gray-200 bg-white"
                   }`}
@@ -218,7 +215,7 @@ function SignupForm() {
                   type="button"
                   onClick={handleSendOtp}
                   disabled={phoneLoading || phoneVerified}
-                  className="px-4 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
+                  className="shrink-0 px-3 sm:px-4 py-2.5 min-h-[44px] bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
                 >
                   {phoneLoading ? "전송 중..." : otpSent ? "재전송" : "인증번호 받기"}
                 </button>
@@ -246,13 +243,13 @@ function SignupForm() {
                       placeholder="인증번호 6자리"
                       value={otpCode}
                       onChange={e => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                      className="flex-1 px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 tracking-widest"
+                      className="flex-1 min-w-0 px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 tracking-widest"
                     />
                     <button
                       type="button"
                       onClick={handleVerifyOtp}
                       disabled={phoneLoading || otpCode.length !== 6}
-                      className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
+                      className="shrink-0 px-3 sm:px-4 py-2.5 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap"
                     >
                       {phoneLoading ? "확인 중..." : "인증 확인"}
                     </button>
@@ -300,10 +297,9 @@ function SignupForm() {
 
             {role === "driver" && (
               <>
-                <Input name="vehicleNumber" label="차량번호" placeholder="12가 3456" required />
-                <Select name="vehicleType" label="차량 종류"
-                  options={VEHICLE_TYPES.map(v => ({ value: v, label: v }))}
-                  placeholder="차량 종류 선택" required />
+                <div className="rounded-lg bg-orange-50 border border-orange-200 p-3 text-sm text-orange-700">
+                  차량 정보는 회원가입 후 사업자 인증 단계에서 입력합니다.
+                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">거주지 (활동 지역)</label>
@@ -317,7 +313,7 @@ function SignupForm() {
                   <div className="flex flex-wrap gap-2">
                     {REGIONS.map(region => (
                       <button key={region} type="button" onClick={() => toggleRoute(region)}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                        className={`px-3 py-2 min-h-[36px] rounded-full text-xs font-medium border transition-all ${
                           selectedRoutes.includes(region)
                             ? "bg-indigo-600 text-white border-indigo-600"
                             : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"

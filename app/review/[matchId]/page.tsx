@@ -69,15 +69,15 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl shadow-black/30">
-        <h1 className="text-2xl font-bold text-center mb-2 tracking-tight">거래 완료!</h1>
-        <p className="text-gray-400 text-center mb-8">
+    <div className="min-h-[100dvh] bg-gray-950 flex items-center justify-center px-4 py-8">
+      <div className="bg-white rounded-2xl p-6 md:p-8 w-full max-w-md shadow-2xl shadow-black/30">
+        <h1 className="text-xl md:text-2xl font-bold text-center mb-2 tracking-tight">거래 완료!</h1>
+        <p className="text-gray-400 text-center mb-6 md:mb-8 text-sm md:text-base">
           상대방에 대한 리뷰를 남겨주세요
         </p>
 
         {/* Star rating */}
-        <div className="flex justify-center gap-2 mb-6">
+        <div className="flex justify-center gap-1 mb-6">
           {[1,2,3,4,5].map(star => (
             <button
               key={star}
@@ -85,7 +85,7 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
               onClick={() => setRating(star)}
               onMouseEnter={() => setHovered(star)}
               onMouseLeave={() => setHovered(0)}
-              className="text-4xl transition-transform hover:scale-110"
+              className="w-14 h-14 flex items-center justify-center text-4xl transition-transform hover:scale-110 active:scale-95"
             >
               <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-200"}>★</span>
             </button>
@@ -111,14 +111,14 @@ export default function ReviewPage({ params }: { params: { matchId: string } }) 
         <div className="flex gap-3">
           <button
             onClick={() => router.back()}
-            className="flex-1 py-3 border border-gray-300 rounded-xl text-sm text-gray-600 hover:bg-gray-50"
+            className="flex-1 py-3.5 min-h-[44px] border border-gray-300 rounded-xl text-sm text-gray-600 hover:bg-gray-50 active:bg-gray-100"
           >
             건너뛰기
           </button>
           <button
             onClick={() => startTransition(submitReview)}
             disabled={rating === 0 || isPending}
-            className="flex-1 py-3 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600 disabled:opacity-50"
+            className="flex-1 py-3.5 min-h-[44px] bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600 active:bg-orange-700 disabled:opacity-50"
           >
             {isPending ? "등록 중..." : "리뷰 등록"}
           </button>

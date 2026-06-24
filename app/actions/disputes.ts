@@ -12,6 +12,17 @@ export async function submitDispute(formData: FormData) {
 
   if (!reason?.trim()) return { error: "신고 사유를 입력해주세요" }
 
+  // Verify user is a participant in this match
+  const { data: match } = await supabase
+    .from("matches")
+    .select("order_id, driver_id, orders!inner(shipper_id)")
+    .eq("id", matchId)
+    .single()
+
+  if (!match) return { error: "매칭을 찾을 수 없습니다" }
+  const isParticipant = match.driver_id === user.id || (match.orders as any)?.shipper_id === user.id
+  if (!isParticipant) return { error: "권한이 없습니다" }
+
   const { data: escrow } = await supabase
     .from("escrow")
     .select("id")
@@ -28,9 +39,7 @@ export async function submitDispute(formData: FormData) {
 
   if (error) return { error: error.message }
 
-  await supabase.from("orders")
-    .update({ status: "disputed" })
-    .eq("id", (await supabase.from("matches").select("order_id").eq("id", matchId).single()).data?.order_id)
+  await supabase.from("orders").update({ status: "disputed" }).eq("id", match.order_id)
 
   revalidatePath(`/chat/${matchId}`)
   return { success: true }

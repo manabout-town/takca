@@ -73,7 +73,7 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
         </div>
 
         {/* 출발지 */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1.5">출발 지역<span className="text-red-400 ml-0.5">*</span></label>
             <select name="origin_city" required
@@ -112,7 +112,7 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
             {PROVINCES.map(p => (
               <button key={p} type="button"
                 onClick={() => setSelectedProvince(selectedProvince === p ? null : p)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                className={`px-3 py-2 min-h-[44px] rounded-lg text-xs font-medium border transition-all ${
                   selectedProvince === p
                     ? "bg-indigo-600 text-white border-indigo-600"
                     : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"
@@ -138,7 +138,7 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
                   const active = destRegions.includes(key)
                   return (
                     <button key={d} type="button" onClick={() => toggleDest(key)}
-                      className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-all ${
+                      className={`px-2.5 py-2 min-h-[44px] rounded-full text-xs font-medium border transition-all ${
                         active
                           ? "bg-indigo-600 text-white border-indigo-600"
                           : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"
@@ -170,7 +170,7 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
                 const active = cargoTypes.includes(c)
                 return (
                   <button key={c} type="button" onClick={() => toggleCargo(c)}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                    className={`px-3 py-2 min-h-[44px] rounded-full text-xs font-medium border transition-all ${
                       active
                         ? "bg-indigo-600 text-white border-indigo-600"
                         : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"

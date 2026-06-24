@@ -7,7 +7,7 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ko`,
-      { headers: { "User-Agent": "hwamulro-app/1.0" } }
+      { headers: { "User-Agent": "takca-app/1.0" } }
     )
     const data = await res.json()
     const { road, city_district, city, county, state } = data.address || {}

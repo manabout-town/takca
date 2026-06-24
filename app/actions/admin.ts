@@ -20,7 +20,7 @@ export async function resolveDispute(
 
   const { data: dispute } = await service
     .from("disputes")
-    .select("*, matches(id, driver_id, orders(shipper_id, price))")
+    .select("*, matches(id, order_id, driver_id, orders(id, shipper_id, price))")
     .eq("id", disputeId)
     .single()
 

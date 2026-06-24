@@ -26,8 +26,6 @@ export default function LoginPage() {
       setError(result.error)
       setLoading(false)
     } else if (result?.redirect) {
-      sessionStorage.setItem("hwamulro_session_active", "true")
-      sessionStorage.setItem("hwamulro_last_active", Date.now().toString())
       router.push(result.redirect)
     }
   }
@@ -47,7 +45,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4 overflow-x-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)] pointer-events-none" />
 
@@ -60,7 +58,7 @@ export default function LoginPage() {
           <p className="text-gray-500 mt-2">계속하려면 로그인하세요</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-2xl shadow-black/30">
+        <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-2xl shadow-black/30">
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">
               {error}
@@ -73,7 +71,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleSocial("kakao")}
               disabled={!!socialLoading}
-              className="w-full flex items-center justify-center gap-2.5 bg-[#FEE500] hover:bg-[#F0D800] text-[#191919] font-semibold text-sm py-3 rounded-xl transition-colors disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2.5 bg-[#FEE500] hover:bg-[#F0D800] text-[#191919] font-semibold text-sm py-3 min-h-[44px] rounded-xl transition-colors disabled:opacity-60"
             >
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                 <path fillRule="evenodd" clipRule="evenodd"
@@ -87,7 +85,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleSocial("google")}
               disabled={!!socialLoading}
-              className="w-full flex items-center justify-center gap-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm py-3 rounded-xl border border-gray-200 transition-colors disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm py-3 min-h-[44px] rounded-xl border border-gray-200 transition-colors disabled:opacity-60"
             >
               <svg width="18" height="18" viewBox="0 0 18 18">
                 <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
@@ -102,7 +100,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleSocial("apple")}
               disabled={!!socialLoading}
-              className="w-full flex items-center justify-center gap-2.5 bg-black hover:bg-gray-900 text-white font-semibold text-sm py-3 rounded-xl transition-colors disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2.5 bg-black hover:bg-gray-900 text-white font-semibold text-sm py-3 min-h-[44px] rounded-xl transition-colors disabled:opacity-60"
             >
               <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
                 <path d="M13.117 9.57c-.02-2.107 1.72-3.12 1.8-3.172-.978-1.43-2.5-1.626-3.048-1.647-1.3-.131-2.54.764-3.198.764-.66 0-1.677-.746-2.76-.727-1.42.02-2.73.824-3.46 2.1-1.477 2.56-.38 6.356 1.062 8.434.703 1.018 1.542 2.16 2.641 2.12 1.06-.042 1.46-.683 2.742-.683 1.282 0 1.64.683 2.76.66 1.14-.02 1.86-1.038 2.558-2.059.806-1.18 1.138-2.322 1.158-2.38-.025-.01-2.218-.85-2.238-3.37h.002z" fill="white"/>

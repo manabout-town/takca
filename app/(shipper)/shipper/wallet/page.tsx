@@ -74,7 +74,7 @@ export default async function ShipperWalletPage() {
       </div>
 
       {/* 충전 / 포인트 사용 */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* 충전 */}
         <div className="bg-white border border-gray-100 rounded-2xl p-6">
           <h2 className="font-bold text-gray-900 mb-4">충전</h2>

@@ -11,12 +11,11 @@ export async function createOrder(formData: FormData) {
 
   const origin = formData.get("origin") as string
   const destination = formData.get("destination") as string
-  const cargoType = formData.get("cargoType") as string
-  const cargoDetail = formData.get("cargoDetail") as string
+  const vehicleCount = parseInt(formData.get("vehicleCount") as string) || 1
+  const vehicleNotes = formData.get("vehicleNotes") as string
   const price = parseInt(formData.get("price") as string)
   const pickupAt = formData.get("pickupAt") as string
   const title = formData.get("title") as string
-  const vehicleType = formData.get("vehicleType") as string
   const isUrgent = formData.get("isUrgent") === "true"
   const urgentFee = isUrgent ? 1000 : 0
 
@@ -24,12 +23,11 @@ export async function createOrder(formData: FormData) {
     shipper_id: user.id,
     origin,
     destination,
-    cargo_type: cargoType,
-    cargo_detail: cargoDetail,
+    vehicle_count: vehicleCount,
+    vehicle_notes: vehicleNotes || null,
     price,
     pickup_at: pickupAt,
     title,
-    vehicle_type: vehicleType,
     is_urgent: isUrgent,
     urgent_fee: urgentFee,
     status: "pending",
@@ -96,10 +94,17 @@ export async function confirmStart(matchId: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "로그인이 필요합니다" }
 
+  const { data: match } = await supabase
+    .from("matches")
+    .select("order_id, driver_id")
+    .eq("id", matchId)
+    .single()
+
+  if (!match) return { error: "매칭을 찾을 수 없습니다" }
+  if (match.driver_id !== user.id) return { error: "권한이 없습니다" }
+
   await supabase.from("matches").update({ status: "in_progress" }).eq("id", matchId)
-  await supabase.from("orders")
-    .update({ status: "in_progress" })
-    .eq("id", (await supabase.from("matches").select("order_id").eq("id", matchId).single()).data?.order_id)
+  await supabase.from("orders").update({ status: "in_progress" }).eq("id", match.order_id)
 
   revalidatePath(`/chat/${matchId}`)
   return { success: true }

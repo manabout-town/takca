@@ -3,9 +3,8 @@ import { OrderCard } from "@/components/shared/OrderCard"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { FeedFilter } from "@/components/driver/FeedFilter"
-import { CARGO_TYPES } from "@/lib/types"
 
-interface SearchParams { cargoType?: string; origin?: string; minPrice?: string; maxPrice?: string }
+interface SearchParams { origin?: string; urgent?: string }
 
 export default async function DriverFeedPage({
   searchParams,
@@ -22,10 +21,9 @@ export default async function DriverFeedPage({
     .order("created_at", { ascending: false })
     .limit(50)
 
-  if (searchParams.cargoType) query = query.eq("cargo_type", searchParams.cargoType)
   if (searchParams.origin) query = query.ilike("origin", `%${searchParams.origin}%`)
-  if (searchParams.minPrice) query = query.gte("price", parseInt(searchParams.minPrice))
-  if (searchParams.maxPrice) query = query.lte("price", parseInt(searchParams.maxPrice))
+  if (searchParams.urgent === "true") query = query.eq("is_urgent", true)
+  if (searchParams.urgent === "false") query = query.eq("is_urgent", false)
 
   const { data: orders } = await query
 
@@ -34,11 +32,11 @@ export default async function DriverFeedPage({
   return (
     <div>
       <PageHeader
-        title="의뢰 피드"
+        title="탁송 의뢰 피드"
         description={`${orders?.length || 0}건 | 긴급 ${urgentCount}건`}
       />
 
-      <FeedFilter cargoTypes={[...CARGO_TYPES]} />
+      <FeedFilter />
 
       {!orders || orders.length === 0 ? (
         <EmptyState

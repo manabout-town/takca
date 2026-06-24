@@ -15,19 +15,24 @@ export async function GET(request: NextRequest) {
       if (user) {
         const { data: profile } = await supabase
           .from("users")
-          .select("role")
+          .select("role, verification_status")
           .eq("id", user.id)
           .single()
 
-        if (profile?.role === "driver") return NextResponse.redirect(`${origin}/driver/dashboard`)
-        if (profile?.role === "shipper") return NextResponse.redirect(`${origin}/shipper/dashboard`)
-        if (profile?.role === "admin") return NextResponse.redirect(`${origin}/admin/dashboard`)
+        if (!profile?.role) {
+          // New social user — no profile yet
+          const url = role ? `${origin}/onboarding?role=${role}` : `${origin}/onboarding`
+          return NextResponse.redirect(url)
+        }
 
-        // New social user — no profile yet
-        const onboardingUrl = role
-          ? `${origin}/onboarding?role=${role}`
-          : `${origin}/onboarding`
-        return NextResponse.redirect(onboardingUrl)
+        // Existing user — check verification
+        if (profile.verification_status !== "verified") {
+          return NextResponse.redirect(`${origin}/verification`)
+        }
+
+        if (profile.role === "driver") return NextResponse.redirect(`${origin}/driver/dashboard`)
+        if (profile.role === "shipper") return NextResponse.redirect(`${origin}/shipper/dashboard`)
+        if (profile.role === "admin") return NextResponse.redirect(`${origin}/admin/dashboard`)
       }
       return NextResponse.redirect(`${origin}/`)
     }

@@ -134,18 +134,18 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">마이페이지</h1>
-          <p className="text-base text-gray-400 mt-2">프로필 및 계정 관리</p>
+          <h1 className="text-xl md:text-3xl font-bold text-gray-900 tracking-tight">마이페이지</h1>
+          <p className="text-sm md:text-base text-gray-400 mt-2">프로필 및 계정 관리</p>
         </div>
-        <span className="text-xs text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full font-semibold border border-indigo-100 mt-1">기사</span>
+        <span className="text-xs text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full font-semibold border border-indigo-100 sm:mt-1 self-start">기사</span>
       </div>
 
       {/* 프로필 요약 */}
-      <div className="bg-gray-950 rounded-2xl p-6 text-white flex items-center gap-5">
-        <button onClick={() => avatarInputRef.current?.click()} className="relative shrink-0 group">
-          <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-800 border-2 border-gray-700">
+      <div className="bg-gray-950 rounded-2xl p-4 md:p-6 text-white flex items-center gap-3 md:gap-5">
+        <button onClick={() => avatarInputRef.current?.click()} className="relative shrink-0 group min-w-[60px] min-h-[60px]">
+          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden bg-gray-800 border-2 border-gray-700">
             {avatarUrl
               ? <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
               : <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-gray-400">
@@ -160,17 +160,17 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
         <input ref={avatarInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleAvatarChange} />
 
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-lg leading-tight">
+          <p className="font-bold text-base md:text-lg leading-tight truncate">
             {profile?.nickname ? `"${profile.nickname}"` : ""} {profile?.name}
           </p>
-          <p className="text-gray-400 text-sm">{profile?.email}</p>
+          <p className="text-gray-400 text-xs md:text-sm truncate">{profile?.email}</p>
           <div className="mt-2">
             <DriverRankBadge completedCount={completedCount} size="sm" showProgress={false} />
           </div>
         </div>
-        <Link href="/driver/wallet" className="shrink-0 text-center">
+        <Link href="/driver/wallet" className="shrink-0 text-center min-h-[44px] flex flex-col justify-center">
           <p className="text-xs text-gray-400">수익 지갑</p>
-          <p className="font-bold text-emerald-400 text-lg">{formatKRW(totalEarned)}</p>
+          <p className="font-bold text-emerald-400 text-base md:text-lg">{formatKRW(totalEarned)}</p>
         </Link>
       </div>
 
@@ -178,7 +178,7 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
       <div className="flex gap-1 bg-gray-100 p-1 rounded-xl">
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
+            className={`flex-1 py-2.5 text-xs md:text-sm font-medium rounded-lg transition-all min-h-[44px] ${
               tab === t.id ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
             }`}>
             {t.label}
@@ -206,14 +206,14 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
           )}
 
           {/* 통계 */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 md:gap-3">
             {[
               { label: "총 운송", value: `${matches.length}건` },
               { label: "완료", value: `${completedCount}건` },
               { label: "평점", value: (dp?.rating_avg || 0) > 0 ? `★ ${dp.rating_avg.toFixed(1)}` : "-" },
             ].map(s => (
-              <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-4 text-center">
-                <p className="font-bold text-lg text-emerald-700">{s.value}</p>
+              <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-3 md:p-4 text-center">
+                <p className="font-bold text-base md:text-lg text-emerald-700">{s.value}</p>
                 <p className="text-xs text-gray-500 mt-1">{s.label}</p>
               </div>
             ))}
@@ -319,7 +319,7 @@ export function DriverMypageClient({ profile, dp, matches, completedMatches, rev
                         onClick={() => setSelectedRoutes(prev =>
                           active ? prev.filter(x => x !== r) : [...prev, r]
                         )}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                        className={`px-3 py-2 min-h-[44px] rounded-full text-xs font-medium border transition-all ${
                           active
                             ? "bg-indigo-600 text-white border-indigo-600"
                             : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"

@@ -4,6 +4,8 @@ export type MatchStatus = 'accepted' | 'in_progress' | 'completed' | 'cancelled'
 export type EscrowStatus = 'held' | 'released' | 'refunded' | 'disputed'
 export type DisputeStatus = 'open' | 'investigating' | 'resolved'
 export type DisputeResolution = 'driver_win' | 'shipper_win' | 'partial_refund'
+export type KYCStatus = 'unverified' | 'pending' | 'verified' | 'rejected'
+export type KYCSubmissionStatus = 'pending' | 'processing' | 'approved' | 'rejected' | 'manual_review'
 
 export interface User {
   id: string
@@ -12,7 +14,26 @@ export interface User {
   name: string
   role: UserRole
   status: 'active' | 'pending' | 'suspended'
+  verification_status: KYCStatus
   created_at: string
+}
+
+export interface KYCSubmission {
+  id: string
+  user_id: string
+  role: UserRole
+  business_registration_url: string
+  driver_license_url?: string
+  ocr_result?: Record<string, unknown>
+  government_api_result?: Record<string, unknown>
+  claude_vision_result?: Record<string, unknown>
+  confidence_score?: number
+  status: KYCSubmissionStatus
+  rejection_reason?: string
+  admin_note?: string
+  reviewed_by?: string
+  created_at: string
+  updated_at: string
 }
 
 export interface DriverProfile {
@@ -41,9 +62,8 @@ export interface Order {
   title?: string
   origin: string
   destination: string
-  cargo_type: string
-  cargo_detail?: string
-  vehicle_type?: string
+  vehicle_count: number
+  vehicle_notes?: string
   price: number
   status: OrderStatus
   is_urgent: boolean
@@ -110,19 +130,18 @@ export interface Dispute {
   resolved_at?: string
 }
 
-export const CARGO_TYPES = [
-  '일반 화물',
-  '냉동/냉장',
-  '위험물',
-  '가구/가전',
-  '건자재',
-  '농산물',
-  '의류/잡화',
-  '기계/장비',
+export const VEHICLE_CARRY_TYPES = [
+  '승용차',
+  'SUV',
+  '승합차',
+  '픽업트럭',
+  '수입차',
+  '전기차',
+  '하이브리드',
   '기타',
 ] as const
 
-export type NotificationType = 'match_request' | 'order_status' | 'chat' | 'escrow' | 'dispute'
+export type NotificationType = 'match_request' | 'order_status' | 'chat' | 'escrow' | 'dispute' | 'kyc'
 
 export interface Notification {
   id: string
@@ -135,14 +154,8 @@ export interface Notification {
   created_at: string
 }
 
-export const VEHICLE_TYPES = [
-  '다마스',
-  '라보',
-  '1톤 트럭',
-  '1.4톤 트럭',
-  '2.5톤 트럭',
-  '3.5톤 트럭',
-  '5톤 트럭',
-  '11톤 트럭',
-  '25톤 트럭',
+export const CARRIER_VEHICLE_TYPES = [
+  '카 캐리어 (소형, 2~4대)',
+  '카 캐리어 (중형, 5~8대)',
+  '카 캐리어 (대형, 9~12대)',
 ] as const

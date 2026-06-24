@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Select } from "@/components/ui/Select"
 import { Logo } from "@/components/shared/Logo"
-import { VEHICLE_TYPES } from "@/lib/types"
 
 const PHONE_RE = /^01[0-9]\d{7,8}$/
 const REGIONS = [
@@ -55,7 +54,7 @@ function OnboardingForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-10 overflow-x-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)] pointer-events-none" />
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
@@ -75,7 +74,7 @@ function OnboardingForm() {
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl shadow-black/30 p-6">
+        <div className="bg-white rounded-2xl shadow-2xl shadow-black/30 p-5 sm:p-6">
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>
           )}
@@ -98,10 +97,9 @@ function OnboardingForm() {
 
             {role === "driver" && (
               <>
-                <Input name="vehicleNumber" label="차량번호" placeholder="12가 3456" required />
-                <Select name="vehicleType" label="차량 종류"
-                  options={VEHICLE_TYPES.map(v => ({ value: v, label: v }))}
-                  placeholder="차량 종류 선택" required />
+                <div className="rounded-lg bg-orange-50 border border-orange-200 p-3 text-sm text-orange-700">
+                  차량 정보는 인증 단계에서 입력합니다.
+                </div>
                 <Select name="homeRegion" label="거주지 (활동 지역)"
                   options={REGIONS.map(r => ({ value: r, label: r }))}
                   placeholder="거주지 선택" />
@@ -110,7 +108,7 @@ function OnboardingForm() {
                   <div className="flex flex-wrap gap-2">
                     {REGIONS.map(region => (
                       <button key={region} type="button" onClick={() => toggleRoute(region)}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                        className={`px-3 py-2 min-h-[36px] rounded-full text-xs font-medium border transition-all ${
                           selectedRoutes.includes(region)
                             ? "bg-indigo-600 text-white border-indigo-600"
                             : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"

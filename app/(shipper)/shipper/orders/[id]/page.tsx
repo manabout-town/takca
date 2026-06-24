@@ -29,8 +29,8 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* 헤더 */}
-      <div className="flex items-center gap-3">
-        <Link href="/shipper/dashboard" className="text-gray-400 hover:text-gray-700 text-sm transition-colors">← 내 의뢰</Link>
+      <div className="flex flex-wrap items-center gap-2 md:gap-3">
+        <Link href="/shipper/dashboard" className="text-gray-400 hover:text-gray-700 text-sm transition-colors min-h-[44px] flex items-center">← 내 의뢰</Link>
         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${ORDER_STATUS_COLOR[order.status as keyof typeof ORDER_STATUS_COLOR] || "bg-gray-100 text-gray-700"}`}>
           {ORDER_STATUS_LABEL[order.status as keyof typeof ORDER_STATUS_LABEL]}
         </span>
@@ -38,9 +38,9 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       </div>
 
       {/* 의뢰 기본 정보 */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h1 className="text-2xl font-bold mb-5 text-gray-900 tracking-tight">{order.title || "운송 의뢰"}</h1>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm mb-6">
+      <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-6">
+        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-5 text-gray-900 tracking-tight">{order.title || "운송 의뢰"}</h1>
+        <div className="grid grid-cols-2 gap-x-4 md:gap-x-6 gap-y-3 md:gap-y-4 text-sm mb-6">
           <div><p className="text-xs text-gray-400 mb-1">출발지</p><p className="font-semibold text-gray-900">{order.origin}</p></div>
           <div><p className="text-xs text-gray-400 mb-1">도착지</p><p className="font-semibold text-gray-900">{order.destination}</p></div>
           <div><p className="text-xs text-gray-400 mb-1">화물 종류</p><p className="font-medium">{order.cargo_type}</p></div>
@@ -72,18 +72,18 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
           }`}>
             🔒 에스크로 {escrow.status === "held" ? "보관 중" : escrow.status === "released" ? "지급 완료" : "환불됨"}
           </h2>
-          <div className="grid grid-cols-3 gap-3 text-sm">
+          <div className="grid grid-cols-3 gap-2 md:gap-3 text-sm">
             <div>
               <p className="text-xs text-gray-400 mb-1">결제 금액</p>
-              <p className="font-bold text-gray-900">{formatKRW(escrow.total_amount)}</p>
+              <p className="font-bold text-gray-900 text-sm md:text-base">{formatKRW(escrow.total_amount)}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400 mb-1">플랫폼 수수료</p>
-              <p className="font-medium text-red-600">{formatKRW(escrow.platform_fee)}</p>
+              <p className="font-medium text-red-600 text-sm md:text-base">{formatKRW(escrow.platform_fee)}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400 mb-1">기사 지급액</p>
-              <p className="font-bold text-emerald-700">{formatKRW(escrow.driver_payout)}</p>
+              <p className="font-bold text-emerald-700 text-sm md:text-base">{formatKRW(escrow.driver_payout)}</p>
             </div>
           </div>
           {escrow.status === "held" && (
@@ -98,7 +98,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
           <h2 className="font-semibold text-orange-800 mb-2 text-sm">💳 에스크로 결제 필요</h2>
           <p className="text-sm text-orange-600 mb-4">기사님이 매칭되었습니다. 에스크로 결제 후 운송이 시작됩니다.</p>
           <Link href={`/shipper/orders/${order.id}/pay`}
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+            className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-colors min-h-[44px] flex items-center justify-center">
             {formatKRW(order.price)} 에스크로 결제 →
           </Link>
         </div>
@@ -121,9 +121,9 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
               {pendingBids.map((bid: any) => {
                 const dp = bid.drivers?.driver_profiles
                 return (
-                  <div key={bid.id} className="border border-gray-100 rounded-2xl p-5 hover:border-indigo-200 transition-colors">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
+                  <div key={bid.id} className="border border-gray-100 rounded-2xl p-4 md:p-5 hover:border-indigo-200 transition-colors">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="min-w-0">
                         <a href={`/driver/${bid.drivers?.id || bid.driver_id}`} target="_blank" rel="noopener noreferrer"
                           className="font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
                           {bid.drivers?.name} ↗
@@ -142,7 +142,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
                           <DriverRankBadge completedCount={dp?.completed_count ?? 0} size="sm" showProgress={false} />
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right shrink-0">
                         <p className="font-bold text-orange-500 text-base">{formatKRW(bid.price)}</p>
                         <p className="text-xs text-gray-400 mt-0.5">{formatDate(bid.created_at)}</p>
                       </div>
@@ -152,12 +152,12 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
                     )}
                     <div className="flex gap-2">
                       <form action={async () => { "use server"; await approveBid(bid.id, order.id) }} className="flex-1">
-                        <button type="submit" className="w-full py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                        <button type="submit" className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors min-h-[44px]">
                           ✓ 승인
                         </button>
                       </form>
                       <form action={async () => { "use server"; await rejectBid(bid.id, order.id) }}>
-                        <button type="submit" className="px-4 py-2 border border-gray-200 text-gray-500 text-sm rounded-lg hover:bg-gray-50 transition-colors">
+                        <button type="submit" className="px-4 py-2.5 border border-gray-200 text-gray-500 text-sm rounded-lg hover:bg-gray-50 transition-colors min-h-[44px]">
                           거절
                         </button>
                       </form>
@@ -196,7 +196,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       {/* 완료 확인 */}
       {order.status === "in_progress" && activeMatch && (
         <form action={async () => { "use server"; await confirmCompletion(activeMatch.id) }}>
-          <button type="submit" className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors">
+          <button type="submit" className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors min-h-[48px]">
             운송 완료 확인
           </button>
         </form>
@@ -205,7 +205,7 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
       {/* 취소 */}
       {order.status === "pending" && (
         <form action={async () => { "use server"; await cancelOrder(params.id) }}>
-          <button type="submit" className="w-full py-2 border border-gray-200 text-gray-400 text-sm rounded-xl hover:bg-gray-50 transition-colors">
+          <button type="submit" className="w-full py-3 border border-gray-200 text-gray-400 text-sm rounded-xl hover:bg-gray-50 transition-colors min-h-[44px]">
             의뢰 취소
           </button>
         </form>

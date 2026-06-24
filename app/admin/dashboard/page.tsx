@@ -42,22 +42,22 @@ export default async function AdminDashboard() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">관리자 대시보드</h1>
-          <p className="text-base text-gray-400 mt-2">플랫폼 현황 모니터링</p>
+          <h1 className="text-xl md:text-3xl font-bold text-gray-900 tracking-tight">관리자 대시보드</h1>
+          <p className="text-sm md:text-base text-gray-400 mt-1 md:mt-2">플랫폼 현황 모니터링</p>
         </div>
-        <div className="flex items-center gap-2 mt-1 bg-emerald-50 border border-emerald-100 px-3 py-2 rounded-xl">
+        <div className="flex items-center gap-2 mt-1 bg-emerald-50 border border-emerald-100 px-3 py-2 rounded-xl shrink-0 ml-3">
           <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
           <span className="text-sm text-emerald-600 font-medium">실시간</span>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         {stats.map(s => (
-          <div key={s.label} className={`${s.bg} border rounded-2xl p-6`}>
-            <div className="text-2xl mb-3">{s.icon}</div>
-            <div className={`text-3xl font-bold tracking-tight ${s.accent}`}>{s.value}</div>
-            <div className="text-sm text-gray-500 mt-1.5">{s.label}</div>
+          <div key={s.label} className={`${s.bg} border rounded-2xl p-4 md:p-6`}>
+            <div className="text-xl md:text-2xl mb-2 md:mb-3">{s.icon}</div>
+            <div className={`text-xl md:text-3xl font-bold tracking-tight ${s.accent}`}>{s.value}</div>
+            <div className="text-xs md:text-sm text-gray-500 mt-1 md:mt-1.5">{s.label}</div>
           </div>
         ))}
       </div>

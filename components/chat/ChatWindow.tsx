@@ -93,12 +93,12 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
     "bg-amber-50 text-amber-700"
 
   return (
-    <div className="flex flex-col h-screen max-w-2xl mx-auto bg-gray-50">
+    <div className="flex flex-col h-[100dvh] max-w-2xl mx-auto bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3 shrink-0">
+      <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3 shrink-0 safe-top">
         <Link
           href={isShipper ? `/shipper/orders/${order?.id}` : "/driver/matches"}
-          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors text-lg"
+          className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors text-lg shrink-0"
         >
           ←
         </Link>
@@ -207,13 +207,13 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
       />
 
       {/* Input */}
-      <div className="bg-white border-t border-gray-100 px-4 py-3 shrink-0">
+      <div className="bg-white border-t border-gray-100 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shrink-0">
         {match.status === "completed" ? (
           <div className="text-center text-sm text-gray-400 py-1">거래가 완료되었습니다</div>
         ) : (
           <form onSubmit={sendMessage} className="flex gap-2">
             <input
-              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all bg-gray-50"
+              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all bg-gray-50 min-h-[44px]"
               placeholder="메시지를 입력하세요..."
               value={input}
               onChange={e => setInput(e.target.value)}
@@ -222,7 +222,7 @@ export function ChatWindow({ match, currentUser, initialMessages, isShipper }: C
             <button
               type="submit"
               disabled={!input.trim() || sending}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40 transition-colors"
+              className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white px-5 py-2.5 min-h-[44px] rounded-xl text-sm font-semibold disabled:opacity-40 transition-colors shrink-0"
             >
               전송
             </button>

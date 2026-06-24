@@ -41,7 +41,7 @@ function DisputeForm({ orderId }: { orderId: string }) {
         </Link>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-8">
+      <div className="bg-white rounded-2xl border border-gray-200 p-5 md:p-8">
         <div className="text-center mb-6">
           <div className="text-4xl mb-3">⚠️</div>
           <h1 className="text-xl font-bold">분쟁 신고</h1>
@@ -72,7 +72,7 @@ function DisputeForm({ orderId }: { orderId: string }) {
           <button
             type="submit"
             disabled={!reason.trim() || loading}
-            className="w-full py-3 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 disabled:opacity-50 transition"
+            className="w-full py-3.5 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 disabled:opacity-50 transition min-h-[44px]"
           >
             {loading ? "제출 중..." : "분쟁 신고하기"}
           </button>

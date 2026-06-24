@@ -2,7 +2,7 @@ import Link from "next/link"
 import type { Order } from "@/lib/types"
 import { formatKRW, formatDate } from "@/lib/utils/format"
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/lib/utils/status"
-import { MapPin, Calendar, Package, Zap } from "lucide-react"
+import { MapPin, Calendar, Car, Zap } from "lucide-react"
 
 interface OrderCardProps {
   order: Order
@@ -31,15 +31,15 @@ export function OrderCard({ order, href, showStatus = true }: OrderCardProps) {
         </div>
 
         <div className="space-y-2 mb-3">
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-sm min-w-0">
             <MapPin size={14} className="text-orange-400 shrink-0" />
-            <span className="font-medium text-gray-800">{order.origin}</span>
-            <span className="text-gray-300">→</span>
-            <span className="font-medium text-gray-800">{order.destination}</span>
+            <span className="font-medium text-gray-800 truncate">{order.origin}</span>
+            <span className="text-gray-300 shrink-0">→</span>
+            <span className="font-medium text-gray-800 truncate">{order.destination}</span>
           </div>
           <div className="flex items-center gap-4 text-xs text-gray-500">
             <span className="flex items-center gap-1">
-              <Package size={13} /> {order.cargo_type}
+              <Car size={13} /> 차량 {order.vehicle_count}대
             </span>
             <span className="flex items-center gap-1">
               <Calendar size={13} /> {formatDate(order.pickup_at)}
@@ -47,8 +47,8 @@ export function OrderCard({ order, href, showStatus = true }: OrderCardProps) {
           </div>
         </div>
 
-        {order.cargo_detail && (
-          <p className="text-xs text-gray-400 line-clamp-1 mt-2 pt-2 border-t border-gray-50">{order.cargo_detail}</p>
+        {order.vehicle_notes && (
+          <p className="text-xs text-gray-400 line-clamp-1 mt-2 pt-2 border-t border-gray-50">{order.vehicle_notes}</p>
         )}
       </div>
     </Link>

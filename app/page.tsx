@@ -16,7 +16,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════
           HERO — Higgsfield AI generated background
       ══════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-[60px]">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-x-hidden pt-[60px]">
 
         {/* Higgsfield AI 생성 히어로 배경 */}
         <div className="absolute inset-0">
@@ -63,7 +63,7 @@ export default function HomePage() {
             실시간 운영 중 · 전국 화물 중개 플랫폼
           </div>
 
-          <h1 className="text-5xl md:text-[4.5rem] lg:text-[5.5rem] font-extrabold text-white
+          <h1 className="text-4xl sm:text-5xl md:text-[4.5rem] lg:text-[5.5rem] font-extrabold text-white
             tracking-tight mb-5 leading-[1.06]">
             화물 운송,<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">
@@ -81,7 +81,7 @@ export default function HomePage() {
           <RoleSelector />
 
           {/* Mini trust strip */}
-          <div className="flex items-center justify-center gap-6 mt-10 text-[11px] text-gray-600">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mt-10 text-[11px] text-gray-600">
             {[
               "✓ 가입비 없음",
               "✓ 의뢰 등록 무료",
@@ -104,7 +104,7 @@ export default function HomePage() {
           STATS STRIP
       ══════════════════════════════════════════ */}
       <section className="bg-white border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="max-w-5xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
           {[
             { num: "94.7%", label: "매칭 성공률", sub: "전국 기사 네트워크" },
             { num: "47분", label: "평균 매칭 시간", sub: "긴급 건 3분 이내" },
@@ -112,7 +112,7 @@ export default function HomePage() {
             { num: "4%", label: "기사 수수료", sub: "화주 등록 무료" },
           ].map(s => (
             <div key={s.label}>
-              <div className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1 tabular-nums">{s.num}</div>
+              <div className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-1 tabular-nums">{s.num}</div>
               <div className="text-sm font-semibold text-gray-700 mb-0.5">{s.label}</div>
               <div className="text-xs text-gray-400">{s.sub}</div>
             </div>
@@ -129,7 +129,7 @@ export default function HomePage() {
             <div className="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
               화물로란?
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-3">
               두 타입의 사용자를 위한 플랫폼
             </h2>
             <p className="text-gray-500 max-w-sm mx-auto text-sm">
@@ -140,7 +140,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-5">
 
             {/* 화주 카드 */}
-            <div className="relative bg-white rounded-3xl border border-orange-100 p-8 overflow-hidden
+            <div className="relative bg-white rounded-3xl border border-orange-100 p-6 md:p-8 overflow-hidden
               hover:border-orange-200 hover:shadow-xl hover:shadow-orange-50 transition-all group">
               <div className="absolute top-0 right-0 w-48 h-48 bg-orange-50 rounded-full
                 translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform" />
@@ -177,7 +177,7 @@ export default function HomePage() {
                 </div>
                 <Link href="/signup?role=shipper"
                   className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400
-                  text-white px-6 py-3 rounded-xl font-bold text-sm transition-all
+                  text-white px-6 py-3 min-h-[44px] rounded-xl font-bold text-sm transition-all
                   hover:shadow-lg hover:shadow-orange-500/25">
                   화주로 무료 가입 →
                 </Link>
@@ -185,7 +185,7 @@ export default function HomePage() {
             </div>
 
             {/* 기사 카드 */}
-            <div className="relative bg-white rounded-3xl border border-indigo-100 p-8 overflow-hidden
+            <div className="relative bg-white rounded-3xl border border-indigo-100 p-6 md:p-8 overflow-hidden
               hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-50 transition-all group">
               <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-50 rounded-full
                 translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform" />
@@ -224,7 +224,7 @@ export default function HomePage() {
                 </div>
                 <Link href="/signup?role=driver"
                   className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500
-                  text-white px-6 py-3 rounded-xl font-bold text-sm transition-all
+                  text-white px-6 py-3 min-h-[44px] rounded-xl font-bold text-sm transition-all
                   hover:shadow-lg hover:shadow-indigo-500/25">
                   기사로 무료 가입 →
                 </Link>
@@ -245,7 +245,7 @@ export default function HomePage() {
               text-xs font-bold px-3 py-1.5 rounded-full mb-4">
               핵심 기능
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-3">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-3">
               안심하고 거래할 수 있는 이유
             </h2>
             <p className="text-gray-500 text-sm">6가지 핵심 기능으로 화주와 기사 모두를 보호합니다</p>
@@ -269,7 +269,7 @@ export default function HomePage() {
               px-3 py-1.5 rounded-full mb-4">
               이용 방법
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-3">
               어떻게 작동하나요?
             </h2>
             <p className="text-gray-400 text-sm">나에게 맞는 탭을 선택하세요</p>
@@ -289,7 +289,7 @@ export default function HomePage() {
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
               실시간 업데이트
             </div>
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-2">지금 이 순간도</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">지금 이 순간도</h2>
             <p className="text-gray-400 text-sm">전국에서 의뢰가 올라오고 있습니다</p>
           </div>
 
@@ -297,7 +297,7 @@ export default function HomePage() {
           <div className="space-y-3 mb-6">
             {MOCK_ORDERS.map((o, i) => (
               <div key={i}
-                className={`flex items-center gap-4 p-4 rounded-2xl border transition-all
+                className={`flex items-center gap-3 p-3 sm:p-4 rounded-2xl border transition-all
                   ${o.urgent
                     ? "border-amber-200 bg-amber-50/60"
                     : "border-gray-100 bg-white shadow-sm"}`}>
@@ -363,7 +363,7 @@ export default function HomePage() {
             text-xs font-bold px-3 py-1.5 rounded-full mb-6">
             지금 시작하세요
           </div>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
             가입비 없음.<br />
             <span className="text-orange-400">30초면 충분합니다.</span>
           </h2>
@@ -431,7 +431,7 @@ function RoleSelector() {
   const [hovered, setHovered] = useState<"shipper" | "driver" | null>(null)
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-lg mx-auto">
+    <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-lg mx-auto w-full">
       <Link
         href="/signup?role=shipper"
         onMouseEnter={() => setHovered("shipper")}
@@ -592,10 +592,10 @@ function HowItWorksTabs() {
   return (
     <div>
       {/* Tab buttons */}
-      <div className="flex gap-2 justify-center mb-10">
+      <div className="flex flex-wrap gap-2 justify-center mb-10">
         <button
           onClick={() => setTab("shipper")}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all
+          className={`flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl text-sm font-bold transition-all
             ${tab === "shipper"
               ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
               : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>
@@ -607,7 +607,7 @@ function HowItWorksTabs() {
         </button>
         <button
           onClick={() => setTab("driver")}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all
+          className={`flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl text-sm font-bold transition-all
             ${tab === "driver"
               ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20"
               : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>
