@@ -27,7 +27,7 @@ export async function submitDispute(formData: FormData) {
     .from("escrow")
     .select("id")
     .eq("match_id", matchId)
-    .single()
+    .maybeSingle()
 
   const { error } = await supabase.from("disputes").insert({
     match_id: matchId,

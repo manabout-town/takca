@@ -25,6 +25,18 @@ function OnboardingForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedRoutes, setSelectedRoutes] = useState<string[]>([])
+  const [phone, setPhone] = useState("")
+  const [phoneError, setPhoneError] = useState<string | null>(null)
+
+  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value.replace(/[^0-9]/g, "")
+    setPhone(val)
+    if (val && !PHONE_RE.test(val)) {
+      setPhoneError("010으로 시작하는 10-11자리 숫자를 입력하세요")
+    } else {
+      setPhoneError(null)
+    }
+  }
 
   useEffect(() => {
     const supabase = createClient()
@@ -80,10 +92,16 @@ function OnboardingForm() {
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              name="name" label="이름" placeholder="홍길동" required
+              name="name" label="이름 *" placeholder="홍길동" required
               value={name} onChange={e => setName(e.target.value)}
             />
-            <Input name="phone" type="tel" label="휴대폰 번호" placeholder="010-1234-5678" required />
+            <div>
+              <Input
+                name="phone" type="tel" label="휴대폰 번호 *" placeholder="01012345678" required
+                value={phone} onChange={handlePhoneChange}
+              />
+              {phoneError && <p className="text-xs text-red-500 mt-1">{phoneError}</p>}
+            </div>
 
             {role === "shipper" && (
               <>
@@ -108,7 +126,7 @@ function OnboardingForm() {
                   <div className="flex flex-wrap gap-2">
                     {REGIONS.map(region => (
                       <button key={region} type="button" onClick={() => toggleRoute(region)}
-                        className={`px-3 py-2 min-h-[36px] rounded-full text-xs font-medium border transition-all ${
+                        className={`px-3 py-2 min-h-[44px] rounded-full text-xs font-medium border transition-all ${
                           selectedRoutes.includes(region)
                             ? "bg-indigo-600 text-white border-indigo-600"
                             : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300"

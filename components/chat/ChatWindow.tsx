@@ -181,21 +181,25 @@ export function ChatWindow({
       {match.status === "accepted" && !isShipper && (
         <div className="bg-indigo-50 border-b border-indigo-100 px-4 py-2.5 flex items-center justify-between shrink-0">
           <span className="text-sm text-indigo-700">운송을 시작하셨나요?</span>
-          <form action={async () => { await confirmStart(match.id) }}>
-            <button type="submit" className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors">
-              운송 시작
-            </button>
-          </form>
+          <button
+            disabled={isPending}
+            onClick={() => startTransition(async () => { await confirmStart(match.id) })}
+            className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 min-h-[44px] min-w-[80px] rounded-lg font-semibold transition-colors disabled:opacity-50"
+          >
+            {isPending ? "처리 중..." : "운송 시작"}
+          </button>
         </div>
       )}
       {match.status === "in_progress" && !isShipper && !completionRequested && (
         <div className="bg-emerald-50 border-b border-emerald-100 px-4 py-2.5 flex items-center justify-between shrink-0">
           <span className="text-sm text-emerald-700">운송을 완료하셨나요?</span>
-          <form action={async () => { await requestCompletion(match.id) }}>
-            <button type="submit" className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors">
-              완료 요청
-            </button>
-          </form>
+          <button
+            disabled={isPending}
+            onClick={() => startTransition(async () => { await requestCompletion(match.id) })}
+            className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 min-h-[44px] min-w-[80px] rounded-lg font-semibold transition-colors disabled:opacity-50"
+          >
+            {isPending ? "처리 중..." : "완료 요청"}
+          </button>
         </div>
       )}
       {completionRequested && isShipper && match.status !== "completed" && (
@@ -204,11 +208,13 @@ export function ChatWindow({
             <div className="text-sm font-semibold text-amber-800">기사님이 완료를 요청했습니다</div>
             <div className="text-xs text-amber-600 mt-0.5">확인 시 에스크로가 해제됩니다</div>
           </div>
-          <form action={async () => { await confirmCompletion(match.id) }}>
-            <button type="submit" className="text-sm bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
-              완료 확인
-            </button>
-          </form>
+          <button
+            disabled={isPending}
+            onClick={() => startTransition(async () => { await confirmCompletion(match.id) })}
+            className="text-sm bg-amber-500 hover:bg-amber-600 text-white px-4 min-h-[44px] min-w-[80px] rounded-lg font-semibold transition-colors disabled:opacity-50"
+          >
+            {isPending ? "처리 중..." : "완료 확인"}
+          </button>
         </div>
       )}
 

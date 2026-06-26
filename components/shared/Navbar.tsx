@@ -55,7 +55,7 @@ export function Navbar({ user }: NavbarProps) {
     : "bg-amber-100 text-amber-700"
 
   return (
-    <nav className="bg-white/95 backdrop-blur border-b border-gray-100 sticky top-0 z-40">
+    <nav className="bg-white/95 backdrop-blur border-b border-gray-100 sticky top-0 z-40 pt-[env(safe-area-inset-top)]">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Logo />
@@ -83,7 +83,7 @@ export function Navbar({ user }: NavbarProps) {
             <span className="text-sm font-medium text-gray-700">{user.name}</span>
           </div>
           <form action={signOut}>
-            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors px-2 py-1 rounded hover:bg-gray-100">
+            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors px-2 py-1 rounded hover:bg-gray-100 min-h-[44px] min-w-[44px]">
               로그아웃
             </button>
           </form>

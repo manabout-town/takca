@@ -95,7 +95,7 @@ export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice =
           <button
             onClick={handleStart}
             disabled={isPending}
-            className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
+            className="flex-1 py-2 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
           >
             {isPending ? "처리 중..." : "🚚 운송 시작"}
           </button>
@@ -104,7 +104,7 @@ export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice =
           <button
             onClick={handleComplete}
             disabled={isPending}
-            className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
+            className="flex-1 py-2 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
           >
             {isPending ? "처리 중..." : "✅ 완료 요청"}
           </button>
@@ -113,7 +113,7 @@ export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice =
           <button
             onClick={() => setShowCancelDialog(true)}
             disabled={isPending}
-            className="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg border border-red-200 transition-colors disabled:opacity-50"
+            className="px-3 py-2 min-h-[44px] bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg border border-red-200 transition-colors disabled:opacity-50"
           >
             취소
           </button>
@@ -163,14 +163,14 @@ export function MatchStatusButtons({ matchId, matchStatus, orderId, orderPrice =
               <button
                 onClick={() => setShowCancelDialog(false)}
                 disabled={isPending}
-                className="flex-1 py-2.5 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+                className="flex-1 py-2.5 min-h-[44px] border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
                 돌아가기
               </button>
               <button
                 onClick={handleCancel}
                 disabled={isPending}
-                className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
+                className="flex-1 py-2.5 min-h-[44px] bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
               >
                 {isPending ? "처리 중..." : "취소 확정"}
               </button>

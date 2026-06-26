@@ -27,7 +27,7 @@ function FeedFilterInner() {
         <div className="flex-1 min-w-[140px]">
           <label className="text-xs font-medium text-gray-500 mb-1.5 block">출발지</label>
           <input
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all bg-white"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 min-h-[44px] text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all bg-white"
             placeholder="예: 서울"
             value={origin}
             onChange={e => setOrigin(e.target.value)}
@@ -37,7 +37,7 @@ function FeedFilterInner() {
         <div className="flex-1 min-w-[140px]">
           <label className="text-xs font-medium text-gray-500 mb-1.5 block">긴급 여부</label>
           <select
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 min-h-[44px] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
             value={urgent}
             onChange={e => setUrgent(e.target.value)}
           >
@@ -49,13 +49,13 @@ function FeedFilterInner() {
         <div className="flex gap-2">
           <button
             onClick={apply}
-            className="bg-[#FF6B2B] hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+            className="bg-[#FF6B2B] hover:bg-orange-600 text-white px-5 py-2.5 min-h-[44px] rounded-lg text-sm font-semibold transition-colors"
           >
             검색
           </button>
           <button
             onClick={reset}
-            className="border border-gray-200 text-gray-500 hover:bg-gray-50 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+            className="border border-gray-200 text-gray-500 hover:bg-gray-50 px-4 py-2.5 min-h-[44px] rounded-lg text-sm font-medium transition-colors"
           >
             초기화
           </button>

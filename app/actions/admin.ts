@@ -48,7 +48,7 @@ export async function resolveDispute(
     const driverPayout = totalAmount - platformFee
 
     const { data: escrow } = await service
-      .from("escrow").select("id").eq("match_id", match.id).single()
+      .from("escrow").select("id").eq("match_id", match.id).maybeSingle()
 
     if (escrow) {
       await service.from("payouts").insert({
@@ -85,7 +85,7 @@ export async function resolveDispute(
     }).eq("match_id", match.id)
 
     const { data: escrow } = await service
-      .from("escrow").select("id").eq("match_id", match.id).single()
+      .from("escrow").select("id").eq("match_id", match.id).maybeSingle()
 
     if (escrow) {
       await service.from("payouts").insert({

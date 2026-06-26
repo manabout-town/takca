@@ -58,7 +58,7 @@ export function GpsAddressInput({ name, label, placeholder, value, onChange, req
           type="button"
           onClick={handleGps}
           disabled={loading}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-orange-500 hover:bg-orange-50 transition-colors disabled:opacity-40"
+          className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-lg text-gray-400 hover:text-orange-500 hover:bg-orange-50 transition-colors disabled:opacity-40"
           title="현재 위치 자동 입력"
         >
           {loading

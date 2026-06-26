@@ -32,7 +32,7 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
         {title && (
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold">{title}</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+            <button onClick={onClose} aria-label="닫기" className="text-gray-400 hover:text-gray-600 text-xl w-11 h-11 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">✕</button>
           </div>
         )}
         {children}

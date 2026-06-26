@@ -103,8 +103,11 @@ export async function confirmStart(matchId: string) {
   if (!match) return { error: "매칭을 찾을 수 없습니다" }
   if (match.driver_id !== user.id) return { error: "권한이 없습니다" }
 
-  await supabase.from("matches").update({ status: "in_progress" }).eq("id", matchId)
-  await supabase.from("orders").update({ status: "in_progress" }).eq("id", match.order_id)
+  const { error: matchErr } = await supabase.from("matches").update({ status: "in_progress" }).eq("id", matchId)
+  if (matchErr) return { error: matchErr.message }
+
+  const { error: orderErr } = await supabase.from("orders").update({ status: "in_progress" }).eq("id", match.order_id)
+  if (orderErr) return { error: orderErr.message }
 
   revalidatePath(`/chat/${matchId}`)
   return { success: true }

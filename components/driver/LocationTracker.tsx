@@ -37,7 +37,7 @@ export function LocationTracker({ driverId, matchId, active }: Props) {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
-  }, [active, matchId])
+  }, [active, matchId, driverId])
 
   return null
 }
