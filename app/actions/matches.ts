@@ -29,7 +29,9 @@ export async function cancelMatch(matchId: string, reason: string = "") {
   const now = new Date()
   const pickup = new Date(order?.pickup_at)
   const hoursUntilPickup = (pickup.getTime() - now.getTime()) / (1000 * 60 * 60)
-  const isSameDay = now.toDateString() === pickup.toDateString()
+  // KST(Asia/Seoul) 기준 날짜 비교 — 서버 로컬타임 의존 버그 방지
+  const kstDate = (d: Date) => d.toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })
+  const isSameDay = kstDate(now) === kstDate(pickup)
 
   let penaltyRate = 0
   let penaltyLabel = ""

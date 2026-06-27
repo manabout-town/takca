@@ -1,5 +1,6 @@
 "use server"
 import { createClient } from "@/lib/supabase/server"
+import { createServiceClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 
 export async function submitDispute(formData: FormData) {
@@ -12,7 +13,6 @@ export async function submitDispute(formData: FormData) {
 
   if (!reason?.trim()) return { error: "신고 사유를 입력해주세요" }
 
-  // Verify user is a participant in this match
   const { data: match } = await supabase
     .from("matches")
     .select("order_id, driver_id, orders!inner(shipper_id)")
@@ -23,13 +23,15 @@ export async function submitDispute(formData: FormData) {
   const isParticipant = match.driver_id === user.id || (match.orders as any)?.shipper_id === user.id
   if (!isParticipant) return { error: "권한이 없습니다" }
 
-  const { data: escrow } = await supabase
+  const service = createServiceClient()
+
+  const { data: escrow } = await service
     .from("escrow")
-    .select("id")
+    .select("id, status")
     .eq("match_id", matchId)
     .maybeSingle()
 
-  const { error } = await supabase.from("disputes").insert({
+  const { error } = await service.from("disputes").insert({
     match_id: matchId,
     escrow_id: escrow?.id || null,
     raised_by: user.id,
@@ -39,7 +41,12 @@ export async function submitDispute(formData: FormData) {
 
   if (error) return { error: error.message }
 
-  await supabase.from("orders").update({ status: "disputed" }).eq("id", match.order_id)
+  await service.from("orders").update({ status: "disputed" }).eq("id", match.order_id)
+
+  // 에스크로 동결 — auto-release 크론이 72h 후 자동 지급하는 것 차단
+  if (escrow?.id && escrow.status === "held") {
+    await service.from("escrow").update({ status: "disputed" }).eq("id", escrow.id)
+  }
 
   revalidatePath(`/chat/${matchId}`)
   return { success: true }

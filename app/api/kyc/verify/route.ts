@@ -340,19 +340,33 @@ export async function POST(req: NextRequest) {
     const bizFile = formData.get('business_registration') as File | null
     const licFile = formData.get('driver_license') as File | null
 
-    if (!bizFile) {
+    // 5. Driver requires both files; shipper biz file is optional
+    if (profile.role === 'driver' && !bizFile) {
       return NextResponse.json(
-        { error: '사업자등록증 파일이 필요합니다.' },
+        { error: '운전기사 역할은 사업자등록증 파일이 필요합니다.' },
         { status: 400 }
       )
     }
 
-    // 5. Driver role requires license
     if (profile.role === 'driver' && !licFile) {
       return NextResponse.json(
         { error: '운전기사 역할은 운전면허증 파일이 필요합니다.' },
         { status: 400 }
       )
+    }
+
+    // Shipper with no business registration → auto-approve
+    if (!bizFile) {
+      await service
+        .from('users')
+        .update({ verification_status: 'verified' })
+        .eq('id', user.id)
+      return NextResponse.json({
+        status: 'approved',
+        message: '인증이 완료되었습니다.',
+        reason: '인증이 완료되었습니다.',
+        confidence: 1.0,
+      })
     }
 
     // 6. Upload files to Supabase Storage

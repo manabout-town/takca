@@ -34,34 +34,16 @@ export async function requestWithdrawal(formData: FormData) {
   if (!bankName || !accountNumber || !accountHolder) return { error: "계좌 정보를 입력해주세요" }
 
   const service = createServiceClient()
-  const wallet = await getOrCreateWallet(user.id)
-  if (!wallet || wallet.balance < amount) return { error: "잔액이 부족합니다" }
-
-  const newBalance = wallet.balance - amount
-
-  await service.from("wallets").update({
-    balance: newBalance,
-    updated_at: new Date().toISOString(),
-  }).eq("user_id", user.id)
-
-  const { data: withdrawalReq } = await service.from("withdrawal_requests").insert({
-    user_id: user.id,
-    amount,
-    bank_name: bankName,
-    account_number: accountNumber,
-    account_holder: accountHolder,
-    status: "pending",
-  }).select("id").single()
-
-  await service.from("wallet_transactions").insert({
-    user_id: user.id,
-    type: "withdrawal",
-    amount: -amount,
-    balance_after: newBalance,
-    description: `출금 신청 — ${bankName} ${accountNumber} (${accountHolder})`,
-    reference_id: withdrawalReq?.id ?? null,
-    status: "pending",
+  const { data, error } = await service.rpc("request_withdrawal_atomic", {
+    p_user_id: user.id,
+    p_amount: amount,
+    p_bank_name: bankName,
+    p_account_number: accountNumber,
+    p_account_holder: accountHolder,
   })
+
+  if (error) return { error: error.message }
+  if (data?.error === "insufficient_balance") return { error: "잔액이 부족합니다" }
 
   revalidatePath("/driver/wallet")
   revalidatePath("/shipper/wallet")
@@ -69,54 +51,8 @@ export async function requestWithdrawal(formData: FormData) {
 }
 
 export async function chargeWallet(formData: FormData) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: "로그인이 필요합니다" }
-
-  const amount = parseInt(formData.get("amount") as string)
-  if (!amount || amount < 1000) return { error: "최소 충전 금액은 1,000원입니다" }
-
-  // 실제 서비스에서는 여기서 Toss 결제를 시작해야 함
-  // 데모용: 즉시 충전 처리
-  const service = createServiceClient()
-  const wallet = await getOrCreateWallet(user.id)
-  const currentBalance = wallet?.balance || 0
-  const newBalance = currentBalance + amount
-
-  // 포인트: 충전액의 1% 적립
-  const pointsEarned = Math.floor(amount * 0.01)
-  const currentPoints = wallet?.points || 0
-  const newPoints = currentPoints + pointsEarned
-
-  await service.from("wallets").update({
-    balance: newBalance,
-    points: newPoints,
-    updated_at: new Date().toISOString(),
-  }).eq("user_id", user.id)
-
-  await service.from("wallet_transactions").insert([
-    {
-      user_id: user.id,
-      type: "deposit",
-      amount,
-      balance_after: newBalance,
-      description: `지갑 충전`,
-      status: "completed",
-    },
-    ...(pointsEarned > 0 ? [{
-      user_id: user.id,
-      type: "point_earn",
-      amount: 0,
-      balance_after: newBalance,
-      points_change: pointsEarned,
-      points_after: newPoints,
-      description: `충전 포인트 적립 (${amount.toLocaleString()}원의 1%)`,
-      status: "completed",
-    }] : []),
-  ])
-
-  revalidatePath("/shipper/wallet")
-  return { success: true, pointsEarned }
+  // Toss 결제 연동 전까지 비활성화 — 직접 잔액 조작 차단
+  return { error: "결제 연동 준비 중입니다. Toss 결제 연동 후 이용 가능합니다." }
 }
 
 export async function usePoints(formData: FormData) {

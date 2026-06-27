@@ -48,7 +48,7 @@ export default async function AdminSettlementsPage({
         order:orders(origin, destination, vehicle_count, pickup_at),
         match:matches(driver_id, drivers:users!driver_id(name, email))
       `)
-      .order("created_at", { ascending: false })
+      .order("held_at", { ascending: false })
       .limit(100),
     supabase
       .from("payouts")
@@ -56,7 +56,7 @@ export default async function AdminSettlementsPage({
         *,
         driver:users!driver_id(name, email)
       `)
-      .order("created_at", { ascending: false })
+      .order("paid_at", { ascending: false })
       .limit(50),
   ])
 
@@ -245,7 +245,7 @@ export default async function AdminSettlementsPage({
                               </span>
                             </td>
                             <td className="px-4 py-3.5 text-gray-400 text-xs whitespace-nowrap">
-                              {formatDate(e.created_at)}
+                              {formatDate(e.held_at)}
                             </td>
                           </tr>
                         )
@@ -346,7 +346,7 @@ export default async function AdminSettlementsPage({
                             </span>
                           </td>
                           <td className="px-4 py-3.5 text-gray-400 text-xs whitespace-nowrap">
-                            {formatDate(p.created_at)}
+                            {formatDate(p.paid_at)}
                           </td>
                           <td className="px-4 py-3.5 whitespace-nowrap">
                             {p.status === "pending" && (
@@ -389,7 +389,7 @@ export default async function AdminSettlementsPage({
                         <div className="text-lg font-bold text-gray-900">
                           {formatKRW(p.amount ?? 0)}
                         </div>
-                        <div className="text-xs text-gray-400">{formatDate(p.created_at)}</div>
+                        <div className="text-xs text-gray-400">{formatDate(p.paid_at)}</div>
                       </div>
                       {p.status === "pending" && (
                         <form action={markPayoutPaid.bind(null, p.id)}>

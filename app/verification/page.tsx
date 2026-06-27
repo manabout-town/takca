@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-type UserRole = 'shipper' | 'driver' | null
+type UserRole = 'shipper' | 'driver' | 'admin' | null
 type Step = 1 | 2 | 3
 type VerificationResult =
   | 'approved'
@@ -107,6 +107,11 @@ export default function VerificationPage() {
         const userRole = userData.role as UserRole
         setRole(userRole)
 
+        if (userRole === 'admin') {
+          router.replace('/admin/dashboard')
+          return
+        }
+
         if (userData.verification_status === 'verified') {
           if (userRole === 'driver') {
             router.replace('/driver/dashboard')
@@ -161,7 +166,7 @@ export default function VerificationPage() {
   }
 
   async function handleSubmit() {
-    if (!businessFile || businessFile.error) return
+    if (role === 'driver' && (!businessFile || businessFile.error)) return
     if (role === 'driver' && (!licenseFile || licenseFile.error)) return
 
     setSubmitting(true)
@@ -170,7 +175,7 @@ export default function VerificationPage() {
 
     try {
       const formData = new FormData()
-      formData.append('business_registration', businessFile.file)
+      if (businessFile) formData.append('business_registration', businessFile.file)
       if (role === 'driver' && licenseFile) {
         formData.append('driver_license', licenseFile.file)
       }
@@ -216,9 +221,8 @@ export default function VerificationPage() {
   }
 
   const canSubmit =
-    !!businessFile &&
-    !businessFile.error &&
-    (role !== 'driver' || (!!licenseFile && !licenseFile.error))
+    role !== 'driver' ||
+    (!!businessFile && !businessFile.error && !!licenseFile && !licenseFile.error)
 
   if (loadingUser) {
     return (
@@ -264,11 +268,18 @@ export default function VerificationPage() {
                 <li className="flex items-center gap-3 text-sm text-gray-300">
                   <FileText size={16} className="text-gray-500 shrink-0" />
                   사업자등록증
+                  {role === 'shipper' && (
+                    <span className="text-gray-500 text-xs">(선택)</span>
+                  )}
+                  {role === 'driver' && (
+                    <span className="text-[#FF6B2B] text-xs">필수</span>
+                  )}
                 </li>
                 {role === 'driver' && (
                   <li className="flex items-center gap-3 text-sm text-gray-300">
                     <FileText size={16} className="text-gray-500 shrink-0" />
                     운전면허증
+                    <span className="text-[#FF6B2B] text-xs">필수</span>
                   </li>
                 )}
               </ul>
@@ -302,7 +313,9 @@ export default function VerificationPage() {
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 사업자등록증{' '}
-                <span className="text-[#FF6B2B] text-xs">필수</span>
+                <span className={`text-xs ${role === 'driver' ? 'text-[#FF6B2B]' : 'text-gray-500'}`}>
+                  {role === 'driver' ? '필수' : '선택'}
+                </span>
               </label>
 
               {!businessFile ? (

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createServiceClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { calculateFee } from "@/lib/utils/format"
 
 export async function createOrder(formData: FormData) {
   const supabase = await createClient()
@@ -49,44 +50,21 @@ export async function acceptOrder(orderId: string) {
   const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).single()
   if (profile?.role !== "driver") return { error: "기사만 의뢰를 수락할 수 있습니다" }
 
-  // Check order is still pending
-  const { data: order } = await supabase
-    .from("orders")
-    .select("status, shipper_id")
-    .eq("id", orderId)
-    .single()
+  const service = createServiceClient()
+  const { data, error } = await service.rpc("accept_order_atomic", {
+    p_order_id: orderId,
+    p_driver_id: user.id,
+  })
 
-  if (!order) return { error: "의뢰를 찾을 수 없습니다" }
-  if (order.status !== "pending") return { error: "이미 매칭된 의뢰입니다" }
-  if (order.shipper_id === user.id) return { error: "본인의 의뢰는 수락할 수 없습니다" }
-
-  // Create match
-  const { data: match, error: matchError } = await supabase
-    .from("matches")
-    .insert({
-      order_id: orderId,
-      driver_id: user.id,
-      status: "accepted",
-      matched_at: new Date().toISOString(),
-    })
-    .select()
-    .single()
-
-  if (matchError) {
-    if (matchError.code === "23505") return { error: "이미 다른 기사가 수락한 의뢰입니다" }
-    return { error: matchError.message }
-  }
-
-  // Update order status
-  await supabase
-    .from("orders")
-    .update({ status: "matched" })
-    .eq("id", orderId)
+  if (error) return { error: error.message }
+  if (data?.error === "already_matched") return { error: "이미 다른 기사가 수락한 의뢰입니다" }
+  if (data?.error === "order_not_found") return { error: "의뢰를 찾을 수 없습니다" }
+  if (data?.error === "self_accept") return { error: "본인의 의뢰는 수락할 수 없습니다" }
 
   revalidatePath("/driver/feed")
   revalidatePath("/driver/dashboard")
   revalidatePath("/shipper/dashboard")
-  redirect(`/chat/${match.id}`)
+  redirect(`/chat/${data.match_id}`)
 }
 
 export async function confirmStart(matchId: string) {
@@ -160,40 +138,38 @@ export async function confirmCompletion(matchId: string) {
   if (!match) return { error: "매칭을 찾을 수 없습니다" }
   if ((match.orders as any)?.shipper_id !== user.id) return { error: "화주만 완료 확인할 수 있습니다" }
 
-  const totalAmount = (match.orders as any)?.price || 0
-  const platformFee = Math.floor(totalAmount * 0.04)
-  const driverPayout = totalAmount - platformFee
+  // escrow 먼저 조회 + 상태 체크 (idempotency guard — payouts_escrow_id_unique 제약과 이중 방어)
+  const { data: escrow } = await service
+    .from("escrow")
+    .select("id, status")
+    .eq("match_id", matchId)
+    .single()
 
-  // Complete match
+  if (!escrow || escrow.status !== "held") {
+    return { error: "이미 처리된 완료 요청입니다" }
+  }
+
+  const totalAmount = (match.orders as any)?.price || 0
+  const { driverPayout } = calculateFee(totalAmount)
+
   await service.from("matches").update({
     status: "completed",
     completed_at: new Date().toISOString(),
   }).eq("id", matchId)
 
-  // Complete order
   await service.from("orders").update({ status: "completed" }).eq("id", match.order_id)
 
-  // Release escrow
   await service.from("escrow").update({
     status: "released",
     released_at: new Date().toISOString(),
-  }).eq("match_id", matchId)
+  }).eq("id", escrow.id)
 
-  // Create payout record
-  const { data: escrow } = await service
-    .from("escrow")
-    .select("id")
-    .eq("match_id", matchId)
-    .single()
-
-  if (escrow) {
-    await service.from("payouts").insert({
-      escrow_id: escrow.id,
-      driver_id: match.driver_id,
-      amount: driverPayout,
-      status: "pending",
-    })
-  }
+  await service.from("payouts").insert({
+    escrow_id: escrow.id,
+    driver_id: match.driver_id,
+    amount: driverPayout,
+    status: "pending",
+  })
 
   await service.rpc("increment_driver_completed_count", { p_driver_id: match.driver_id })
 

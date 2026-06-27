@@ -1,6 +1,6 @@
 {
-  "name": "화물로 - 화물 중개 플랫폼",
-  "short_name": "화물로",
+  "name": "탁카 - 화물 중개 플랫폼",
+  "short_name": "탁카",
   "description": "화주와 기사를 직접 연결하는 디지털 화물 중개 플랫폼",
   "start_url": "/",
   "display": "standalone",

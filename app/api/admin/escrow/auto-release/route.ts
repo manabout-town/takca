@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createServiceClient } from "@/lib/supabase/service"
+import { calculateFee } from "@/lib/utils/format"
 
 // 72시간 자동 에스크로 해제 (cron job용)
 export async function POST(req: NextRequest) {
@@ -42,8 +43,7 @@ export async function POST(req: NextRequest) {
     if (!escrow) continue
 
     const totalAmount = (match.orders as any)?.price || 0
-    const platformFee = Math.floor(totalAmount * 0.04)
-    const driverPayout = totalAmount - platformFee
+    const { driverPayout } = calculateFee(totalAmount)
 
     await service.from("escrow").update({
       status: "released",
@@ -63,6 +63,9 @@ export async function POST(req: NextRequest) {
     }).eq("id", match.id)
 
     await service.from("orders").update({ status: "completed" }).eq("id", match.order_id)
+
+    await service.rpc("increment_driver_completed_count", { p_driver_id: match.driver_id })
+
     released++
   }
 
