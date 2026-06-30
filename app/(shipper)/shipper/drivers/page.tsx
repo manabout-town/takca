@@ -163,7 +163,7 @@ export default async function ShipperDriversPage({
                   </div>
                   {s.cargo_types?.length > 0 && (
                     <div className="flex items-center gap-3 text-sm">
-                      <span className="text-gray-400 text-xs shrink-0 w-6">화물</span>
+                      <span className="text-gray-400 text-xs shrink-0 w-6">차종</span>
                       <span className="text-xs text-gray-600">{s.cargo_types.join(", ")}</span>
                     </div>
                   )}

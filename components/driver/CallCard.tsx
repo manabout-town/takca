@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { formatKRW } from "@/lib/utils/format"
-import { Zap, Package, Truck } from "lucide-react"
+import { Zap, Car, Truck } from "lucide-react"
 import { ClaimButton } from "@/components/driver/ClaimButton"
 
 interface CallCardProps {
@@ -10,9 +10,9 @@ interface CallCardProps {
     origin: string
     destination: string
     price: number
-    cargo_type?: string | null
-    vehicle_type?: string | null
-    pickup_date?: string | null
+    vehicle_count?: number | null
+    vehicle_notes?: string | null
+    pickup_at?: string | null
     is_urgent?: boolean | null
   }
 }
@@ -65,21 +65,19 @@ export function CallCard({ order }: CallCardProps) {
 
       {/* Meta chips */}
       <div className="flex items-center gap-2 px-4 pb-4 flex-wrap">
-        {order.cargo_type && (
-          <span className="inline-flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-            <Package className="w-3 h-3" />
-            {order.cargo_type}
-          </span>
-        )}
-        {order.vehicle_type && (
+        <span className="inline-flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
+          <Car className="w-3 h-3" />
+          {order.vehicle_count ?? 1}대
+        </span>
+        {order.vehicle_notes && (
           <span className="inline-flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
             <Truck className="w-3 h-3" />
-            {order.vehicle_type}
+            {order.vehicle_notes}
           </span>
         )}
-        {order.pickup_date && (
+        {order.pickup_at && (
           <span className="text-xs text-gray-400 ml-auto">
-            {new Date(order.pickup_date).toLocaleDateString("ko-KR", { month: "numeric", day: "numeric", weekday: "short" })}
+            {new Date(order.pickup_at).toLocaleDateString("ko-KR", { month: "numeric", day: "numeric", weekday: "short" })}
           </span>
         )}
       </div>

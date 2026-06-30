@@ -152,7 +152,7 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
           )}
         </div>
 
-        {/* 차량 & 화물 */}
+        {/* 차량 */}
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1.5">차량 종류</label>
@@ -164,7 +164,7 @@ export function ScheduleForm({ defaultVehicleType }: { defaultVehicleType?: stri
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-2">취급 가능 화물 (복수 선택)</label>
+            <label className="block text-xs font-medium text-gray-500 mb-2">탁송 가능 차종 (복수 선택)</label>
             <div className="flex flex-wrap gap-1.5">
               {CARGO_TYPES.map(c => {
                 const active = cargoTypes.includes(c)

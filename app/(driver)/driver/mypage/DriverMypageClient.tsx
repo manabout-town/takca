@@ -919,7 +919,7 @@ export function DriverMypageClient({
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
             <SectionTitle>운전 자격 서류</SectionTitle>
             <p className="text-xs text-gray-400 mb-4">
-              사업자등록증, 화물운송종사자격증 등을 업로드하세요
+              사업자등록증, 운송종사자격증 등을 업로드하세요
             </p>
             <div className="flex items-center gap-3">
               <button

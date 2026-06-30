@@ -90,8 +90,8 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
           <span className="font-medium text-right">{order.origin} → {order.destination}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">화물</span>
-          <span className="font-medium">{order.cargo_type}</span>
+          <span className="text-gray-500">차량 대수</span>
+          <span className="font-medium">{order.vehicle_count ?? 1}대{order.vehicle_notes ? ` (${order.vehicle_notes})` : ""}</span>
         </div>
         <div className="border-t pt-3 space-y-2">
           <div className="flex justify-between">

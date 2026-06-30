@@ -39,14 +39,14 @@ export default async function ShipperOrderDetail({ params }: { params: { id: str
 
       {/* 의뢰 기본 정보 */}
       <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-6">
-        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-5 text-gray-900 tracking-tight">{order.title || "운송 의뢰"}</h1>
+        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-5 text-gray-900 tracking-tight">{order.origin} → {order.destination}</h1>
         <div className="grid grid-cols-2 gap-x-4 md:gap-x-6 gap-y-3 md:gap-y-4 text-sm mb-6">
           <div><p className="text-xs text-gray-400 mb-1">출발지</p><p className="font-semibold text-gray-900">{order.origin}</p></div>
           <div><p className="text-xs text-gray-400 mb-1">도착지</p><p className="font-semibold text-gray-900">{order.destination}</p></div>
-          <div><p className="text-xs text-gray-400 mb-1">화물 종류</p><p className="font-medium">{order.cargo_type}</p></div>
-          <div><p className="text-xs text-gray-400 mb-1">필요 차량</p><p className="font-medium">{order.vehicle_type || "무관"}</p></div>
-          <div><p className="text-xs text-gray-400 mb-1">희망 운임</p><p className="font-bold text-orange-500">{formatKRW(order.price)}</p></div>
+          <div><p className="text-xs text-gray-400 mb-1">차량 대수</p><p className="font-medium">{order.vehicle_count ?? 1}대</p></div>
           <div><p className="text-xs text-gray-400 mb-1">픽업 일시</p><p className="font-medium">{formatDate(order.pickup_at)}</p></div>
+          <div><p className="text-xs text-gray-400 mb-1">희망 운임</p><p className="font-bold text-orange-500">{formatKRW(order.price)}</p></div>
+          {order.vehicle_notes && <div className="col-span-2"><p className="text-xs text-gray-400 mb-1">비고</p><p className="font-medium">{order.vehicle_notes}</p></div>}
         </div>
 
         {/* 지도 + 기사 실시간 위치 */}

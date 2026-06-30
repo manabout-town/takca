@@ -103,7 +103,7 @@ export async function AvailableDriversBanner() {
                 </div>
                 {s.cargo_types?.length > 0 && (
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="text-gray-400">화물</span>
+                    <span className="text-gray-400">차종</span>
                     <span className="text-gray-600">{s.cargo_types.join(", ")}</span>
                   </div>
                 )}

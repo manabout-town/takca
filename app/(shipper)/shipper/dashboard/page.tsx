@@ -24,12 +24,14 @@ export default async function ShipperDashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { data: profile } = await supabase.from("users").select("*").eq("id", user!.id).single()
-  const { data: orders } = await supabase
-    .from("orders")
-    .select("*, matches(id, status, drivers:users!driver_id(name, phone))")
-    .eq("shipper_id", user!.id)
-    .order("created_at", { ascending: false })
+  const [{ data: profile }, { data: orders }] = await Promise.all([
+    supabase.from("users").select("*").eq("id", user!.id).single(),
+    supabase
+      .from("orders")
+      .select("*, matches(id, status, drivers:users!driver_id(name, phone))")
+      .eq("shipper_id", user!.id)
+      .order("created_at", { ascending: false }),
+  ])
 
   const totalOrders = orders?.length || 0
   const activeOrders = orders?.filter(o => ["pending","matched","in_progress"].includes(o.status)).length || 0
@@ -104,7 +106,7 @@ export default async function ShipperDashboardPage() {
                 <span className={`w-2 h-2 rounded-full ${STATUS_DOT[activeOrder.status]} animate-pulse`} />
                 <span className="text-sm font-semibold text-orange-600">{STATUS_LABEL[activeOrder.status]}</span>
               </div>
-              <h2 className="text-base md:text-lg font-bold text-gray-900">{activeOrder.title || "진행 중인 운송"}</h2>
+              <h2 className="text-base md:text-lg font-bold text-gray-900">{activeOrder.origin} → {activeOrder.destination}</h2>
             </div>
             <span className="text-lg md:text-xl font-bold text-orange-500 shrink-0">{formatKRW(activeOrder.price)}</span>
           </div>
@@ -182,7 +184,7 @@ export default async function ShipperDashboardPage() {
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    {order.title && <span className="font-semibold text-gray-900 truncate">{order.title}</span>}
+                    <span className="font-semibold text-gray-900 truncate">{order.origin} → {order.destination}</span>
                     {order.is_urgent && (
                       <span className="inline-flex items-center gap-0.5 text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full shrink-0">
                         <Zap className="w-2.5 h-2.5" />
@@ -190,7 +192,6 @@ export default async function ShipperDashboardPage() {
                       </span>
                     )}
                   </div>
-                  <div className="text-sm text-gray-400 truncate">{order.origin} → {order.destination}</div>
                 </div>
                 <div className="text-right flex-shrink-0">
                   <div className="font-bold text-orange-500">{formatKRW(order.price)}</div>

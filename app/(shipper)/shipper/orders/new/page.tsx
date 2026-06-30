@@ -40,14 +40,6 @@ export default function NewOrderPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 의뢰명 */}
-          <Input
-            name="title"
-            label="의뢰명"
-            placeholder="예: 서울-부산 전자기기 운송"
-            required
-          />
-
           {/* 출발 / 도착 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <GpsAddressInput

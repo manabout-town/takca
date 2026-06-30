@@ -20,4 +20,4 @@ export const CITY_DISTRICTS: Record<string, string[]> = {
 
 export const PROVINCES = Object.keys(CITY_DISTRICTS)
 
-export const CARGO_TYPES = ["일반화물","냉동/냉장","위험물","중량물","귀중품","가구/이사","건자재","농산물","공산품","기타"]
+export const CARGO_TYPES = ["승용차","SUV/RV","MPV/밴","트럭","오토바이","전기차","수입차","클래식카","사고차량","기타"]

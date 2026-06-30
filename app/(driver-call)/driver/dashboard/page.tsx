@@ -27,7 +27,7 @@ export default async function DriverDashboardPage() {
       .limit(1),
     supabase
       .from("orders")
-      .select("id, title, origin, destination, price, cargo_type, vehicle_type, pickup_date, is_urgent")
+      .select("id, title, origin, destination, price, vehicle_count, vehicle_notes, pickup_at, is_urgent")
       .eq("status", "pending")
       .order("is_urgent", { ascending: false })
       .order("created_at", { ascending: false })

@@ -29,11 +29,11 @@ export default function IntroPage() {
             실시간 운영 중
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-5">
-            화물 운송,<br />
+            차량 탁송,<br />
             <span className="text-gray-500">더 스마트하게.</span>
           </h1>
           <p className="text-gray-400 text-base md:text-lg max-w-md mx-auto mb-10 leading-relaxed">
-            화주와 기사를 직접 연결하는 디지털 화물 중개 플랫폼
+            화주와 카 캐리어 기사를 직접 연결하는 차량 탁송 중개 플랫폼
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/signup?role=shipper" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3.5 min-h-[44px] rounded-xl font-semibold transition-colors text-sm">
@@ -75,7 +75,7 @@ export default function IntroPage() {
               { icon: "🔒", title: "에스크로 결제", desc: "거래 완료까지 결제금을 안전하게 보호합니다. 사기 걱정 없이 거래하세요." },
               { icon: "⚡", title: "긴급 부스팅", desc: "1,000원으로 피드 최상단 노출. 평균 3분 내 기사님이 응합니다." },
               { icon: "💬", title: "실시간 채팅", desc: "매칭 즉시 화주-기사 1:1 채팅방 개설. 모든 소통을 한 곳에서." },
-              { icon: "🚚", title: "차량 맞춤 매칭", desc: "화물 종류와 무게에 맞는 최적 차량을 자동으로 필터링합니다." },
+              { icon: "🚚", title: "카 캐리어 매칭", desc: "차량 대수와 탁송 구간에 맞는 카 캐리어 기사를 빠르게 연결합니다." },
               { icon: "📍", title: "경로 시각화", desc: "출발지와 도착지를 직관적으로 확인. 운송 루트를 한눈에 파악하세요." },
               { icon: "⭐", title: "상호 평가", desc: "운송 완료 후 화주와 기사가 서로를 평가하는 신뢰 시스템." },
             ].map(f => (
@@ -99,7 +99,7 @@ export default function IntroPage() {
             <div>
               <div className="text-xs font-semibold text-gray-400 mb-6 uppercase tracking-widest">화주</div>
               <div className="space-y-5">
-                {["회원가입 (무료)", "의뢰 등록 — 출발/도착/화물/금액 입력", "기사 매칭 알림 수신", "에스크로 결제 후 운송 완료"].map((s, i) => (
+                {["회원가입 (무료)", "의뢰 등록 — 출발/도착/차량/금액 입력", "기사 매칭 알림 수신", "에스크로 결제 후 운송 완료"].map((s, i) => (
                   <div key={s} className="flex items-start gap-4">
                     <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i + 1}</span>
                     <span className="text-sm text-gray-600 leading-relaxed">{s}</span>

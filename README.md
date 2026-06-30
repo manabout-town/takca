@@ -1,6 +1,6 @@
-# 화물로 (Hwamulro)
+# 탁카 (Takca)
 
-> 화주와 차주를 실시간으로 연결하는 화물 중개 플랫폼
+> 화주와 카 캐리어 기사를 실시간으로 연결하는 차량 탁송 중개 플랫폼
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://typescriptlang.org)
@@ -11,7 +11,7 @@
 
 ## 개요
 
-화물로는 화주(배송 의뢰인)와 차주(운전기사)를 실시간으로 매칭하는 **화물 중개 플랫폼**이다. 화주는 화물 운송을 등록하고, 차주는 인근 화물을 확인하여 수락한다. 실시간 채팅, 지도 기반 위치 추적, 에스크로 결제, 운행 완료 후 리뷰까지 운송 전 과정을 플랫폼 내에서 처리한다.
+탁카는 화주(차량 탁송 의뢰인)와 카 캐리어 기사를 실시간으로 매칭하는 **차량 탁송 중개 플랫폼**이다. 화주는 탁송 의뢰를 등록하고, 기사는 인근 탁송 의뢰를 확인하여 수락한다. 실시간 채팅, 지도 기반 위치 추적, 에스크로 결제, 운행 완료 후 리뷰까지 운송 전 과정을 플랫폼 내에서 처리한다.
 
 ---
 
@@ -32,13 +32,13 @@
 ## 주요 기능
 
 ### 화주 (Shipper)
-- 화물 운송 의뢰 등록 (출발지/목적지 지도 선택)
+- 차량 탁송 의뢰 등록 (출발지/목적지 지도 선택)
 - 실시간 차주 위치 추적
 - 에스크로 결제 — 운송 완료 확인 후 차주에게 정산
 - 운행 완료 후 차주 리뷰 작성
 
 ### 차주 (Driver)
-- 인근 화물 목록 조회 및 지도 확인
+- 인근 탁송 의뢰 목록 조회 및 지도 확인
 - 운송 수락 → 운행 시작 → 완료 처리
 - 실시간 위치 공유 (driver_locations 테이블)
 - 화주 채팅 / 운임 확인 / 정산 수령
@@ -99,8 +99,9 @@ app/
 ### 설치
 
 ```bash
-git clone https://github.com/manabout-town/hwamulro.git
-cd hwamulro
+git clone https://github.com/manabout-town/takca.git
+cd takca
+
 npm install
 ```
 
@@ -139,7 +140,7 @@ npm run dev
 ## 디렉터리 구조
 
 ```
-hwamulro/
+takca/
 ├── app/                # Next.js App Router 페이지
 ├── components/
 │   ├── chat/           # 채팅 컴포넌트

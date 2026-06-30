@@ -65,8 +65,23 @@ export default function LoginPage() {
             </div>
           )}
 
+          {/* 계정 로그인 */}
+          <form onSubmit={handleSubmit} className="space-y-4 mb-5">
+            <Input name="email" type="email" label="이메일" placeholder="name@example.com" autoComplete="email" required />
+            <Input name="password" type="password" label="비밀번호" placeholder="••••••••" autoComplete="current-password" required />
+            <Button type="submit" className="w-full" size="lg" loading={loading}>
+              로그인
+            </Button>
+          </form>
+
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-xs text-gray-400">또는 소셜로 로그인</span>
+            <div className="flex-1 h-px bg-gray-100" />
+          </div>
+
           {/* 소셜 로그인 */}
-          <div className="space-y-2.5 mb-5">
+          <div className="space-y-2.5">
             <button
               type="button"
               onClick={() => handleSocial("kakao")}
@@ -110,20 +125,6 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-gray-100" />
-            <span className="text-xs text-gray-400">또는 이메일로 로그인</span>
-            <div className="flex-1 h-px bg-gray-100" />
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input name="email" type="email" label="이메일" placeholder="name@example.com" autoComplete="email" required />
-            <Input name="password" type="password" label="비밀번호" placeholder="••••••••" autoComplete="current-password" required />
-            <Button type="submit" className="w-full" size="lg" loading={loading}>
-              로그인
-            </Button>
-          </form>
-
           <div className="mt-5 pt-5 border-t border-gray-50 text-center text-sm text-gray-400">
             계정이 없으신가요?{" "}
             <Link href="/signup" className="text-gray-900 font-semibold hover:underline">
@@ -133,9 +134,9 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-gray-600">
-          <a href="#" className="hover:text-gray-400">이용약관</a>
+          <Link href="/terms" className="hover:text-gray-400">이용약관</Link>
           {" · "}
-          <a href="#" className="hover:text-gray-400">개인정보처리방침</a>
+          <Link href="/privacy" className="hover:text-gray-400">개인정보처리방침</Link>
         </p>
       </div>
     </div>

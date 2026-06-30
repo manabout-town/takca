@@ -55,7 +55,7 @@ function SignupForm() {
   const [phoneVerified, setPhoneVerified] = useState(false)
   const [phoneLoading, setPhoneLoading] = useState(false)
   const [phoneError, setPhoneError] = useState<string | null>(null)
-  const [otpDevCode, setOtpDevCode] = useState<string | undefined>()
+  const [otpDevCode] = useState<string | undefined>()
 
   function toggleRoute(region: string) {
     setSelectedRoutes(prev =>
@@ -72,7 +72,6 @@ function SignupForm() {
     setPhoneLoading(false)
     if (result.error) { setPhoneError(result.error); return }
     setOtpSent(true)
-    if (result.devCode) setOtpDevCode(result.devCode)
   }
 
   async function handleVerifyOtp() {

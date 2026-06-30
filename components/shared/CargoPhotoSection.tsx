@@ -100,7 +100,7 @@ export function CargoPhotoSection({ matchId, isDriver, matchStatus }: Props) {
 
   return (
     <div className="border-t border-gray-100 px-4 py-3 bg-white shrink-0">
-      <p className="text-xs font-semibold text-gray-500 mb-2.5">📸 화물 사진</p>
+      <p className="text-xs font-semibold text-gray-500 mb-2.5">📸 차량 사진</p>
       {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
       <div className="grid grid-cols-2 gap-2.5">
         <PhotoSlot

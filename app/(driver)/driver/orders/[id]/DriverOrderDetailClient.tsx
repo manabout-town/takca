@@ -7,8 +7,8 @@ import { KakaoRouteMap, estimateRouteInfo } from "@/components/shared/KakaoRoute
 import Link from "next/link"
 
 interface Order {
-  id: string; title?: string; origin: string; destination: string
-  cargo_type: string; cargo_detail?: string; vehicle_type?: string
+  id: string; origin: string; destination: string
+  vehicle_count?: number; vehicle_notes?: string
   price: number; status: string; is_urgent: boolean; pickup_at: string
   shippers?: { name: string; phone?: string }
 }
@@ -69,21 +69,20 @@ export function DriverOrderDetailClient({ order, myBid, canBid, driverProfile }:
 
       {/* 의뢰 정보 + 지도 */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{order.title || "운송 의뢰"}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{order.origin} → {order.destination}</h1>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
           <div><p className="text-gray-400 text-xs mb-1">출발지</p><p className="font-semibold text-gray-900">{order.origin}</p></div>
           <div><p className="text-gray-400 text-xs mb-1">도착지</p><p className="font-semibold text-gray-900">{order.destination}</p></div>
-          <div><p className="text-gray-400 text-xs mb-1">화물 종류</p><p className="font-medium">{order.cargo_type}</p></div>
-          <div><p className="text-gray-400 text-xs mb-1">필요 차량</p><p className="font-medium">{order.vehicle_type || "무관"}</p></div>
+          <div><p className="text-gray-400 text-xs mb-1">차량 대수</p><p className="font-medium">{order.vehicle_count ?? 1}대</p></div>
           <div><p className="text-gray-400 text-xs mb-1">희망 운임</p><p className="font-bold text-indigo-600">{formatKRW(order.price)}</p></div>
           <div><p className="text-gray-400 text-xs mb-1">픽업 일시</p><p className="font-medium">{formatDate(order.pickup_at)}</p></div>
         </div>
 
-        {order.cargo_detail && (
+        {order.vehicle_notes && (
           <div className="pt-4 border-t border-gray-50">
-            <p className="text-xs text-gray-400 mb-1">화물 상세</p>
-            <p className="text-sm text-gray-700">{order.cargo_detail}</p>
+            <p className="text-xs text-gray-400 mb-1">비고</p>
+            <p className="text-sm text-gray-700">{order.vehicle_notes}</p>
           </div>
         )}
 
@@ -120,6 +119,22 @@ export function DriverOrderDetailClient({ order, myBid, canBid, driverProfile }:
             <span className="font-bold text-indigo-800">
               약 {Math.max(0, calculateFee(order.price).driverPayout - routeInfo.toll - routeInfo.fuel).toLocaleString()}원
             </span>
+          </div>
+        </div>
+      )}
+
+      {/* 화주 정보 */}
+      {order.shippers && (
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 className="font-semibold text-gray-900 mb-3 text-sm">화주 정보</h2>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-sm font-bold text-indigo-700">
+              {order.shippers.name?.[0] || "화"}
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900">{order.shippers.name}</p>
+              {order.shippers.phone && <p className="text-sm text-gray-500">{order.shippers.phone}</p>}
+            </div>
           </div>
         </div>
       )}
