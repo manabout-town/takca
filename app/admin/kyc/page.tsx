@@ -175,7 +175,7 @@ export default async function AdminKYCPage({
                   <div className="flex flex-wrap gap-2">
                     {s.business_registration_url && (
                       <a
-                        href={s.business_registration_url}
+                        href={`/api/admin/kyc-signed-url?url=${encodeURIComponent(s.business_registration_url)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-medium transition-colors"
@@ -185,7 +185,7 @@ export default async function AdminKYCPage({
                     )}
                     {s.driver_license_url && (
                       <a
-                        href={s.driver_license_url}
+                        href={`/api/admin/kyc-signed-url?url=${encodeURIComponent(s.driver_license_url)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-medium transition-colors"
