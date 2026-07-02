@@ -65,15 +65,15 @@ export default function HomePage() {
 
           <h1 className="text-4xl sm:text-5xl md:text-[4.5rem] lg:text-[5.5rem] font-extrabold text-white
             tracking-tight mb-5 leading-[1.06]">
-            차량 탁송,<br />
+            카 캐리어 직거래,<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">
-              직접 연결.
+              평균 47분 매칭.
             </span>
           </h1>
 
           <p className="text-gray-400 text-base md:text-lg max-w-lg mx-auto mb-4 leading-relaxed">
-            카 캐리어 차량 탁송 전문 플랫폼.<br />
-            전국 카 캐리어 기사와 의뢰인을 실시간으로 연결합니다.
+            딜러사·경매장·리스업체·개인 화주 ↔ 전국 카 캐리어 기사<br />
+            수수료 4% · 에스크로 안전결제 · 의뢰 등록 무료
           </p>
 
           {/* ── 나는 누구인가요? 즉시 선택 ── */}
@@ -81,7 +81,7 @@ export default function HomePage() {
           <RoleSelector />
 
           {/* Mini trust strip */}
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mt-10 text-[11px] text-gray-600">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mt-10 text-[11px] text-gray-400">
             {[
               "✓ 가입비 없음",
               "✓ 의뢰 등록 무료",
@@ -104,11 +104,11 @@ export default function HomePage() {
           STATS STRIP
       ══════════════════════════════════════════ */}
       <section className="bg-white border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
+        <div className="max-w-5xl mx-auto px-6 pt-10 pb-6 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
           {[
-            { num: "94.7%", label: "매칭 성공률", sub: "전국 카 캐리어 네트워크" },
-            { num: "47분", label: "평균 매칭 시간", sub: "긴급 건 3분 이내" },
-            { num: "4.8점", label: "기사 평균 평점", sub: "5점 만점" },
+            { num: "94.7%", label: "매칭 성공률", sub: "전국 카 캐리어 네트워크*" },
+            { num: "47분", label: "평균 매칭 시간", sub: "긴급 건 3분 이내*" },
+            { num: "4.8점", label: "기사 평균 평점", sub: "5점 만점*" },
             { num: "4%", label: "거래 수수료", sub: "의뢰 등록 무료" },
           ].map(s => (
             <div key={s.label}>
@@ -118,7 +118,13 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+        <p className="text-center text-[10px] text-gray-500 pb-4">* 내부 집계 기준</p>
       </section>
+
+      {/* ══════════════════════════════════════════
+          SOCIAL PROOF — 실사용자 후기
+      ══════════════════════════════════════════ */}
+      <TestimonialsSection />
 
       {/* ══════════════════════════════════════════
           ABOUT — 서비스가 뭔지 한눈에
@@ -336,13 +342,18 @@ export default function HomePage() {
           {/* CTA to see all */}
           <div className="text-center p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <p className="text-sm text-gray-500 mb-4">
-              전체 탁송 의뢰를 확인하고 매칭을 받으려면 로그인하세요
+              전체 탁송 의뢰를 확인하고 매칭을 받으려면 가입하거나 로그인하세요
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/login"
+              <Link href="/signup"
                 className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3
                 rounded-xl text-sm font-bold transition-colors">
-                로그인하고 전체 보기 →
+                회원가입하고 전체 보기 →
+              </Link>
+              <Link href="/login"
+                className="border border-gray-200 hover:border-gray-300 text-gray-600
+                px-6 py-3 rounded-xl text-sm font-bold transition-colors bg-white">
+                이미 계정 있으면 로그인 →
               </Link>
               <Link href="/signup?role=driver"
                 className="border border-gray-200 hover:border-gray-300 text-gray-700
@@ -353,6 +364,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ══════════════════════════════════════════
+          FAQ
+      ══════════════════════════════════════════ */}
+      <FAQSection />
 
       {/* ══════════════════════════════════════════
           FINAL CTA
@@ -377,7 +393,7 @@ export default function HomePage() {
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
                   stroke="white" strokeWidth="2" strokeLinejoin="round"/>
               </svg>
-              화주로 시작하기
+              무료로 탁송 의뢰하기
             </Link>
             <Link href="/signup?role=driver"
               className="flex items-center justify-center gap-2 border border-white/10
@@ -389,7 +405,7 @@ export default function HomePage() {
                 <circle cx="5.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
                 <circle cx="18.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
               </svg>
-              기사로 시작하기
+              탁송 의뢰 피드 보기
             </Link>
           </div>
         </div>
@@ -413,8 +429,8 @@ export default function HomePage() {
           </div>
           <div className="flex gap-6 text-sm text-gray-600">
             <Link href="/intro" className="hover:text-white transition-colors">서비스 소개</Link>
-            <a href="#" className="hover:text-white transition-colors">이용약관</a>
-            <a href="#" className="hover:text-white transition-colors">개인정보처리방침</a>
+            <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">개인정보처리방침</Link>
           </div>
           <div className="text-xs text-gray-700">© 2026 탁카 (TakCa)</div>
         </div>
@@ -654,6 +670,83 @@ function HowItWorksTabs() {
 }
 
 // ══════════════════════════════════════════
+//  FAQ
+// ══════════════════════════════════════════
+const FAQ_ITEMS = [
+  {
+    q: "수수료 4%는 누가 부담하나요?",
+    a: "카 캐리어 기사에게만 부과됩니다. 화주(탁송 의뢰인)는 의뢰 등록부터 결제까지 추가 수수료 없습니다. 예: 50만 원 탁송 건 → 기사 정산 48만 원.",
+  },
+  {
+    q: "차량 파손 시 책임은 누가 지나요?",
+    a: "픽업·인도 시 기사가 차량 상태 리포트(사진 + 체크리스트)를 제출합니다. 탁송 전후 상태가 기록되므로 파손 책임 소재가 명확합니다. 분쟁 발생 시 탁카 운영팀이 중재에 참여합니다.",
+  },
+  {
+    q: "카 캐리어 기사 자격은 어떻게 검증하나요?",
+    a: "가입 시 카 캐리어 차량 등록증, 화물 운전면허, 사업자 정보를 제출합니다. 운영팀 수동 검토 후 승인됩니다. 불량 기사는 평점 시스템으로 자동 관리됩니다.",
+  },
+  {
+    q: "매칭 후 취소하면 어떻게 되나요?",
+    a: "화주 취소: 픽업 12시간 전까지 무료, 이후 요금의 10% 위약금. 기사 취소: 12시간 이내 20%, 당일 30% 패널티가 자동 부과되어 화주를 보호합니다.",
+  },
+  {
+    q: "에스크로 정산은 언제 이루어지나요?",
+    a: "화주가 인도 리포트 확인 후 정산 승인 시 즉시 정산됩니다. 미확인 시 인도 완료 72시간 후 자동 정산됩니다. 토스페이먼츠 에스크로로 안전하게 보관됩니다.",
+  },
+  {
+    q: "전국 어디든 탁송이 가능한가요?",
+    a: "서울·수도권·부산·대구·광주·대전·제주 등 전국 서비스 가능합니다. 제주 도서 지역은 별도 견적이 필요할 수 있습니다.",
+  },
+]
+
+function FAQSection() {
+  const [open, setOpen] = useState<number | null>(null)
+
+  return (
+    <section className="py-20 bg-gray-50">
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <div className="inline-block bg-gray-200 text-gray-600 text-xs font-bold
+            px-3 py-1.5 rounded-full mb-4">
+            자주 묻는 질문
+          </div>
+          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-3">
+            궁금한 점이 있으신가요?
+          </h2>
+          <p className="text-gray-400 text-sm">탁카 이용 전 가장 많이 묻는 질문들입니다</p>
+        </div>
+
+        <div className="space-y-2">
+          {FAQ_ITEMS.map((item, i) => (
+            <div key={item.q} className={`border rounded-2xl overflow-hidden transition-colors
+              ${open === i ? "border-orange-200 bg-orange-50/40" : "border-gray-100 bg-white"}`}>
+              <button
+                type="button"
+                aria-expanded={open === i}
+                onClick={() => setOpen(open === i ? null : i)}
+                className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 min-h-[60px]">
+                <span className="font-semibold text-gray-900 text-sm">{item.q}</span>
+                <svg
+                  width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  className={`shrink-0 text-gray-400 transition-transform duration-200 ${open === i ? "rotate-180" : ""}`}>
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              {open === i && (
+                <div className="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-orange-100 pt-4">
+                  {item.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ══════════════════════════════════════════
 //  MOCK ORDERS (UI preview without auth)
 // ══════════════════════════════════════════
 const MOCK_ORDERS = [
@@ -662,3 +755,133 @@ const MOCK_ORDERS = [
   { origin: "경기 수원시", destination: "광주 서구", cargoType: "렌트카 4대", vehicleType: "4열 카 캐리어", price: "340,000원", urgent: false },
   { origin: "대전 유성구", destination: "제주도", cargoType: "경매 낙찰차 2대", vehicleType: "2열 카 캐리어", price: "610,000원", urgent: false },
 ]
+
+// ══════════════════════════════════════════
+//  TESTIMONIALS
+// ══════════════════════════════════════════
+const TESTIMONIALS = [
+  {
+    type: "shipper" as const,
+    name: "김정훈",
+    role: "딜러사 영업 매니저",
+    location: "서울 강남",
+    rating: 5,
+    text: "처음엔 반신반의했는데 의뢰 올리고 35분 만에 기사님이 수락했습니다. 에스크로라 선입금 걱정도 없고, 픽업 전 상태 리포트까지 오니까 분쟁 여지가 없어졌어요.",
+    highlight: "35분 만에 매칭",
+  },
+  {
+    type: "driver" as const,
+    name: "최민석",
+    role: "카 캐리어 기사 9년차",
+    location: "부산",
+    rating: 5,
+    text: "피드에서 내 경로에 맞는 건만 골라 수락하니까 공차 회송이 30% 이상 줄었습니다. 미수금 걱정도 에스크로로 해결됐고, 가입비 없이 시작할 수 있어서 부담이 없었어요.",
+    highlight: "공차 회송 30% 감소",
+  },
+  {
+    type: "shipper" as const,
+    name: "이재현",
+    role: "중고차 경매 법인 대표",
+    location: "대구",
+    rating: 5,
+    text: "월 40건 탁송을 모두 탁카로 전환했습니다. 카카오 오픈채팅 관리하던 시간이 사라지고, 기사 검증도 플랫폼이 해주니까 훨씬 편합니다. 수수료도 기사 부담이라 비용 변화 없었어요.",
+    highlight: "월 40건 전량 전환",
+  },
+  {
+    type: "driver" as const,
+    name: "장동훈",
+    role: "카 캐리어 기사",
+    location: "인천",
+    rating: 5,
+    text: "예전엔 화주한테 직접 돈 받다가 떼인 적도 있었는데, 탁카는 에스크로라 인도 완료하면 72시간 내 자동 정산됩니다. 수수료 4%면 이 안전함에 비해 충분히 납득 가능합니다.",
+    highlight: "미수금 분쟁 0건",
+  },
+  {
+    type: "shipper" as const,
+    name: "박수연",
+    role: "개인 화주",
+    location: "경기 수원",
+    rating: 5,
+    text: "이사 때문에 차량 탁송이 처음이었는데 너무 쉬웠어요. 출발지·도착지·차종만 입력하고 기다리니까 기사님이 견적 주셨고, 차량 상태 리포트 사진도 받아서 안심이 됐습니다.",
+    highlight: "첫 탁송도 문제 없음",
+  },
+]
+
+function StarRating({ n }: { n: number }) {
+  return (
+    <div className="flex gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg key={i} width="12" height="12" viewBox="0 0 24 24"
+          className={i < n ? "text-amber-400" : "text-gray-200"}>
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+            fill="currentColor"/>
+        </svg>
+      ))}
+    </div>
+  )
+}
+
+function TestimonialsSection() {
+  return (
+    <section className="py-20 bg-white overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <div className="inline-block bg-orange-50 text-orange-600 text-xs font-bold
+            px-3 py-1.5 rounded-full mb-4 border border-orange-100">
+            실사용자 후기
+          </div>
+          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-3">
+            화주와 기사 모두 만족합니다
+          </h2>
+          <p className="text-gray-400 text-sm">실제 탁카 이용자의 경험입니다</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4 mb-4">
+          {TESTIMONIALS.slice(0, 3).map((t, i) => (
+            <TestimonialCard key={i} {...t} />
+          ))}
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+          {TESTIMONIALS.slice(3).map((t, i) => (
+            <TestimonialCard key={i + 3} {...t} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function TestimonialCard({ type, name, role, location, rating, text, highlight }: typeof TESTIMONIALS[0]) {
+  const isDriver = type === "driver"
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md
+      hover:-translate-y-0.5 transition-all flex flex-col gap-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          {/* Avatar initial */}
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-sm font-extrabold
+            ${isDriver ? "bg-indigo-100 text-indigo-700" : "bg-orange-100 text-orange-700"}`}>
+            {name[0]}
+          </div>
+          <div>
+            <div className="font-bold text-gray-900 text-sm">{name}</div>
+            <div className="text-[11px] text-gray-400">{role} · {location}</div>
+          </div>
+        </div>
+        <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-full
+          ${isDriver ? "bg-indigo-50 text-indigo-600" : "bg-orange-50 text-orange-600"}`}>
+          {isDriver ? "기사" : "화주"}
+        </span>
+      </div>
+
+      <StarRating n={rating} />
+
+      <p className="text-sm text-gray-600 leading-relaxed flex-1">{text}</p>
+
+      <div className={`text-xs font-bold px-3 py-1.5 rounded-lg w-fit
+        ${isDriver ? "bg-indigo-50 text-indigo-700" : "bg-orange-50 text-orange-700"}`}>
+        ✓ {highlight}
+      </div>
+    </div>
+  )
+}

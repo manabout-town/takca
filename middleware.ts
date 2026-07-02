@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   // Public paths — no auth required
-  const publicPaths = ["/", "/login", "/signup", "/intro", "/verify-email", "/auth/callback"]
+  const publicPaths = ["/", "/login", "/signup", "/intro", "/verify-email", "/auth/callback", "/terms", "/privacy"]
   const isPublic = publicPaths.some(p => path === p || path.startsWith("/auth/")) || path.startsWith("/api/")
 
   if (!user && !isPublic && path !== "/onboarding") {

@@ -13,6 +13,7 @@ const NAV = [
 export function LandingHeader() {
   const [role, setRole] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -28,6 +29,8 @@ export function LandingHeader() {
     })
   }, [])
 
+  const closeMenu = () => setMenuOpen(false)
+
   const dashboardHref =
     role === "driver" ? "/driver/dashboard"
     : role === "admin" ? "/admin/dashboard"
@@ -39,62 +42,127 @@ export function LandingHeader() {
     : "화주"
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gray-950/95 backdrop-blur-md border-b border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between" style={{ height: 60 }}>
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-orange-500 flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <rect x="1" y="3" width="15" height="13" rx="2" stroke="white" strokeWidth="2"/>
-              <path d="M16 8h4l3 3v5h-7V8z" stroke="white" strokeWidth="2" strokeLinejoin="round"/>
-              <circle cx="5.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
-              <circle cx="18.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
-            </svg>
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-950/95 backdrop-blur-md border-b border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between" style={{ height: 60 }}>
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-orange-500 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="1" y="3" width="15" height="13" rx="2" stroke="white" strokeWidth="2"/>
+                <path d="M16 8h4l3 3v5h-7V8z" stroke="white" strokeWidth="2" strokeLinejoin="round"/>
+                <circle cx="5.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
+                <circle cx="18.5" cy="18.5" r="2.5" stroke="white" strokeWidth="2"/>
+              </svg>
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="text-white font-extrabold text-base tracking-tight">탁카</span>
+              <span className="text-orange-400 text-[9px] font-semibold tracking-widest">카 캐리어 전문</span>
+            </div>
           </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-white font-extrabold text-base tracking-tight">탁카</span>
-            <span className="text-orange-400 text-[9px] font-semibold tracking-widest">카 캐리어 전문</span>
-          </div>
-        </div>
 
-        {/* Nav */}
-        <nav className="hidden md:flex items-center gap-1 text-sm">
+          {/* Nav — desktop */}
+          <nav className="hidden md:flex items-center gap-1 text-sm">
+            {NAV.map(n => (
+              <a key={n.label} href={n.href}
+                className="px-3 py-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-all">
+                {n.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Auth Actions — desktop */}
+          <div className="hidden md:flex items-center gap-2">
+            {loading ? (
+              <div className="w-32 h-8 rounded-lg bg-white/5 animate-pulse" />
+            ) : role ? (
+              <>
+                <span className="text-xs text-gray-500 px-2 py-1 rounded-full border border-white/10">
+                  {roleLabel}
+                </span>
+                <Link href={dashboardHref}
+                  className="bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all hover:shadow-lg hover:shadow-orange-500/20">
+                  대시보드
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/login"
+                  className="text-sm text-gray-400 hover:text-white px-4 py-2 rounded-lg transition-colors">
+                  로그인
+                </Link>
+                <Link href="/signup"
+                  className="bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all hover:shadow-lg hover:shadow-orange-500/20">
+                  무료 시작
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Hamburger — mobile */}
+          <button
+            type="button"
+            aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(v => !v)}
+            className="md:hidden flex flex-col items-center justify-center w-10 h-10 gap-[6px] rounded-lg hover:bg-white/5 transition-colors"
+          >
+            <span className={`block w-5 h-[2px] bg-gray-400 rounded-full transition-all duration-200
+              ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
+            <span className={`block w-5 h-[2px] bg-gray-400 rounded-full transition-all duration-200
+              ${menuOpen ? "opacity-0 scale-x-0" : ""}`} />
+            <span className={`block w-5 h-[2px] bg-gray-400 rounded-full transition-all duration-200
+              ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+          </button>
+        </div>
+      </header>
+
+      {/* Backdrop */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden bg-gray-950/50 backdrop-blur-sm"
+          onClick={closeMenu}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <div className={`fixed top-[60px] left-0 right-0 z-40 md:hidden bg-gray-950 border-b border-white/[0.06]
+        transition-all duration-200 origin-top
+        ${menuOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95 pointer-events-none"}`}>
+        <nav className="px-4 pt-3 pb-2 space-y-0.5">
           {NAV.map(n => (
-            <a key={n.label} href={n.href}
-              className="px-3 py-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-all">
+            <a
+              key={n.label}
+              href={n.href}
+              onClick={closeMenu}
+              className="flex items-center px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"
+            >
               {n.label}
             </a>
           ))}
         </nav>
-
-        {/* Auth Actions */}
-        <div className="flex items-center gap-2">
+        <div className="px-4 pb-5 pt-2 border-t border-white/[0.06] space-y-2">
           {loading ? (
-            <div className="w-32 h-8 rounded-lg bg-white/5 animate-pulse" />
+            <div className="w-full h-11 rounded-xl bg-white/5 animate-pulse" />
           ) : role ? (
-            <>
-              <span className="text-xs text-gray-500 px-2 py-1 rounded-full border border-white/10">
-                {roleLabel}
-              </span>
-              <Link href={dashboardHref}
-                className="bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all hover:shadow-lg hover:shadow-orange-500/20">
-                대시보드
-              </Link>
-            </>
+            <Link href={dashboardHref} onClick={closeMenu}
+              className="flex items-center justify-center w-full bg-orange-500 hover:bg-orange-400 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all">
+              대시보드 ({roleLabel})
+            </Link>
           ) : (
             <>
-              <Link href="/login"
-                className="text-sm text-gray-400 hover:text-white px-4 py-2 rounded-lg transition-colors">
+              <Link href="/login" onClick={closeMenu}
+                className="flex items-center justify-center w-full border border-white/10 text-gray-400 hover:text-white hover:border-white/20 px-4 py-3 rounded-xl text-sm font-bold transition-all">
                 로그인
               </Link>
-              <Link href="/signup"
-                className="bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all hover:shadow-lg hover:shadow-orange-500/20">
+              <Link href="/signup" onClick={closeMenu}
+                className="flex items-center justify-center w-full bg-orange-500 hover:bg-orange-400 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all">
                 무료 시작
               </Link>
             </>
           )}
         </div>
       </div>
-    </header>
+    </>
   )
 }
