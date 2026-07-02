@@ -6,10 +6,11 @@ import { formatKRW } from "@/lib/utils/format"
 import Link from "next/link"
 import { Suspense } from "react"
 import {
-  ClipboardPlus, LayoutList, Wallet, User,
+  LayoutList, Wallet, User,
   ClipboardList, TrendingUp, Loader2, CheckCircle2, Zap,
   ArrowRight, MessageCircle,
 } from "lucide-react"
+import { QuickOrderSheet } from "@/components/shipper/QuickOrderSheet"
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "대기 중", matched: "매칭됨", in_progress: "운송 중",
@@ -47,7 +48,7 @@ export default async function ShipperDashboardPage() {
   ]
 
   const quickActions = [
-    { href: "/shipper/orders/new", Icon: ClipboardPlus, label: "의뢰 등록", color: "orange" },
+    { href: "/shipper/orders/new", Icon: ClipboardList, label: "상세 등록", color: "orange" },
     { href: "/shipper/dashboard", Icon: LayoutList, label: "의뢰 목록", color: "gray" },
     { href: "/shipper/wallet", Icon: Wallet, label: "에스크로", color: "gray" },
     { href: "/shipper/mypage", Icon: User, label: "마이페이지", color: "gray" },
@@ -63,13 +64,7 @@ export default async function ShipperDashboardPage() {
           </h1>
           <p className="text-sm md:text-base text-gray-400 mt-1 md:mt-2">화주 대시보드</p>
         </div>
-        <Link
-          href="/shipper/orders/new"
-          className="flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors shrink-0 mt-1 min-h-[44px]"
-        >
-          <ClipboardPlus className="w-4 h-4" />
-          의뢰 등록
-        </Link>
+        <QuickOrderSheet />
       </div>
 
       {/* Stats */}

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { OrderCard } from "@/components/shared/OrderCard"
+import { DriverFeedCard } from "@/components/driver/DriverFeedCard"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { FeedFilter } from "@/components/driver/FeedFilter"
@@ -47,12 +47,7 @@ export default async function DriverFeedPage({
       ) : (
         <div className="grid gap-4">
           {orders.map(order => (
-            <OrderCard
-              key={order.id}
-              order={order}
-              href={`/driver/orders/${order.id}`}
-              showStatus={false}
-            />
+            <DriverFeedCard key={order.id} order={order} />
           ))}
         </div>
       )}
